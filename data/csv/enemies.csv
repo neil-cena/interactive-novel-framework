@@ -1,0 +1,3 @@
+id,name,hp,maxHp,ac,attackBonus,damage,xpReward
+silk_thug,Silk Mask Thug,15,15,12,3,1d6,35
+silk_enforcer,Garrick the Enforcer,25,25,14,4,1d8,100
