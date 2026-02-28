@@ -1,40 +1,228 @@
 <script setup lang="ts">
-import { onMounted, computed, ref } from 'vue'
+import { onMounted, onUnmounted, computed, ref, watch } from 'vue'
 import GraphCanvas from './components/GraphCanvas.vue'
 import NodeInspector from './components/NodeInspector.vue'
 import DiagnosticsPanel from './components/DiagnosticsPanel.vue'
+import EntityTabs from './components/EntityTabs.vue'
+import EncountersEditor from './components/EncountersEditor.vue'
+import ItemsEditor from './components/ItemsEditor.vue'
+import EnemiesEditor from './components/EnemiesEditor.vue'
+import type { EdgeData } from './components/GraphCanvas.vue'
 import { useAuthoringData } from './composables/useAuthoringData'
 
 const {
   flowElements,
   selectedNodeId,
+  selectedEncounterId,
   nodes,
+  encounters,
+  items,
+  enemies,
   errors,
   warnings,
   loading,
   saveResult,
+  dirty,
+  canUndo,
+  canRedo,
   load,
   save,
   validate,
   selectNode,
+  selectEncounter,
   updateNode,
+  createNode,
+  deleteNode,
+  createChoice,
+  connectChoice,
+  setChoiceVisibility,
+  setOnEnterActions,
+  createEncounter,
+  deleteEncounter,
+  updateEncounter,
+  createItem,
+  deleteItem,
+  updateItem,
+  createEnemy,
+  deleteEnemy,
+  updateEnemy,
+  disconnectChoiceTarget,
+  clearEncounterResolutionTarget,
+  undo,
+  redo,
 } = useAuthoringData()
 const saveError = ref<string | null>(null)
+const selectedEdge = ref<EdgeData | null>(null)
+const addNodeMenuOpen = ref(false)
+const sidebarTab = ref<'node' | 'encounters' | 'items' | 'enemies'>('node')
+const selectedItemId = ref<string | null>(null)
+const selectedEnemyId = ref<string | null>(null)
+const autosaveEnabled = ref(false)
+const autosaveError = ref<string | null>(null)
+let autosaveTimer: ReturnType<typeof setTimeout> | null = null
+const AUTOSAVE_DEBOUNCE_MS = 2000
 
 const selectedNode = computed(() =>
   selectedNodeId.value ? nodes.value[selectedNodeId.value] ?? null : null
 )
 
+function scheduleAutosave() {
+  if (!autosaveEnabled.value) return
+  if (autosaveTimer) clearTimeout(autosaveTimer)
+  autosaveTimer = setTimeout(async () => {
+    autosaveTimer = null
+    autosaveError.value = null
+    try {
+      const res = await validate()
+      if (res.errors.length > 0) return
+      await save()
+    } catch (e) {
+      autosaveError.value = e instanceof Error ? e.message : String(e)
+    }
+  }, AUTOSAVE_DEBOUNCE_MS)
+}
+
+watch(dirty, (isDirty) => {
+  if (isDirty && autosaveEnabled.value) scheduleAutosave()
+})
+
+function handleConnect(connection: { source: string; target: string }) {
+  const { source, target } = connection
+  const isEnc = target.startsWith('enc:')
+  const encounterId = isEnc ? target.slice(4) : ''
+  const choiceId = createChoice(
+    source,
+    isEnc ? 'combat_init' : 'navigate'
+  )
+  if (!choiceId) return
+  if (isEnc) connectChoice(source, choiceId, { type: 'encounter', encounterId })
+  else connectChoice(source, choiceId, { type: 'node', nodeId: target })
+}
+
+function handleSelectEdge(data: EdgeData | null) {
+  selectedEdge.value = data
+}
+
+function handleDeleteNode() {
+  if (!selectedNodeId.value) return
+  deleteNode(selectedNodeId.value, 'cascade')
+  selectedEdge.value = null
+}
+
+function handleDeleteEdge() {
+  const e = selectedEdge.value
+  if (!e) return
+  if (e.sourceNodeId && e.choiceId !== undefined) {
+    disconnectChoiceTarget(e.sourceNodeId, e.choiceId, e.branchType ?? undefined)
+  } else if (e.encounterId && e.resolutionType) {
+    clearEncounterResolutionTarget(e.encounterId, e.resolutionType)
+  }
+  selectedEdge.value = null
+}
+
+function handleAddNode(type: 'narrative' | 'encounter' | 'ending') {
+  createNode(type)
+  addNodeMenuOpen.value = false
+}
+
+function handleCreateItem() {
+  const id = createItem()
+  selectedItemId.value = id
+  sidebarTab.value = 'items'
+}
+
+function handleCreateEnemy() {
+  const id = createEnemy()
+  selectedEnemyId.value = id
+  sidebarTab.value = 'enemies'
+}
+
+function handleCreateEncounter() {
+  createEncounter()
+  sidebarTab.value = 'encounters'
+}
+
 async function doSave() {
   saveError.value = null
   try {
+    const res = await validate()
+    if (res.errors.length > 0) {
+      errors.value = res.errors
+      warnings.value = res.warnings
+      handleDiagnosticFocus(res.errors[0])
+      return
+    }
     await save()
   } catch (e) {
     saveError.value = e instanceof Error ? e.message : String(e)
   }
 }
 
-onMounted(() => load())
+function isInputTarget(el: EventTarget | null): boolean {
+  if (!el || !(el instanceof HTMLElement)) return false
+  const tag = el.tagName.toLowerCase()
+  return tag === 'input' || tag === 'textarea' || tag === 'select' || el.isContentEditable
+}
+
+function onKeyDown(e: KeyboardEvent) {
+  if (isInputTarget(e.target)) return
+  if (e.ctrlKey && e.key === 's') {
+    e.preventDefault()
+    doSave()
+    return
+  }
+  if (e.ctrlKey && e.key === 'z') {
+    e.preventDefault()
+    if (e.shiftKey) redo()
+    else undo()
+    return
+  }
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (selectedEdge.value) {
+      e.preventDefault()
+      handleDeleteEdge()
+    } else if (selectedNodeId.value) {
+      e.preventDefault()
+      handleDeleteNode()
+    }
+  }
+}
+
+const onBeforeUnload = (e: BeforeUnloadEvent) => {
+  if (dirty.value) e.preventDefault()
+}
+
+onMounted(() => {
+  load()
+  window.addEventListener('beforeunload', onBeforeUnload)
+  window.addEventListener('keydown', onKeyDown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('beforeunload', onBeforeUnload)
+  window.removeEventListener('keydown', onKeyDown)
+})
+
+function handleDiagnosticFocus(diagnostic: { context?: Record<string, unknown> }) {
+  const ctx = diagnostic.context
+  if (!ctx) return
+  if (ctx.nodeId && typeof ctx.nodeId === 'string') {
+    selectNode(ctx.nodeId)
+    sidebarTab.value = 'node'
+  }
+  if (ctx.encounterId && typeof ctx.encounterId === 'string') {
+    selectEncounter(ctx.encounterId)
+    sidebarTab.value = 'encounters'
+  }
+  if (ctx.itemId && typeof ctx.itemId === 'string') {
+    selectedItemId.value = ctx.itemId
+    sidebarTab.value = 'items'
+  }
+  if (ctx.enemyId && typeof ctx.enemyId === 'string') {
+    selectedEnemyId.value = ctx.enemyId
+    sidebarTab.value = 'enemies'
+  }
+}
 </script>
 
 <template>
@@ -42,11 +230,32 @@ onMounted(() => load())
     <header class="toolbar">
       <h1>Story Authoring</h1>
       <div class="actions">
-        <button :disabled="loading" @click="load">Load</button>
-        <button :disabled="loading" @click="validate">Validate</button>
-        <button :disabled="loading" @click="doSave">Save</button>
+        <div class="dropdown">
+          <button type="button" :disabled="loading" class="btn" @click="addNodeMenuOpen = !addNodeMenuOpen">
+            Add node
+          </button>
+          <div v-if="addNodeMenuOpen" class="dropdown-menu">
+            <button type="button" @click="handleAddNode('narrative')">Narrative</button>
+            <button type="button" @click="handleAddNode('encounter')">Encounter</button>
+            <button type="button" @click="handleAddNode('ending')">Ending</button>
+          </div>
+        </div>
+        <button type="button" :disabled="!selectedNodeId || loading" @click="handleDeleteNode">
+          Delete node
+        </button>
+        <button type="button" :disabled="!selectedEdge || loading" @click="handleDeleteEdge">
+          Delete edge
+        </button>
+        <button type="button" :disabled="!canUndo" @click="undo">Undo</button>
+        <button type="button" :disabled="!canRedo" @click="redo">Redo</button>
+        <button type="button" :disabled="loading" @click="load">Load</button>
+        <button type="button" :disabled="loading" @click="validate">Validate</button>
+        <button type="button" :disabled="loading" @click="doSave">Save</button>
+        <label class="autosave-label"><input v-model="autosaveEnabled" type="checkbox" /> Autosave</label>
       </div>
-      <p v-if="saveResult" class="save-result">Saved. {{ saveResult.written.length }} file(s) written.</p>
+      <p v-if="autosaveError" class="autosave-error">Autosave failed: {{ autosaveError }}</p>
+      <p v-else-if="dirty" class="dirty-hint">Unsaved changes</p>
+      <p v-else-if="saveResult" class="save-result">Saved. {{ saveResult.written.length }} file(s) written.</p>
       <p v-else-if="saveError" class="save-error">Save failed: {{ saveError }}</p>
     </header>
     <div class="main">
@@ -54,18 +263,60 @@ onMounted(() => load())
         <GraphCanvas
           :flow-nodes="flowElements.flowNodes"
           :flow-edges="flowElements.flowEdges"
-          :selected-id="selectedNodeId"
+          :selected-node-id="selectedNodeId"
+          :selected-edge="selectedEdge"
+          :connectable="true"
           @select-node="selectNode"
+          @select-edge="handleSelectEdge"
+          @connect="handleConnect"
         />
       </div>
       <aside class="sidebar">
-        <NodeInspector
-          :node="selectedNode"
-          @update:node="(id, patch) => updateNode(id, patch)"
-        />
+        <EntityTabs v-model:active-tab="sidebarTab" />
+        <div class="sidebar-content">
+          <NodeInspector
+            v-show="sidebarTab === 'node'"
+            :node="selectedNode"
+            :node-ids="Object.keys(nodes)"
+            :encounter-ids="Object.keys(encounters)"
+            :item-ids="Object.keys(items)"
+            @update:node="(id, patch) => updateNode(id, patch)"
+            @update:choice-visibility="(id, choiceId, reqs) => setChoiceVisibility(id, choiceId, reqs)"
+            @update:on-enter="(id, actions) => setOnEnterActions(id, actions)"
+          />
+          <EncountersEditor
+            v-show="sidebarTab === 'encounters'"
+            :encounters="encounters"
+            :nodes="nodes"
+            :enemies="enemies"
+            :selected-id="selectedEncounterId"
+            @select="(id) => selectEncounter(id)"
+            @create="handleCreateEncounter"
+            @delete="(id) => deleteEncounter(id)"
+            @update="(id, patch) => updateEncounter(id, patch)"
+          />
+          <ItemsEditor
+            v-show="sidebarTab === 'items'"
+            :items="items"
+            :selected-id="selectedItemId"
+            @select="(id) => (selectedItemId = id)"
+            @create="handleCreateItem"
+            @delete="(id) => { deleteItem(id); if (selectedItemId === id) selectedItemId = null }"
+            @update="(id, patch) => updateItem(id, patch)"
+          />
+          <EnemiesEditor
+            v-show="sidebarTab === 'enemies'"
+            :enemies="enemies"
+            :selected-id="selectedEnemyId"
+            @select="(id) => (selectedEnemyId = id)"
+            @create="handleCreateEnemy"
+            @delete="(id) => { deleteEnemy(id); if (selectedEnemyId === id) selectedEnemyId = null }"
+            @update="(id, patch) => updateEnemy(id, patch)"
+          />
+        </div>
       </aside>
     </div>
-    <DiagnosticsPanel :errors="errors" :warnings="warnings" />
+    <DiagnosticsPanel :errors="errors" :warnings="warnings" @focus="handleDiagnosticFocus" />
   </div>
 </template>
 
@@ -91,11 +342,48 @@ onMounted(() => load())
 .actions {
   display: flex;
   gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
 }
-.actions button {
+.actions button,
+.actions .btn {
   padding: 6px 12px;
   cursor: pointer;
 }
+.dropdown {
+  position: relative;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background: #333;
+  border-radius: 4px;
+  padding: 4px 0;
+  min-width: 120px;
+  z-index: 10;
+}
+.dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.dropdown-menu button:hover {
+  background: #444;
+}
+.dirty-hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #ffc107;
+}
+.autosave-label { margin: 0; font-size: 0.85rem; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+.autosave-error { margin: 0; font-size: 0.85rem; color: #f44336; }
 .save-result {
   margin: 0;
   font-size: 0.85rem;
@@ -116,8 +404,15 @@ onMounted(() => load())
   min-width: 0;
 }
 .sidebar {
-  width: 320px;
+  width: 360px;
   flex-shrink: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sidebar-content {
+  flex: 1;
   min-height: 0;
   overflow: auto;
 }

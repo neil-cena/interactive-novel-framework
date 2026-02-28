@@ -1,10 +1,27 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import MechanicEditor from './MechanicEditor.vue'
+import VisibilityEditor from './VisibilityEditor.vue'
+import OnEnterActionEditor from './OnEnterActionEditor.vue'
 import type { StoryNodeModel } from '../api/authoringClient'
+import type { VisibilityReq } from './VisibilityEditor.vue'
+import type { OnEnterAction } from './OnEnterActionEditor.vue'
 
 const props = defineProps<{
   node: StoryNodeModel | null
+  nodeIds?: string[]
+  encounterIds?: string[]
+  itemIds?: string[]
 }>()
-const emit = defineEmits<{ 'update:node': [id: string, patch: Partial<StoryNodeModel>] }>()
+const emit = defineEmits<{
+  'update:node': [id: string, patch: Partial<StoryNodeModel>]
+  'update:choice-visibility': [nodeId: string, choiceId: string, reqs: VisibilityReq[]]
+  'update:on-enter': [nodeId: string, actions: OnEnterAction[]]
+}>()
+
+const nodeIds = computed(() => props.nodeIds ?? [])
+const encounterIds = computed(() => props.encounterIds ?? [])
+const itemIds = computed(() => props.itemIds ?? [])
 
 function updateText(id: string, text: string) {
   emit('update:node', id, { text })
@@ -65,18 +82,26 @@ function addChoice(id: string) {
       <label>Text</label>
       <textarea :value="node.text" @input="(e) => updateText(node.id, (e.target as HTMLTextAreaElement).value)" rows="4" />
     </div>
+    <OnEnterActionEditor
+      :actions="node.onEnter ?? []"
+      :item-ids="itemIds"
+      @update="(actions) => emit('update:on-enter', node.id, actions)"
+    />
     <div class="choices-section">
       <h4>Choices ({{ node.choices?.length ?? 0 }})</h4>
       <div v-for="(c, idx) in node.choices" :key="c.id" class="choice-row">
-        <input :value="c.label" @input="(e) => updateChoiceLabel(node.id, idx, (e.target as HTMLInputElement).value)" class="choice-label-inp" />
-        <template v-if="(c.mechanic as { type?: string })?.type === 'navigate'">
-          <label>→ Node ID</label>
-          <input :value="(c.mechanic as { nextNodeId?: string })?.nextNodeId ?? ''" @input="(e) => updateChoiceMechanic(node.id, idx, { ...c.mechanic, type: 'navigate', nextNodeId: (e.target as HTMLInputElement).value })" class="choice-mechanic-inp" />
-        </template>
-        <template v-else-if="(c.mechanic as { type?: string })?.type === 'combat_init'">
-          <label>→ Encounter ID</label>
-          <input :value="(c.mechanic as { encounterId?: string })?.encounterId ?? ''" @input="(e) => updateChoiceMechanic(node.id, idx, { ...c.mechanic, type: 'combat_init', encounterId: (e.target as HTMLInputElement).value })" class="choice-mechanic-inp" />
-        </template>
+        <input :value="c.label" @input="(e) => updateChoiceLabel(node.id, idx, (e.target as HTMLInputElement).value)" class="choice-label-inp" placeholder="Choice label" />
+        <MechanicEditor
+          :mechanic="(c.mechanic as Record<string, unknown>) ?? { type: 'navigate', nextNodeId: '' }"
+          :node-ids="nodeIds"
+          :encounter-ids="encounterIds"
+          @update="(m) => updateChoiceMechanic(node.id, idx, m)"
+        />
+        <VisibilityEditor
+          :requirements="c.visibilityRequirements ?? []"
+          :item-ids="itemIds"
+          @update="(reqs) => emit('update:choice-visibility', node.id, c.id, reqs)"
+        />
         <button type="button" class="btn-remove" @click="removeChoice(node.id, idx)">Remove</button>
       </div>
       <button type="button" class="btn-add" @click="addChoice(node.id)">Add choice</button>
@@ -95,10 +120,8 @@ function addChoice(id: string) {
 .field select, .field textarea { width: 100%; padding: 6px 8px; }
 .choices-section { margin-top: 1rem; }
 .choices-section h4 { font-size: 0.9rem; margin-bottom: 6px; }
-.choices-section ul { margin: 0; padding-left: 1.2rem; font-size: 0.85rem; }
-.choice-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 8px; padding: 6px; background: #fff; border-radius: 4px; }
-.choice-label-inp { flex: 1; min-width: 100px; padding: 4px 8px; }
-.choice-mechanic-inp { flex: 1; min-width: 80px; padding: 4px 8px; font-family: monospace; }
-.btn-remove { padding: 4px 8px; cursor: pointer; }
+.choice-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; padding: 8px; background: #fff; border-radius: 4px; border: 1px solid #eee; }
+.choice-label-inp { padding: 4px 8px; width: 100%; box-sizing: border-box; }
+.btn-remove { padding: 4px 8px; cursor: pointer; align-self: flex-start; }
 .btn-add { margin-top: 8px; padding: 6px 12px; cursor: pointer; }
 </style>

@@ -85,6 +85,14 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "type": "navigate",
           "nextNodeId": "n_market"
         }
+      },
+      {
+        "id": "c_n_buy_smoke_2",
+        "label": "Actually cheating",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_node_1"
+        }
       }
     ]
   },
@@ -390,6 +398,27 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_start"
+        }
+      }
+    ]
+  },
+  "n_node_1": {
+    "id": "n_node_1",
+    "type": "narrative",
+    "text": "You are happy. finally.",
+    "onEnter": [
+      {
+        "action": "heal",
+        "amount": "20"
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_n_node_1_1",
+        "label": "New choice",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_boss_defeated"
         }
       }
     ]

@@ -1,0 +1,6 @@
+id,name,type,damage,attackBonus,acBonus,effect,scalingAttribute,aoe
+dagger_iron,Iron Dagger,weapon,1d4,0,0,,dexterity,false
+blade_of_shadows,Blade of Shadows,weapon,1d6,1,0,,dexterity,false
+health_potion,Health Potion,consumable,,,,heal:2d4+2,,
+smoke_bomb,Smoke Bomb,tool,,,,,,
+guard_cloak,Silk Mask Cloak,tool,,,,,,

@@ -85,17 +85,17 @@ export function modelToVueFlow(
   for (const [sourceId, node] of Object.entries(nodes)) {
     if (!node.choices) continue
     for (const choice of node.choices) {
-      const m = choice.mechanic as { type?: string; nextNodeId?: string; onSuccess?: { nextNodeId: string }; onFailure?: { nextNodeId: string } } | undefined
+      const m = choice.mechanic as { type?: string; nextNodeId?: string; encounterId?: string; onSuccess?: { nextNodeId: string }; onFailure?: { nextNodeId: string } } | undefined
       if (!m) continue
       let targetId: string | null = null
       if (m.type === 'navigate' && m.nextNodeId) targetId = m.nextNodeId
-      if (m.type === 'combat_init' && (m as { encounterId?: string }).encounterId) {
-        const encId = (m as { encounterId: string }).encounterId
+      if (m.type === 'combat_init' && m.encounterId) {
         flowEdges.push({
           id: `e${edgeId++}`,
           source: sourceId,
-          target: `enc:${encId}`,
+          target: `enc:${m.encounterId}`,
           label: choice.label ?? choice.id,
+          data: { sourceNodeId: sourceId, choiceId: choice.id, branchType: undefined as undefined },
         })
         continue
       }
@@ -106,6 +106,7 @@ export function modelToVueFlow(
             source: sourceId,
             target: m.onSuccess.nextNodeId,
             label: `${choice.label} (success)`,
+            data: { sourceNodeId: sourceId, choiceId: choice.id, branchType: 'success' as const },
           })
         }
         if (m.onFailure?.nextNodeId) {
@@ -114,6 +115,7 @@ export function modelToVueFlow(
             source: sourceId,
             target: m.onFailure.nextNodeId,
             label: `${choice.label} (fail)`,
+            data: { sourceNodeId: sourceId, choiceId: choice.id, branchType: 'failure' as const },
           })
         }
         continue
@@ -124,6 +126,7 @@ export function modelToVueFlow(
           source: sourceId,
           target: targetId,
           label: choice.label ?? choice.id,
+          data: { sourceNodeId: sourceId, choiceId: choice.id, branchType: undefined as undefined },
         })
       }
     }
@@ -139,6 +142,7 @@ export function modelToVueFlow(
         source: encNodeId,
         target: onVictory,
         label: 'victory',
+        data: { encounterId: enc.id, resolutionType: 'onVictory' as const },
       })
     }
     if (onDefeat) {
@@ -147,6 +151,7 @@ export function modelToVueFlow(
         source: encNodeId,
         target: onDefeat,
         label: 'defeat',
+        data: { encounterId: enc.id, resolutionType: 'onDefeat' as const },
       })
     }
   }
