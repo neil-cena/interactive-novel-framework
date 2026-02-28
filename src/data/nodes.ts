@@ -124,7 +124,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "label": "[Sneak Past]",
         "mechanic": {
           "type": "skill_check",
-          "dice": "1d20+2",
+          "dice": "1d20",
           "dc": 12,
           "onSuccess": {
             "nextNodeId": "n_safehouse_hall"
@@ -132,7 +132,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "onFailure": {
             "nextNodeId": "n_game_over"
           },
-          "onFailureEncounterId": "combat_alley_thug"
+          "onFailureEncounterId": "combat_alley_thug",
+          "attribute": "dexterity"
         }
       },
       {
@@ -263,14 +264,15 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "label": "[Pick the Lock]",
         "mechanic": {
           "type": "skill_check",
-          "dice": "1d20+3",
+          "dice": "1d20",
           "dc": 14,
           "onSuccess": {
             "nextNodeId": "n_office_in"
           },
           "onFailure": {
             "nextNodeId": "n_office_caught"
-          }
+          },
+          "attribute": "intelligence"
         }
       },
       {

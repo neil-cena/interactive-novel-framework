@@ -16,6 +16,7 @@ describe('playerStore', () => {
     const state = defaultPlayerState()
     expect(state.metadata.currentNodeId).toBe(GAME_CONFIG.player.startingNodeId)
     expect(state.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp)
+    expect(state.vitals.hpMax).toBe(GAME_CONFIG.player.startingHp)
     expect(state.inventory.currency).toBe(GAME_CONFIG.player.startingCurrency)
     expect(state.equipment.mainHand).toBe(GAME_CONFIG.player.startingWeaponId)
     expect(state.inventory.items.lockpick).toBe(1)
@@ -27,14 +28,36 @@ describe('playerStore', () => {
     expect(store.metadata.currentNodeId).toBe('n_market')
   })
 
-  it('adjustHp adds and subtracts, floors at 0', () => {
+  it('adjustHp clamps between 0 and hpMax', () => {
     const store = usePlayerStore()
     store.adjustHp(5)
-    expect(store.vitals.hpCurrent).toBe(25)
+    expect(store.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp)
     store.adjustHp(-10)
-    expect(store.vitals.hpCurrent).toBe(15)
+    expect(store.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp - 10)
     store.adjustHp(-100)
     expect(store.vitals.hpCurrent).toBe(0)
+  })
+
+  it('adjustHp respects hpMax ceiling after increaseMaxHp', () => {
+    const store = usePlayerStore()
+    store.increaseMaxHp(10)
+    expect(store.vitals.hpMax).toBe(GAME_CONFIG.player.startingHp + 10)
+    expect(store.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp + 10)
+    store.adjustHp(-5)
+    expect(store.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp + 5)
+    store.adjustHp(100)
+    expect(store.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp + 10)
+  })
+
+  it('increaseMaxHp rejects invalid amounts', () => {
+    const store = usePlayerStore()
+    const before = store.vitals.hpMax
+    store.increaseMaxHp(NaN)
+    expect(store.vitals.hpMax).toBe(before)
+    store.increaseMaxHp(-5)
+    expect(store.vitals.hpMax).toBe(before)
+    store.increaseMaxHp(0)
+    expect(store.vitals.hpMax).toBe(before)
   })
 
   it('adjustHp with NaN is no-op', () => {
@@ -100,6 +123,7 @@ describe('playerStore', () => {
     store.startNewGame('save_slot_1')
     expect(store.metadata.currentNodeId).toBe(GAME_CONFIG.player.startingNodeId)
     expect(store.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp)
+    expect(store.vitals.hpMax).toBe(GAME_CONFIG.player.startingHp)
     expect(store.activeSaveSlot).toBe('save_slot_1')
   })
 
@@ -108,12 +132,29 @@ describe('playerStore', () => {
     const saved = {
       ...defaultPlayerState(),
       metadata: { currentNodeId: 'n_armory' },
-      vitals: { hpCurrent: 5 },
+      vitals: { hpCurrent: 5, hpMax: 20 },
     }
     store.loadGame('save_slot_2', saved)
     expect(store.metadata.currentNodeId).toBe('n_armory')
     expect(store.vitals.hpCurrent).toBe(5)
+    expect(store.vitals.hpMax).toBe(20)
     expect(store.activeSaveSlot).toBe('save_slot_2')
+  })
+
+  it('loadGame deep-merges with defaults for old save shapes', () => {
+    const store = usePlayerStore()
+    const oldSave = {
+      metadata: { currentNodeId: 'n_armory' },
+      vitals: { hpCurrent: 12 },
+      inventory: { currency: 5, items: { key: 1 } },
+      equipment: { mainHand: null },
+      flags: { quest_done: true },
+    } as Partial<import('../../types/player').PlayerState>
+    store.loadGame('save_slot_1', oldSave)
+    expect(store.metadata.currentNodeId).toBe('n_armory')
+    expect(store.vitals.hpCurrent).toBe(12)
+    expect(store.vitals.hpMax).toBe(GAME_CONFIG.player.startingHp)
+    expect(store.activeSaveSlot).toBe('save_slot_1')
   })
 
   it('resetToDefaults restores default state', () => {
@@ -123,5 +164,89 @@ describe('playerStore', () => {
     store.resetToDefaults()
     expect(store.metadata.currentNodeId).toBe(GAME_CONFIG.player.startingNodeId)
     expect(store.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp)
+  })
+
+  it('defaultPlayerState includes attributes from config', () => {
+    const state = defaultPlayerState()
+    expect(state.attributes).toEqual(GAME_CONFIG.player.startingAttributes)
+  })
+
+  it('defaultPlayerState includes progression', () => {
+    const state = defaultPlayerState()
+    expect(state.progression.level).toBe(GAME_CONFIG.leveling.startingLevel)
+    expect(state.progression.xp).toBe(GAME_CONFIG.leveling.startingXp)
+    expect(state.progression.unspentAttributePoints).toBe(0)
+  })
+
+  it('adjustAttribute increments attribute', () => {
+    const store = usePlayerStore()
+    const before = store.attributes.dexterity
+    store.adjustAttribute('dexterity', 3)
+    expect(store.attributes.dexterity).toBe(before + 3)
+  })
+
+  it('adjustAttribute with NaN is no-op', () => {
+    const store = usePlayerStore()
+    const before = store.attributes.strength
+    store.adjustAttribute('strength', NaN)
+    expect(store.attributes.strength).toBe(before)
+  })
+
+  it('awardXp adds XP without leveling when below threshold', () => {
+    const store = usePlayerStore()
+    const leveled = store.awardXp(10)
+    expect(leveled).toBe(false)
+    expect(store.progression.xp).toBe(10)
+    expect(store.progression.level).toBe(1)
+  })
+
+  it('awardXp triggers level-up at threshold', () => {
+    const store = usePlayerStore()
+    const leveled = store.awardXp(GAME_CONFIG.leveling.xpThresholds[1])
+    expect(leveled).toBe(true)
+    expect(store.progression.level).toBe(2)
+    expect(store.vitals.hpMax).toBe(GAME_CONFIG.player.startingHp + GAME_CONFIG.leveling.hpPerLevel)
+    expect(store.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp + GAME_CONFIG.leveling.hpPerLevel)
+    expect(store.progression.unspentAttributePoints).toBe(GAME_CONFIG.leveling.attributePointsPerLevel)
+  })
+
+  it('awardXp rejects invalid amounts', () => {
+    const store = usePlayerStore()
+    expect(store.awardXp(NaN)).toBe(false)
+    expect(store.awardXp(-5)).toBe(false)
+    expect(store.awardXp(0)).toBe(false)
+    expect(store.progression.xp).toBe(0)
+  })
+
+  it('spendAttributePoint decrements points and increases attribute', () => {
+    const store = usePlayerStore()
+    store.awardXp(GAME_CONFIG.leveling.xpThresholds[1])
+    expect(store.progression.unspentAttributePoints).toBe(1)
+    const beforeInt = store.attributes.intelligence
+    store.spendAttributePoint('intelligence')
+    expect(store.attributes.intelligence).toBe(beforeInt + 1)
+    expect(store.progression.unspentAttributePoints).toBe(0)
+  })
+
+  it('spendAttributePoint does nothing when no points available', () => {
+    const store = usePlayerStore()
+    const beforeStr = store.attributes.strength
+    store.spendAttributePoint('strength')
+    expect(store.attributes.strength).toBe(beforeStr)
+  })
+
+  it('loadGame deep-merges attributes and progression for old saves', () => {
+    const store = usePlayerStore()
+    const oldSave = {
+      metadata: { currentNodeId: 'n_armory' },
+      vitals: { hpCurrent: 10 },
+      inventory: { currency: 5, items: {} },
+      equipment: { mainHand: null },
+      flags: {},
+    } as Partial<import('../../types/player').PlayerState>
+    store.loadGame('save_slot_1', oldSave)
+    expect(store.attributes).toEqual(GAME_CONFIG.player.startingAttributes)
+    expect(store.progression.level).toBe(GAME_CONFIG.leveling.startingLevel)
+    expect(store.progression.xp).toBe(GAME_CONFIG.leveling.startingXp)
   })
 })

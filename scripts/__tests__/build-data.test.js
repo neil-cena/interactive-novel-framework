@@ -7,10 +7,13 @@ import {
   parseVisibility,
   parseMechanic,
   parseOnEnter,
+  parseItems,
+  parseEnemies,
   validateData,
   NODE_TYPES,
   ITEM_TYPES,
   DICE_NOTATION_REGEX,
+  VALID_ATTRIBUTES,
 } from '../build-data.js'
 
 describe('splitPipe', () => {
@@ -79,6 +82,14 @@ describe('parseAction', () => {
   it('returns null for missing key in set_flag', () => {
     expect(parseAction('set_flag:')).toBeNull()
   })
+  it('parses heal action with dice string amount', () => {
+    const result = parseAction('heal:2d4+2')
+    expect(result).toEqual({ action: 'heal', amount: '2d4+2' })
+  })
+  it('parses heal action with default 0', () => {
+    const result = parseAction('heal:')
+    expect(result).toEqual({ action: 'heal', amount: '0' })
+  })
 })
 
 describe('parseMechanic', () => {
@@ -105,6 +116,21 @@ describe('parseMechanic', () => {
   })
   it('returns null for empty mechanic', () => {
     expect(parseMechanic('')).toBeNull()
+  })
+  it('parses skill_check with optional attribute', () => {
+    const result = parseMechanic('skill_check:1d20:12:n_win:n_fail::dexterity')
+    expect(result?.type).toBe('skill_check')
+    expect(result?.attribute).toBe('dexterity')
+    expect(result?.dice).toBe('1d20')
+  })
+  it('parses skill_check with encounter and attribute', () => {
+    const result = parseMechanic('skill_check:1d20:12:n_win:n_fail:enc_1:intelligence')
+    expect(result?.onFailureEncounterId).toBe('enc_1')
+    expect(result?.attribute).toBe('intelligence')
+  })
+  it('parses skill_check without attribute (backward compat)', () => {
+    const result = parseMechanic('skill_check:1d20+2:12:n_win:n_fail')
+    expect(result?.attribute).toBeUndefined()
   })
 })
 
@@ -185,6 +211,66 @@ describe('validateData', () => {
   })
 })
 
+describe('parseItems', () => {
+  it('parses scalingAttribute from row', () => {
+    const rows = [{ id: 'sword', name: 'Sword', type: 'weapon', damage: '1d6', attackBonus: '2', acBonus: '', effect: '', scalingAttribute: 'strength', aoe: '' }]
+    const items = parseItems(rows)
+    expect(items.sword.scalingAttribute).toBe('strength')
+  })
+  it('parses aoe flag from row', () => {
+    const rows = [{ id: 'bomb', name: 'Bomb', type: 'weapon', damage: '2d6', attackBonus: '0', acBonus: '', effect: '', scalingAttribute: '', aoe: 'true' }]
+    const items = parseItems(rows)
+    expect(items.bomb.aoe).toBe(true)
+  })
+  it('omits scalingAttribute when empty', () => {
+    const rows = [{ id: 'potion', name: 'Pot', type: 'consumable', damage: '', attackBonus: '', acBonus: '', effect: 'heal:1d4', scalingAttribute: '', aoe: '' }]
+    const items = parseItems(rows)
+    expect(items.potion.scalingAttribute).toBeUndefined()
+  })
+})
+
+describe('parseEnemies', () => {
+  it('parses xpReward from row', () => {
+    const rows = [{ id: 'goblin', name: 'Goblin', hp: '5', ac: '10', attackBonus: '0', damage: '1d4', xpReward: '35' }]
+    const enemies = parseEnemies(rows)
+    expect(enemies.goblin.xpReward).toBe(35)
+  })
+  it('defaults xpReward to 0 when missing', () => {
+    const rows = [{ id: 'rat', name: 'Rat', hp: '2', ac: '8', attackBonus: '0', damage: '1d2' }]
+    const enemies = parseEnemies(rows)
+    expect(enemies.rat.xpReward).toBe(0)
+  })
+})
+
+describe('validateData (Phase 2)', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('reports error for invalid scalingAttribute on item', () => {
+    const items = { sword: { id: 'sword', name: 'Sword', type: 'weapon', damage: '1d6', scalingAttribute: 'dexteirty' } }
+    const { errors } = validateData({}, items, {}, {})
+    expect(errors.some((e) => e.includes('invalid scalingAttribute') && e.includes('dexteirty'))).toBe(true)
+  })
+  it('passes validation for valid scalingAttribute', () => {
+    const items = { sword: { id: 'sword', name: 'Sword', type: 'weapon', damage: '1d6', scalingAttribute: 'dexterity' } }
+    const { errors } = validateData({}, items, {}, {})
+    expect(errors.some((e) => e.includes('scalingAttribute'))).toBe(false)
+  })
+  it('reports error for invalid skill_check attribute', () => {
+    const nodes = {
+      n_a: { id: 'n_a', type: 'encounter', text: '', choices: [{
+        id: 'c1', label: 'Go', mechanic: { type: 'skill_check', dice: '1d20', dc: 12, onSuccess: { nextNodeId: 'n_a' }, onFailure: { nextNodeId: 'n_a' }, attribute: 'charisma' }
+      }] },
+    }
+    const { errors } = validateData(nodes, {}, {}, {})
+    expect(errors.some((e) => e.includes('invalid attribute') && e.includes('charisma'))).toBe(true)
+  })
+})
+
 describe('constants', () => {
   it('NODE_TYPES contains expected values', () => {
     expect(NODE_TYPES.has('narrative')).toBe(true)
@@ -201,5 +287,11 @@ describe('constants', () => {
     expect(DICE_NOTATION_REGEX.test('2d6+3')).toBe(true)
     expect(DICE_NOTATION_REGEX.test('1d4-1')).toBe(true)
     expect(DICE_NOTATION_REGEX.test('abc')).toBe(false)
+  })
+  it('VALID_ATTRIBUTES contains strength, dexterity, intelligence', () => {
+    expect(VALID_ATTRIBUTES.has('strength')).toBe(true)
+    expect(VALID_ATTRIBUTES.has('dexterity')).toBe(true)
+    expect(VALID_ATTRIBUTES.has('intelligence')).toBe(true)
+    expect(VALID_ATTRIBUTES.has('charisma')).toBe(false)
   })
 })

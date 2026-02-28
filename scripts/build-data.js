@@ -112,6 +112,10 @@ function parseAction(actionToken) {
         amount: asNumber(amountValue, 0),
       }
     }
+    case 'heal': {
+      const [amountValue] = parts
+      return { action: 'heal', amount: amountValue || '0' }
+    }
     default:
       console.warn('[build-data] parseAction: unknown action type:', action, 'Token:', JSON.stringify(actionToken))
       return null
@@ -200,7 +204,7 @@ function parseMechanic(value) {
   }
 
   if (mechanicType === 'skill_check') {
-    const [dice, dcValue, successNodeId, failureNodeId, onFailureEncounterId] = parts
+    const [dice, dcValue, successNodeId, failureNodeId, onFailureEncounterId, attribute] = parts
     if (!dice || !dcValue || !successNodeId || !failureNodeId) {
       console.warn('[build-data] parseMechanic: skill_check missing dice/dc/successNodeId/failureNodeId. Value:', JSON.stringify(value))
       return null
@@ -216,6 +220,10 @@ function parseMechanic(value) {
 
     if (onFailureEncounterId) {
       mechanic.onFailureEncounterId = onFailureEncounterId
+    }
+
+    if (attribute) {
+      mechanic.attribute = attribute
     }
 
     return mechanic
@@ -323,6 +331,14 @@ function parseItems(rows) {
       }
     }
 
+    if (row.scalingAttribute) {
+      item.scalingAttribute = row.scalingAttribute
+    }
+
+    if (row.aoe) {
+      item.aoe = asBoolean(row.aoe, false)
+    }
+
     items[id] = item
   }
 
@@ -348,6 +364,7 @@ function parseEnemies(rows) {
       ac: asNumber(row.ac, 10),
       attackBonus: asNumber(row.attackBonus, 0),
       damage: row.damage ?? '1d2',
+      xpReward: asNumber(row.xpReward, 0),
     }
   }
 
@@ -414,6 +431,7 @@ function writeDataFile(fileName, content) {
 
 const NODE_TYPES = new Set(['narrative', 'encounter', 'ending'])
 const ITEM_TYPES = new Set(['weapon', 'consumable', 'tool'])
+const VALID_ATTRIBUTES = new Set(['strength', 'dexterity', 'intelligence'])
 const STAT_CHECK_OPERATORS = new Set(['>=', '<=', '==', '>', '<'])
 const STAT_CHECK_STATS = new Set(['hpCurrent', 'currency'])
 const DICE_NOTATION_REGEX = /^\d+d\d+([+-]\d+)?$/i
@@ -461,6 +479,9 @@ function validateData(nodes, items, enemies, encounters) {
         }
         if (m.dice && !DICE_NOTATION_REGEX.test(m.dice) && Number.isNaN(Number(m.dice))) {
           warn(`Node "${id}" choice "${choice.id}": skill_check dice "${m.dice}" is not valid notation`)
+        }
+        if (m.attribute && !VALID_ATTRIBUTES.has(m.attribute)) {
+          err(`Node "${id}" choice "${choice.id}": skill_check invalid attribute "${m.attribute}"`)
         }
       }
       if (choice.visibilityRequirements) {
@@ -516,6 +537,9 @@ function validateData(nodes, items, enemies, encounters) {
     }
     if (item.effect?.action === 'add_item' && item.effect.itemId && !itemIds.has(item.effect.itemId)) {
       err(`Item "${id}" effect: add_item references missing item "${item.effect.itemId}"`)
+    }
+    if (item.scalingAttribute && !VALID_ATTRIBUTES.has(item.scalingAttribute)) {
+      err(`Item "${id}": invalid scalingAttribute "${item.scalingAttribute}"`)
     }
   }
 
@@ -627,4 +651,5 @@ export {
   STAT_CHECK_OPERATORS,
   STAT_CHECK_STATS,
   DICE_NOTATION_REGEX,
+  VALID_ATTRIBUTES,
 }

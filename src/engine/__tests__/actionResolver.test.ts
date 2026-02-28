@@ -79,4 +79,37 @@ describe('resolveAction', () => {
     resolveAction({ action: 'add_item', qty: 1 } as any, store as any)
     expect(store.addItem).not.toHaveBeenCalled()
   })
+
+  it('heal action rolls dice and calls adjustHp', () => {
+    const store = createMockStore()
+    const result = resolveAction({ action: 'heal', amount: '2d4+2' }, store as any)
+    expect(store.adjustHp).toHaveBeenCalled()
+    expect(result.type).toBe('heal')
+    expect(typeof result.value).toBe('number')
+  })
+
+  it('heal action returns value from dice roll', () => {
+    const store = createMockStore()
+    const result = resolveAction({ action: 'heal', amount: '1d4' }, store as any)
+    expect(result.type).toBe('heal')
+    expect(result.value).toBeGreaterThanOrEqual(1)
+    expect(result.value).toBeLessThanOrEqual(4)
+  })
+
+  it('heal action warns on non-string amount', () => {
+    const store = createMockStore()
+    const result = resolveAction({ action: 'heal', amount: 5 }, store as any)
+    expect(store.adjustHp).not.toHaveBeenCalled()
+    expect(result.type).toBe('heal')
+    expect(result.value).toBeUndefined()
+    expect(console.warn).toHaveBeenCalled()
+  })
+
+  it('all actions return ProcessedAction with type', () => {
+    const store = createMockStore()
+    expect(resolveAction({ action: 'set_flag', key: 'k', value: true }, store as any).type).toBe('set_flag')
+    expect(resolveAction({ action: 'adjust_hp', amount: 5 }, store as any).type).toBe('adjust_hp')
+    expect(resolveAction({ action: 'add_item', itemId: 'x' }, store as any).type).toBe('add_item')
+    expect(resolveAction({ action: 'adjust_currency', amount: 5 }, store as any).type).toBe('adjust_currency')
+  })
 })

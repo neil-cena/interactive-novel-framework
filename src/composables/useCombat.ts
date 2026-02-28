@@ -3,6 +3,8 @@ import { ENEMY_DICTIONARY } from '../data/enemies'
 import { ITEM_DICTIONARY } from '../data/items'
 import { GAME_CONFIG } from '../config'
 import type { CombatEncounter, CombatEnemyState } from '../types/combat'
+import type { ActionPayload } from '../types/story'
+import type { ProcessedAction } from '../engine/actionResolver'
 import { rollDice } from '../utils/dice'
 
 const { combat: combatConfig } = GAME_CONFIG
@@ -10,11 +12,19 @@ const { combat: combatConfig } = GAME_CONFIG
 type CombatTurn = 'player' | 'enemy'
 type CombatOutcome = 'victory' | 'defeat' | null
 
+export interface TurnOrderEntry {
+  id: string
+  name: string
+  initiative: number
+  isPlayer: boolean
+}
+
 export function useCombat() {
   const turn = ref<CombatTurn>('player')
   const enemies = ref<CombatEnemyState[]>([])
   const roundCount = ref(1)
   const log = ref<string[]>([])
+  const turnOrder = ref<TurnOrderEntry[]>([])
 
   const isResolved = computed<CombatOutcome>(() => {
     if (enemies.value.length === 0) {
@@ -32,7 +42,11 @@ export function useCombat() {
     log.value = [...log.value, entry]
   }
 
-  function initCombat(encounter: CombatEncounter): void {
+  function initCombat(
+    encounter: CombatEncounter,
+    playerDex: number = 0,
+    hasSurprise: boolean = false,
+  ): void {
     const spawned: CombatEnemyState[] = []
 
     encounter.enemies.forEach((spawn) => {
@@ -55,7 +69,25 @@ export function useCombat() {
     })
 
     enemies.value = spawned
-    turn.value = 'player'
+
+    const playerInitRoll = rollDice(`1d20+${playerDex}`)
+    const playerInitiative = playerInitRoll.total + (hasSurprise ? 10 : 0)
+
+    const order: TurnOrderEntry[] = [
+      { id: 'player', name: 'You', initiative: playerInitiative, isPlayer: true },
+    ]
+    spawned.forEach((enemy) => {
+      const enemyInitRoll = rollDice(`1d20+${enemy.attackBonus}`)
+      order.push({ id: enemy.id, name: enemy.name, initiative: enemyInitRoll.total, isPlayer: false })
+    })
+    order.sort((a, b) => {
+      if (b.initiative !== a.initiative) return b.initiative - a.initiative
+      return a.isPlayer ? -1 : 1
+    })
+    turnOrder.value = order
+
+    const firstActor = order[0]
+    turn.value = firstActor?.isPlayer ? 'player' : 'enemy'
     roundCount.value = 1
     log.value = ['Combat begins.']
   }
@@ -110,11 +142,51 @@ export function useCombat() {
     roundCount.value += 1
   }
 
+  function playerAoeAttack(
+    playerWeaponId: string | null,
+    playerAttackBonus: number,
+  ): void {
+    const weapon = playerWeaponId ? ITEM_DICTIONARY[playerWeaponId] : undefined
+    const damageDice = weapon?.damage ?? combatConfig.unarmedDamage
+    const livingEnemies = enemies.value.filter((e) => e.hpCurrent > 0)
+
+    livingEnemies.forEach((target) => {
+      const hitRoll = rollDice(
+        `${combatConfig.attackRollDice}${playerAttackBonus >= 0 ? '+' : ''}${playerAttackBonus}`,
+      )
+      if (hitRoll.total >= target.ac) {
+        const damageResult = rollDice(damageDice)
+        target.hpCurrent = Math.max(0, target.hpCurrent - damageResult.total)
+        addLog(`You hit ${target.name} for ${damageResult.total} damage.`)
+      } else {
+        addLog(`You miss ${target.name}.`)
+      }
+    })
+
+    turn.value = 'enemy'
+  }
+
+  function useItem(
+    itemId: string,
+    onResolveEffect: (effect: ActionPayload) => ProcessedAction,
+  ): void {
+    const item = ITEM_DICTIONARY[itemId]
+    if (!item || item.type !== 'consumable' || !item.effect) return
+    const result = onResolveEffect(item.effect)
+    if (result.type === 'heal' && result.value != null) {
+      addLog(`You used ${item.name} and recovered ${result.value} HP.`)
+    } else {
+      addLog(`You used ${item.name}.`)
+    }
+    turn.value = 'enemy'
+  }
+
   function resetCombat(): void {
     turn.value = 'player'
     enemies.value = []
     roundCount.value = 1
     log.value = []
+    turnOrder.value = []
   }
 
   return {
@@ -122,10 +194,13 @@ export function useCombat() {
     enemies,
     roundCount,
     log,
+    turnOrder,
     isResolved,
     initCombat,
     playerAttack,
+    playerAoeAttack,
     enemyTurn,
+    useItem,
     resetCombat,
   }
 }

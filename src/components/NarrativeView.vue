@@ -65,10 +65,18 @@ function handleChoice(choice: Choice): void {
   }
 
   const check = choice.mechanic
+  const attrMod = check.attribute ? playerStore.attributes[check.attribute] : 0
   const roll = rollDice(check.dice)
-  lastRollSummary.value = `Roll ${check.dice}: [${roll.rolls.join(', ')}] ${roll.modifier >= 0 ? '+' : ''}${roll.modifier} = ${roll.total} vs DC ${check.dc}`
+  const adjustedTotal = roll.total + attrMod
 
-  if (roll.total >= check.dc) {
+  if (check.attribute) {
+    const sign = attrMod >= 0 ? '+' : ''
+    lastRollSummary.value = `Roll ${check.dice}: [${roll.rolls.join(', ')}] ${roll.modifier >= 0 ? '+' : ''}${roll.modifier} ${sign}${attrMod} (${check.attribute.toUpperCase()}) = ${adjustedTotal} vs DC ${check.dc}`
+  } else {
+    lastRollSummary.value = `Roll ${check.dice}: [${roll.rolls.join(', ')}] ${roll.modifier >= 0 ? '+' : ''}${roll.modifier} = ${adjustedTotal} vs DC ${check.dc}`
+  }
+
+  if (adjustedTotal >= check.dc) {
     playerStore.navigateTo(check.onSuccess.nextNodeId)
     return
   }

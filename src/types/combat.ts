@@ -22,6 +22,7 @@ export interface EnemyTemplate {
   ac: number
   attackBonus: number
   damage: string
+  xpReward: number
 }
 
 export interface CombatEnemyState {

@@ -4,6 +4,7 @@ export type ActionType =
   | 'add_item'
   | 'remove_item'
   | 'adjust_currency'
+  | 'heal'
 
 export interface ActionPayload {
   action: ActionType
@@ -42,6 +43,7 @@ export type ChoiceMechanic =
       type: 'skill_check'
       dice: string
       dc: number
+      attribute?: 'strength' | 'dexterity' | 'intelligence'
       onSuccess: ChoiceOutcome
       onFailure: ChoiceOutcome
       onFailureEncounterId?: string

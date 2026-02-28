@@ -11,6 +11,16 @@ export const GAME_CONFIG = {
     startingWeaponId: 'dagger_iron',
     startingItems: { lockpick: 1 } as Record<string, number>,
     startingFlags: { met_goblin: false } as Record<string, boolean>,
+    startingAttributes: { strength: 0, dexterity: 2, intelligence: 1 },
+  },
+
+  /** Leveling / progression */
+  leveling: {
+    startingLevel: 1,
+    startingXp: 0,
+    xpThresholds: [0, 100, 250, 500, 1000] as readonly number[],
+    hpPerLevel: 5,
+    attributePointsPerLevel: 1,
   },
 
   /** Combat system */

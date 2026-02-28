@@ -8,7 +8,9 @@ export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
     "type": "weapon",
     "damage": "1d4",
     "attackBonus": 0,
-    "acBonus": 0
+    "acBonus": 0,
+    "scalingAttribute": "dexterity",
+    "aoe": false
   },
   "blade_of_shadows": {
     "id": "blade_of_shadows",
@@ -16,12 +18,18 @@ export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
     "type": "weapon",
     "damage": "1d6",
     "attackBonus": 1,
-    "acBonus": 0
+    "acBonus": 0,
+    "scalingAttribute": "dexterity",
+    "aoe": false
   },
   "health_potion": {
     "id": "health_potion",
     "name": "Health Potion",
-    "type": "consumable"
+    "type": "consumable",
+    "effect": {
+      "action": "heal",
+      "amount": "2d4+2"
+    }
   },
   "smoke_bomb": {
     "id": "smoke_bomb",

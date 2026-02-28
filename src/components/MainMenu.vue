@@ -66,7 +66,7 @@ onMounted(() => {
         <p v-if="slot.data" class="mt-3 text-sm text-slate-300">
           Continue from node <span class="font-semibold text-slate-100">{{ slot.data.metadata.currentNodeId }}</span>
           with
-          <span class="font-semibold text-slate-100">{{ slot.data.vitals.hpCurrent }} HP</span>.
+          <span class="font-semibold text-slate-100">{{ slot.data.vitals.hpCurrent }} / {{ slot.data.vitals.hpMax ?? slot.data.vitals.hpCurrent }} HP</span>.
         </p>
         <p v-else class="mt-3 text-sm text-slate-300">Start a new run in this slot.</p>
 

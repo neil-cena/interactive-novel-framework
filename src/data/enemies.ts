@@ -8,7 +8,8 @@ export const ENEMY_DICTIONARY: Record<string, EnemyTemplate> = {
     "hp": 15,
     "ac": 12,
     "attackBonus": 3,
-    "damage": "1d6"
+    "damage": "1d6",
+    "xpReward": 35
   },
   "silk_enforcer": {
     "id": "silk_enforcer",
@@ -16,6 +17,7 @@ export const ENEMY_DICTIONARY: Record<string, EnemyTemplate> = {
     "hp": 25,
     "ac": 14,
     "attackBonus": 4,
-    "damage": "1d8"
+    "damage": "1d8",
+    "xpReward": 100
   }
 }

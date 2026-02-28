@@ -4,6 +4,7 @@ import { COMBAT_ENCOUNTERS } from '../data/encounters'
 import { ITEM_DICTIONARY } from '../data/items'
 import { GAME_CONFIG } from '../config'
 import { useCombat } from '../composables/useCombat'
+import { resolveAction } from '../engine/actionResolver'
 import { usePlayerStore } from '../stores/playerStore'
 
 const props = defineProps<{
@@ -16,7 +17,7 @@ const emit = defineEmits<{
 }>()
 
 const playerStore = usePlayerStore()
-const { turn, enemies, roundCount, log, isResolved, initCombat, playerAttack, enemyTurn } = useCombat()
+const { turn, enemies, roundCount, log, turnOrder, isResolved, initCombat, playerAttack, playerAoeAttack, enemyTurn, useItem } = useCombat()
 const isResolving = ref(false)
 const encounterNotFound = ref(false)
 
@@ -28,7 +29,25 @@ const playerAc = computed(() => {
 
 const playerAttackBonus = computed(() => {
   const weaponId = playerStore.equipment.mainHand
-  return weaponId ? ITEM_DICTIONARY[weaponId]?.attackBonus ?? 0 : 0
+  const weapon = weaponId ? ITEM_DICTIONARY[weaponId] : undefined
+  const baseBonus = weapon?.attackBonus ?? 0
+  const scalingAttr = weapon?.scalingAttribute ?? 'strength'
+  return baseBonus + (playerStore.attributes[scalingAttr] ?? 0)
+})
+
+const weaponIsAoe = computed(() => {
+  const weaponId = playerStore.equipment.mainHand
+  return weaponId ? ITEM_DICTIONARY[weaponId]?.aoe === true : false
+})
+
+const usableConsumables = computed(() => {
+  return Object.entries(playerStore.inventory.items)
+    .map(([id, qty]) => {
+      const item = ITEM_DICTIONARY[id]
+      if (!item || item.type !== 'consumable' || !item.effect) return null
+      return { id, name: item.name, qty }
+    })
+    .filter(Boolean) as { id: string; name: string; qty: number }[]
 })
 
 function initializeCombat(): void {
@@ -40,8 +59,19 @@ function initializeCombat(): void {
     return
   }
 
-  initCombat(encounter)
+  initCombat(
+    encounter,
+    playerStore.attributes.dexterity,
+    playerStore.flags.has_surprise ?? false,
+  )
   isResolving.value = false
+
+  if (turn.value === 'enemy') {
+    window.setTimeout(() => {
+      enemyTurn(playerAc.value, (damage) => playerStore.adjustHp(-damage))
+      resolveIfFinished()
+    }, GAME_CONFIG.combat.enemyTurnDelayMs)
+  }
 }
 
 function resolveIfFinished(): void {
@@ -59,6 +89,32 @@ function resolveIfFinished(): void {
     isResolving.value = true
     emit('resolved', 'victory')
   }
+}
+
+function handleUseItem(itemId: string): void {
+  if (turn.value !== 'player') return
+  useItem(itemId, (effect) => {
+    const result = resolveAction(effect, playerStore)
+    playerStore.removeItem(itemId, 1)
+    return result
+  })
+  resolveIfFinished()
+  if (isResolving.value) return
+  window.setTimeout(() => {
+    enemyTurn(playerAc.value, (damage) => playerStore.adjustHp(-damage))
+    resolveIfFinished()
+  }, GAME_CONFIG.combat.enemyTurnDelayMs)
+}
+
+function handleAoeAttack(): void {
+  if (turn.value !== 'player') return
+  playerAoeAttack(playerStore.equipment.mainHand, playerAttackBonus.value)
+  resolveIfFinished()
+  if (isResolving.value) return
+  window.setTimeout(() => {
+    enemyTurn(playerAc.value, (damage) => playerStore.adjustHp(-damage))
+    resolveIfFinished()
+  }, GAME_CONFIG.combat.enemyTurnDelayMs)
 }
 
 function handlePlayerAttack(index: number): void {
@@ -103,18 +159,60 @@ watch(
     <template v-else>
     <h2 class="text-xl font-semibold text-red-300">Combat</h2>
     <p class="mt-2 text-sm text-slate-200">Round {{ roundCount }}</p>
-    <p class="text-sm text-slate-200">Your HP: {{ playerStore.vitals.hpCurrent }}</p>
+    <p class="text-sm text-slate-200">Your HP: {{ playerStore.vitals.hpCurrent }} / {{ playerStore.vitals.hpMax }}</p>
+
+    <div v-if="turnOrder.length > 0" class="mt-3 flex flex-wrap gap-1">
+      <span
+        v-for="entry in turnOrder"
+        :key="entry.id"
+        class="rounded px-2 py-0.5 text-xs"
+        :class="entry.isPlayer
+          ? (turn === 'player' ? 'bg-sky-700 text-sky-100' : 'bg-sky-900/40 text-sky-300')
+          : (turn === 'enemy' ? 'bg-red-700 text-red-100' : 'bg-red-900/40 text-red-300')"
+      >
+        {{ entry.name }} ({{ entry.initiative }})
+      </span>
+    </div>
 
     <div class="mt-4 space-y-3">
-      <button
-        v-for="(enemy, index) in enemies"
-        :key="enemy.id"
-        :disabled="enemy.hpCurrent <= 0 || turn !== 'player'"
-        class="block w-full rounded border border-slate-600 px-3 py-2 text-left transition enabled:hover:bg-slate-800 disabled:opacity-60"
-        @click="handlePlayerAttack(index)"
-      >
-        {{ enemy.name }} - HP {{ enemy.hpCurrent }}
-      </button>
+      <template v-if="weaponIsAoe">
+        <div v-for="enemy in enemies" :key="enemy.id" class="rounded border border-slate-700 px-3 py-2 text-sm text-slate-200">
+          {{ enemy.name }} - HP {{ enemy.hpCurrent }}
+        </div>
+        <button
+          :disabled="turn !== 'player'"
+          class="block w-full rounded border border-orange-600 bg-orange-900/40 px-3 py-2 text-sm text-orange-200 transition enabled:hover:bg-orange-900/70 disabled:opacity-60"
+          @click="handleAoeAttack"
+        >
+          Attack All
+        </button>
+      </template>
+      <template v-else>
+        <button
+          v-for="(enemy, index) in enemies"
+          :key="enemy.id"
+          :disabled="enemy.hpCurrent <= 0 || turn !== 'player'"
+          class="block w-full rounded border border-slate-600 px-3 py-2 text-left transition enabled:hover:bg-slate-800 disabled:opacity-60"
+          @click="handlePlayerAttack(index)"
+        >
+          {{ enemy.name }} - HP {{ enemy.hpCurrent }}
+        </button>
+      </template>
+    </div>
+
+    <div v-if="usableConsumables.length > 0" class="mt-4">
+      <p class="mb-2 text-sm font-semibold text-slate-300">Items</p>
+      <div class="flex flex-wrap gap-2">
+        <button
+          v-for="consumable in usableConsumables"
+          :key="consumable.id"
+          :disabled="turn !== 'player'"
+          class="rounded border border-emerald-700 bg-emerald-900/40 px-3 py-2 text-sm text-emerald-200 transition enabled:hover:bg-emerald-900/70 disabled:opacity-60"
+          @click="handleUseItem(consumable.id)"
+        >
+          {{ consumable.name }} ({{ consumable.qty }})
+        </button>
+      </div>
     </div>
 
     <div class="mt-4 rounded border border-slate-700 bg-slate-950 p-3">

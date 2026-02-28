@@ -8,4 +8,6 @@ export interface ItemTemplate {
   attackBonus?: number
   acBonus?: number
   effect?: ActionPayload
+  scalingAttribute?: 'strength' | 'dexterity' | 'intelligence'
+  aoe?: boolean
 }

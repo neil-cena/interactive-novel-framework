@@ -139,12 +139,100 @@ describe('useCombat', () => {
   })
 
   it('resetCombat clears state', () => {
-    const { initCombat, resetCombat, enemies, roundCount, log, turn } = useCombat()
+    const { initCombat, resetCombat, enemies, roundCount, log, turn, turnOrder } = useCombat()
     initCombat(mockEncounter)
     resetCombat()
     expect(enemies.value).toEqual([])
     expect(roundCount.value).toBe(1)
     expect(log.value).toEqual([])
     expect(turn.value).toBe('player')
+    expect(turnOrder.value).toEqual([])
+  })
+
+  it('useItem calls callback, logs, and switches turn', () => {
+    const { initCombat, useItem, turn, log } = useCombat()
+    initCombat(mockEncounter)
+    turn.value = 'player'
+    const callback = vi.fn(() => ({ type: 'heal', value: 6 }))
+    useItem('health_potion', callback)
+    expect(callback).toHaveBeenCalled()
+    expect(log.value.some((e: string) => e.includes('recovered 6 HP'))).toBe(true)
+    expect(turn.value).toBe('enemy')
+  })
+
+  it('useItem logs generic message for non-heal effects', () => {
+    const { initCombat, useItem, log } = useCombat()
+    initCombat(mockEncounter)
+    const callback = vi.fn(() => ({ type: 'adjust_hp', value: 5 }))
+    useItem('health_potion', callback)
+    expect(log.value.some((e: string) => e.includes('You used Health Potion'))).toBe(true)
+  })
+
+  it('useItem ignores non-consumable items', () => {
+    const { initCombat, useItem, turn } = useCombat()
+    initCombat(mockEncounter)
+    turn.value = 'player'
+    const callback = vi.fn(() => ({ type: 'heal' }))
+    useItem('dagger_iron', callback)
+    expect(callback).not.toHaveBeenCalled()
+    expect(turn.value).toBe('player')
+  })
+
+  it('playerAoeAttack damages all living enemies and switches turn', () => {
+    vi.mocked(rollDice).mockImplementation((dice: string) => {
+      const n = Number(dice)
+      if (Number.isFinite(n)) return { rolls: [], modifier: n, total: n }
+      if (dice.includes('1d20')) return { rolls: [15], modifier: 0, total: 15 }
+      return { rolls: [3], modifier: 0, total: 3 }
+    })
+    const { initCombat, playerAoeAttack, enemies, turn } = useCombat()
+    initCombat(mockEncounterTwo)
+    const hp0 = enemies.value[0].hpCurrent
+    const hp1 = enemies.value[1].hpCurrent
+    playerAoeAttack('dagger_iron', 0)
+    expect(enemies.value[0].hpCurrent).toBe(hp0 - 3)
+    expect(enemies.value[1].hpCurrent).toBe(hp1 - 3)
+    expect(turn.value).toBe('enemy')
+  })
+
+  it('initCombat creates turnOrder with player and enemies', () => {
+    const { initCombat, turnOrder } = useCombat()
+    initCombat(mockEncounter, 2, false)
+    expect(turnOrder.value.length).toBeGreaterThanOrEqual(2)
+    expect(turnOrder.value.some((e: any) => e.isPlayer)).toBe(true)
+    expect(turnOrder.value.some((e: any) => !e.isPlayer)).toBe(true)
+  })
+
+  it('initCombat player wins ties in initiative', () => {
+    vi.mocked(rollDice).mockImplementation(() => ({ rolls: [10], modifier: 0, total: 10 }))
+    const { initCombat, turnOrder } = useCombat()
+    initCombat(mockEncounter, 0, false)
+    expect(turnOrder.value[0].isPlayer).toBe(true)
+  })
+
+  it('initCombat surprise adds +10 to player initiative', () => {
+    vi.mocked(rollDice).mockImplementation((dice: string) => {
+      const n = Number(dice)
+      if (Number.isFinite(n)) return { rolls: [], modifier: n, total: n }
+      return { rolls: [5], modifier: 0, total: 5 }
+    })
+    const { initCombat, turnOrder } = useCombat()
+    initCombat(mockEncounter, 0, true)
+    const playerEntry = turnOrder.value.find((e: any) => e.isPlayer)
+    expect(playerEntry?.initiative).toBe(15)
+  })
+
+  it('initCombat sets enemy turn when enemy rolls higher', () => {
+    let callIndex = 0
+    vi.mocked(rollDice).mockImplementation((dice: string) => {
+      const n = Number(dice)
+      if (Number.isFinite(n)) return { rolls: [], modifier: n, total: n }
+      callIndex += 1
+      if (callIndex === 1) return { rolls: [1], modifier: 0, total: 1 }
+      return { rolls: [20], modifier: 0, total: 20 }
+    })
+    const { initCombat, turn } = useCombat()
+    initCombat(mockEncounter, 0, false)
+    expect(turn.value).toBe('enemy')
   })
 })
