@@ -311,6 +311,7 @@ export function parseEncounters(rows, logPrefix = '[parse]') {
     }
     encounters[id] = {
       id,
+      name: row.name ?? id,
       type: 'combat',
       enemies: parseEncounterEnemies(row.enemies),
       resolution: {

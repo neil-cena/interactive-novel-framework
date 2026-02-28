@@ -3,6 +3,7 @@
  */
 
 import path from 'node:path'
+import fs from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { readCsv, readRawFile, writeFileInDir } from './data-core/io.js'
 import {
@@ -26,6 +27,7 @@ const projectRoot = path.resolve(__dirname, '..') // scripts/ -> project root
 
 export function authoringServerPlugin() {
   const csvDir = path.join(projectRoot, 'data', 'csv')
+  const draftFileName = '.authoring-draft.json'
 
   return {
     name: 'authoring-api',
@@ -57,6 +59,22 @@ export function authoringServerPlugin() {
             }
             handleSave(body, res, csvDir)
           })
+          return
+        }
+        if (req.url === '/api/authoring/save-draft' && req.method === 'POST') {
+          collectBody(req, (err, body) => {
+            if (err) {
+              res.statusCode = 400
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: err.message }))
+              return
+            }
+            handleSaveDraft(body, res, csvDir, draftFileName)
+          })
+          return
+        }
+        if (req.url === '/api/authoring/load-draft' && req.method === 'GET') {
+          handleLoadDraft(res, csvDir, draftFileName)
           return
         }
         next()
@@ -161,6 +179,52 @@ function handleSave(body, res, csvDir) {
         written,
         backups,
         warnings,
+      }),
+    )
+  } catch (err) {
+    res.statusCode = 500
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ error: err.message }))
+  }
+}
+
+function handleSaveDraft(body, res, csvDir, draftFileName) {
+  const payload = {
+    savedAt: new Date().toISOString(),
+    model: {
+      nodes: body?.nodes ?? {},
+      items: body?.items ?? {},
+      enemies: body?.enemies ?? {},
+      encounters: body?.encounters ?? {},
+    },
+  }
+  try {
+    writeFileInDir(csvDir, draftFileName, JSON.stringify(payload, null, 2))
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ success: true, path: path.join(csvDir, draftFileName), savedAt: payload.savedAt }))
+  } catch (err) {
+    res.statusCode = 500
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ error: err.message }))
+  }
+}
+
+function handleLoadDraft(res, csvDir, draftFileName) {
+  const fullPath = path.join(csvDir, draftFileName)
+  try {
+    if (!fs.existsSync(fullPath)) {
+      res.setHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify({ exists: false }))
+      return
+    }
+    const raw = readRawFile(csvDir, draftFileName)
+    const parsed = JSON.parse(raw || '{}')
+    res.setHeader('Content-Type', 'application/json')
+    res.end(
+      JSON.stringify({
+        exists: true,
+        savedAt: parsed.savedAt,
+        model: parsed.model ?? { nodes: {}, items: {}, enemies: {}, encounters: {} },
       }),
     )
   } catch (err) {

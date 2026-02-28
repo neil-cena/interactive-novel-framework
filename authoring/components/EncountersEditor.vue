@@ -54,13 +54,17 @@ function removeEnemySlot(encounterId: string, index: number) {
         :class="{ selected: selectedId === enc.id }"
         @click="emit('select', enc.id)"
       >
-        {{ enc.id }}
+        {{ enc.name ?? enc.id }}
       </li>
     </ul>
     <div v-if="selected" class="enc-form">
       <div class="field">
         <label>ID</label>
         <input :value="selected.id" disabled />
+      </div>
+      <div class="field">
+        <label>Title</label>
+        <input :value="selected.name ?? ''" @input="(e) => emit('update', selected.id, { name: (e.target as HTMLInputElement).value })" />
       </div>
       <div class="field">
         <label>Enemies</label>

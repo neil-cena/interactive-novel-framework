@@ -57,6 +57,7 @@ export interface EnemyModel {
 
 export interface EncounterModel {
   id: string
+  name?: string
   type: string
   enemies: Array<{ enemyId: string; count?: number }>
   resolution?: { onVictory?: { nextNodeId: string }; onDefeat?: { nextNodeId: string } }
@@ -81,6 +82,18 @@ export interface SaveResponse {
   written: string[]
   backups: string[]
   warnings: Diagnostic[]
+}
+
+export interface SaveDraftResponse {
+  success: true
+  path: string
+  savedAt: string
+}
+
+export interface LoadDraftResponse {
+  exists: boolean
+  savedAt?: string
+  model?: AuthoringModel
 }
 
 export async function loadFromApi(): Promise<LoadResponse> {
@@ -108,4 +121,22 @@ export async function saveToApi(payload: AuthoringModel): Promise<SaveResponse> 
   const data = await res.json().catch(() => ({}))
   if (!res.ok) throw new Error((data as { error?: string }).error || res.statusText)
   return data as SaveResponse
+}
+
+export async function saveDraftToApi(payload: AuthoringModel): Promise<SaveDraftResponse> {
+  const res = await fetch('/api/authoring/save-draft', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error((data as { error?: string }).error || res.statusText)
+  return data as SaveDraftResponse
+}
+
+export async function loadDraftFromApi(): Promise<LoadDraftResponse> {
+  const res = await fetch('/api/authoring/load-draft')
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error((data as { error?: string }).error || res.statusText)
+  return data as LoadDraftResponse
 }

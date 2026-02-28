@@ -1,5 +1,5 @@
 import { ref, computed, shallowRef, watch } from 'vue'
-import { loadFromApi, saveToApi, validateOnApi, type AuthoringModel, type Diagnostic, type StoryNodeModel, type ItemModel, type EnemyModel, type EncounterModel } from '../api/authoringClient'
+import { loadFromApi, saveToApi, validateOnApi, saveDraftToApi, loadDraftFromApi, type AuthoringModel, type Diagnostic, type StoryNodeModel, type ItemModel, type EnemyModel, type EncounterModel } from '../api/authoringClient'
 import { modelToVueFlow } from '../adapters/graphAdapter'
 import { analyzeGraph } from '@data-core/graph.js'
 import { createIdFactory, collectIdContext } from '../utils/idFactory'
@@ -15,6 +15,7 @@ function deepClone<T>(obj: T): T {
 }
 
 export type DeleteNodeStrategy = 'block' | 'cascade' | 'rewire'
+type CreateOptions = { customId?: string; title?: string; seed?: string }
 
 export function useAuthoringData() {
   const nodes = shallowRef<Record<string, StoryNodeModel>>({})
@@ -111,6 +112,21 @@ export function useAuthoringData() {
     return res
   }
 
+  async function saveDraft() {
+    const res = await saveDraftToApi(model.value)
+    baseline.value = deepClone(model.value)
+    return res
+  }
+
+  async function loadDraft() {
+    const res = await loadDraftFromApi()
+    if (!res.exists || !res.model) return res
+    setState(res.model)
+    baseline.value = deepClone(model.value)
+    history.clear()
+    return res
+  }
+
   function selectNode(id: string | null) {
     selectedNodeId.value = id
     selectedEncounterId.value = null
@@ -129,14 +145,21 @@ export function useAuthoringData() {
     nodes.value = next
   }
 
-  function createNode(type: 'narrative' | 'encounter' | 'ending', seed?: string): string {
+  function normalizeCustomId(customId?: string): string | undefined {
+    const id = customId?.trim()
+    return id ? id : undefined
+  }
+
+  function createNode(type: 'narrative' | 'encounter' | 'ending', options?: CreateOptions): string | null {
     pushHistory()
     const idFactory = getIdFactory()
-    const id = idFactory.nextNodeId(seed)
+    const customId = normalizeCustomId(options?.customId)
+    if (customId && nodes.value[customId]) return null
+    const id = customId ?? idFactory.nextNodeId(options?.seed ?? options?.title)
     const node: StoryNodeModel = {
       id,
       type,
-      text: '',
+      text: options?.title?.trim() ?? '',
       choices: [],
     }
     nodes.value = { ...nodes.value, [id]: node }
@@ -244,12 +267,15 @@ export function useAuthoringData() {
     return true
   }
 
-  function createEncounter(seed?: string): string {
+  function createEncounter(options?: CreateOptions): string | null {
     pushHistory()
     const idFactory = getIdFactory()
-    const id = idFactory.nextEncounterId(seed)
+    const customId = normalizeCustomId(options?.customId)
+    if (customId && encounters.value[customId]) return null
+    const id = customId ?? idFactory.nextEncounterId(options?.seed ?? options?.title)
     const enc: EncounterModel = {
       id,
+      name: options?.title?.trim() || id,
       type: 'combat',
       enemies: [],
       resolution: { onVictory: { nextNodeId: '' }, onDefeat: { nextNodeId: '' } },
@@ -276,13 +302,15 @@ export function useAuthoringData() {
     encounters.value = { ...encounters.value, [id]: { ...current, ...patch } }
   }
 
-  function createItem(seed?: string): string {
+  function createItem(options?: CreateOptions): string | null {
     pushHistory()
     const idFactory = getIdFactory()
-    const id = idFactory.nextItemId(seed)
+    const customId = normalizeCustomId(options?.customId)
+    if (customId && items.value[customId]) return null
+    const id = customId ?? idFactory.nextItemId(options?.seed ?? options?.title)
     const item: ItemModel = {
       id,
-      name: id,
+      name: options?.title?.trim() || id,
       type: 'tool',
     }
     items.value = { ...items.value, [id]: item }
@@ -305,13 +333,15 @@ export function useAuthoringData() {
     items.value = { ...items.value, [id]: { ...current, ...patch } }
   }
 
-  function createEnemy(seed?: string): string {
+  function createEnemy(options?: CreateOptions): string | null {
     pushHistory()
     const idFactory = getIdFactory()
-    const id = idFactory.nextEnemyId(seed)
+    const customId = normalizeCustomId(options?.customId)
+    if (customId && enemies.value[customId]) return null
+    const id = customId ?? idFactory.nextEnemyId(options?.seed ?? options?.title)
     const enemy: EnemyModel = {
       id,
-      name: id,
+      name: options?.title?.trim() || id,
       hp: 10,
       ac: 10,
       damage: '1d4',
@@ -441,6 +471,8 @@ export function useAuthoringData() {
     load,
     validate,
     save,
+    saveDraft,
+    loadDraft,
     selectNode,
     selectEncounter,
     updateNode,

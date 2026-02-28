@@ -30,6 +30,8 @@ const {
   validate,
   selectNode,
   selectEncounter,
+  saveDraft,
+  loadDraft,
   updateNode,
   createNode,
   deleteNode,
@@ -55,16 +57,24 @@ const saveError = ref<string | null>(null)
 const selectedEdge = ref<EdgeData | null>(null)
 const addNodeMenuOpen = ref(false)
 const sidebarTab = ref<'node' | 'encounters' | 'items' | 'enemies'>('node')
+const isSidebarCollapsed = ref(false)
 const selectedItemId = ref<string | null>(null)
 const selectedEnemyId = ref<string | null>(null)
 const autosaveEnabled = ref(false)
 const autosaveError = ref<string | null>(null)
+const draftInfo = ref<string | null>(null)
+const draftBadge = ref<{ status: 'saved' | 'loaded'; savedAt: string } | null>(null)
 let autosaveTimer: ReturnType<typeof setTimeout> | null = null
 const AUTOSAVE_DEBOUNCE_MS = 2000
 
 const selectedNode = computed(() =>
   selectedNodeId.value ? nodes.value[selectedNodeId.value] ?? null : null
 )
+const draftBadgeText = computed(() => {
+  if (!draftBadge.value) return null
+  const action = draftBadge.value.status === 'loaded' ? 'Draft loaded' : 'Draft saved'
+  return `${action}: ${new Date(draftBadge.value.savedAt).toLocaleString()}`
+})
 
 function scheduleAutosave() {
   if (!autosaveEnabled.value) return
@@ -121,24 +131,45 @@ function handleDeleteEdge() {
 }
 
 function handleAddNode(type: 'narrative' | 'encounter' | 'ending') {
-  createNode(type)
+  const customId = window.prompt('Node ID (optional):')?.trim() || undefined
+  const title = window.prompt('Node title (optional):')?.trim() || undefined
+  const id = createNode(type, { customId, title, seed: title })
+  if (!id) window.alert(`Node ID "${customId}" already exists.`)
   addNodeMenuOpen.value = false
 }
 
 function handleCreateItem() {
-  const id = createItem()
+  const customId = window.prompt('Item ID (optional):')?.trim() || undefined
+  const title = window.prompt('Item title (optional):')?.trim() || undefined
+  const id = createItem({ customId, title, seed: title })
+  if (!id) {
+    window.alert(`Item ID "${customId}" already exists.`)
+    return
+  }
   selectedItemId.value = id
   sidebarTab.value = 'items'
 }
 
 function handleCreateEnemy() {
-  const id = createEnemy()
+  const customId = window.prompt('Enemy ID (optional):')?.trim() || undefined
+  const title = window.prompt('Enemy title (optional):')?.trim() || undefined
+  const id = createEnemy({ customId, title, seed: title })
+  if (!id) {
+    window.alert(`Enemy ID "${customId}" already exists.`)
+    return
+  }
   selectedEnemyId.value = id
   sidebarTab.value = 'enemies'
 }
 
 function handleCreateEncounter() {
-  createEncounter()
+  const customId = window.prompt('Encounter ID (optional):')?.trim() || undefined
+  const title = window.prompt('Encounter title (optional):')?.trim() || undefined
+  const id = createEncounter({ customId, title, seed: title })
+  if (!id) {
+    window.alert(`Encounter ID "${customId}" already exists.`)
+    return
+  }
   sidebarTab.value = 'encounters'
 }
 
@@ -153,6 +184,34 @@ async function doSave() {
       return
     }
     await save()
+    draftBadge.value = null
+    draftInfo.value = null
+  } catch (e) {
+    saveError.value = e instanceof Error ? e.message : String(e)
+  }
+}
+
+async function doSaveDraft() {
+  saveError.value = null
+  try {
+    const res = await saveDraft()
+    draftInfo.value = `Draft saved at ${new Date(res.savedAt).toLocaleString()}`
+    draftBadge.value = { status: 'saved', savedAt: res.savedAt }
+  } catch (e) {
+    saveError.value = e instanceof Error ? e.message : String(e)
+  }
+}
+
+async function doLoadDraft() {
+  saveError.value = null
+  try {
+    const res = await loadDraft()
+    if (!res.exists) {
+      draftInfo.value = 'No draft found.'
+      return
+    }
+    draftInfo.value = `Draft loaded from ${new Date(res.savedAt ?? '').toLocaleString()}`
+    draftBadge.value = { status: 'loaded', savedAt: res.savedAt ?? new Date().toISOString() }
   } catch (e) {
     saveError.value = e instanceof Error ? e.message : String(e)
   }
@@ -250,10 +309,14 @@ function handleDiagnosticFocus(diagnostic: { context?: Record<string, unknown> }
         <button type="button" :disabled="!canRedo" @click="redo">Redo</button>
         <button type="button" :disabled="loading" @click="load">Load</button>
         <button type="button" :disabled="loading" @click="validate">Validate</button>
+        <button type="button" :disabled="loading" @click="doLoadDraft">Load Draft</button>
+        <button type="button" :disabled="loading" @click="doSaveDraft">Save Draft</button>
         <button type="button" :disabled="loading" @click="doSave">Save</button>
         <label class="autosave-label"><input v-model="autosaveEnabled" type="checkbox" /> Autosave</label>
       </div>
       <p v-if="autosaveError" class="autosave-error">Autosave failed: {{ autosaveError }}</p>
+      <p v-if="draftBadgeText" class="draft-badge">{{ draftBadgeText }}</p>
+      <p v-else-if="draftInfo" class="draft-info">{{ draftInfo }}</p>
       <p v-else-if="dirty" class="dirty-hint">Unsaved changes</p>
       <p v-else-if="saveResult" class="save-result">Saved. {{ saveResult.written.length }} file(s) written.</p>
       <p v-else-if="saveError" class="save-error">Save failed: {{ saveError }}</p>
@@ -271,9 +334,18 @@ function handleDiagnosticFocus(diagnostic: { context?: Record<string, unknown> }
           @connect="handleConnect"
         />
       </div>
-      <aside class="sidebar">
-        <EntityTabs v-model:active-tab="sidebarTab" />
-        <div class="sidebar-content">
+      <aside class="sidebar" :class="{ collapsed: isSidebarCollapsed }">
+        <button
+          type="button"
+          class="sidebar-toggle"
+          :aria-label="isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+          @click="isSidebarCollapsed = !isSidebarCollapsed"
+        >
+          {{ isSidebarCollapsed ? '>' : '<' }}
+        </button>
+        <template v-if="!isSidebarCollapsed">
+          <EntityTabs v-model:active-tab="sidebarTab" />
+          <div class="sidebar-content">
           <NodeInspector
             v-show="sidebarTab === 'node'"
             :node="selectedNode"
@@ -313,7 +385,8 @@ function handleDiagnosticFocus(diagnostic: { context?: Record<string, unknown> }
             @delete="(id) => { deleteEnemy(id); if (selectedEnemyId === id) selectedEnemyId = null }"
             @update="(id, patch) => updateEnemy(id, patch)"
           />
-        </div>
+          </div>
+        </template>
       </aside>
     </div>
     <DiagnosticsPanel :errors="errors" :warnings="warnings" @focus="handleDiagnosticFocus" />
@@ -384,6 +457,8 @@ function handleDiagnosticFocus(diagnostic: { context?: Record<string, unknown> }
 }
 .autosave-label { margin: 0; font-size: 0.85rem; display: flex; align-items: center; gap: 4px; cursor: pointer; }
 .autosave-error { margin: 0; font-size: 0.85rem; color: #f44336; }
+.draft-info { margin: 0; font-size: 0.85rem; color: #90caf9; }
+.draft-badge { margin: 0; font-size: 0.85rem; color: #1e3a8a; background: #dbeafe; border: 1px solid #93c5fd; border-radius: 999px; padding: 2px 8px; }
 .save-result {
   margin: 0;
   font-size: 0.85rem;
@@ -410,6 +485,19 @@ function handleDiagnosticFocus(diagnostic: { context?: Record<string, unknown> }
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: width 0.2s ease;
+}
+.sidebar.collapsed {
+  width: 40px;
+}
+.sidebar-toggle {
+  width: 100%;
+  height: 32px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-weight: 600;
 }
 .sidebar-content {
   flex: 1;
