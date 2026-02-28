@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import { COMBAT_ENCOUNTERS } from '../data/encounters'
 import { ITEM_DICTIONARY } from '../data/items'
+import { GAME_CONFIG } from '../config'
 import { useCombat } from '../composables/useCombat'
 import { usePlayerStore } from '../stores/playerStore'
 
@@ -11,16 +12,18 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   resolved: [outcome: 'victory' | 'defeat']
+  error: []
 }>()
 
 const playerStore = usePlayerStore()
 const { turn, enemies, roundCount, log, isResolved, initCombat, playerAttack, enemyTurn } = useCombat()
 const isResolving = ref(false)
+const encounterNotFound = ref(false)
 
 const playerAc = computed(() => {
   const weaponId = playerStore.equipment.mainHand
   const acBonus = weaponId ? ITEM_DICTIONARY[weaponId]?.acBonus ?? 0 : 0
-  return 10 + acBonus
+  return GAME_CONFIG.combat.baseAc + acBonus
 })
 
 const playerAttackBonus = computed(() => {
@@ -29,8 +32,11 @@ const playerAttackBonus = computed(() => {
 })
 
 function initializeCombat(): void {
+  encounterNotFound.value = false
   const encounter = COMBAT_ENCOUNTERS[props.encounterId]
   if (!encounter) {
+    encounterNotFound.value = true
+    emit('error')
     return
   }
 
@@ -69,7 +75,7 @@ function handlePlayerAttack(index: number): void {
   window.setTimeout(() => {
     enemyTurn(playerAc.value, (damage) => playerStore.adjustHp(-damage))
     resolveIfFinished()
-  }, 300)
+  }, GAME_CONFIG.combat.enemyTurnDelayMs)
 }
 
 watch(
@@ -81,6 +87,20 @@ watch(
 
 <template>
   <section class="rounded-lg border border-red-700 bg-slate-900 p-6">
+    <div
+      v-if="encounterNotFound"
+      class="rounded border border-red-700 bg-slate-900/90 p-6"
+    >
+      <p class="text-base font-medium text-red-300">Encounter not found</p>
+      <p class="mt-1 text-sm text-slate-400">Encounter ID: {{ encounterId }}</p>
+      <button
+        class="mt-4 rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
+        @click="emit('error')"
+      >
+        Return to Main Menu
+      </button>
+    </div>
+    <template v-else>
     <h2 class="text-xl font-semibold text-red-300">Combat</h2>
     <p class="mt-2 text-sm text-slate-200">Round {{ roundCount }}</p>
     <p class="text-sm text-slate-200">Your HP: {{ playerStore.vitals.hpCurrent }}</p>
@@ -103,5 +123,6 @@ watch(
         <li v-for="(entry, idx) in log" :key="idx">{{ entry }}</li>
       </ul>
     </div>
+    </template>
   </section>
 </template>

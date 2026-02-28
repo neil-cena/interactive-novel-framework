@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import ChoiceList from './ChoiceList.vue'
+import { GAME_CONFIG } from '../config'
 import { STORY_NODES } from '../data/nodes'
 import { rollDice } from '../utils/dice'
 import { isSaveSlotId } from '../utils/storage'
@@ -10,6 +11,7 @@ import type { Choice } from '../types/story'
 
 const emit = defineEmits<{
   combatStart: [encounterId: string]
+  requestQuit: []
 }>()
 
 const playerStore = usePlayerStore()
@@ -40,7 +42,8 @@ watch(
 function handleChoice(choice: Choice): void {
   if (choice.mechanic.type === 'navigate') {
     const shouldStartNewRun =
-      choice.mechanic.nextNodeId === 'n_start' && currentNode.value?.id !== 'n_start'
+      choice.mechanic.nextNodeId === GAME_CONFIG.player.startingNodeId &&
+      currentNode.value?.id !== GAME_CONFIG.player.startingNodeId
     if (shouldStartNewRun) {
       if (playerStore.activeSaveSlot && isSaveSlotId(playerStore.activeSaveSlot)) {
         playerStore.startNewGame(playerStore.activeSaveSlot)
@@ -77,22 +80,45 @@ function handleChoice(choice: Choice): void {
 
   playerStore.navigateTo(check.onFailure.nextNodeId)
 }
+
+function goToStart(): void {
+  processedNodes.value = new Set()
+  lastRollSummary.value = ''
+  playerStore.navigateTo(GAME_CONFIG.player.startingNodeId)
+}
 </script>
 
 <template>
   <section class="rounded-lg border border-slate-700 bg-slate-900 p-6">
-    <p v-if="currentNode" class="whitespace-pre-line text-base text-slate-100">{{ currentNode.text }}</p>
-    <p v-else class="text-base text-red-300">Missing node: {{ playerStore.metadata.currentNodeId }}</p>
-
-    <p v-if="lastRollSummary" class="mt-4 rounded border border-slate-600 bg-slate-800 p-2 text-sm text-slate-200">
-      {{ lastRollSummary }}
-    </p>
-
-    <ChoiceList
-      v-if="currentNode?.choices && currentNode.choices.length > 0"
-      :choices="currentNode.choices"
-      :state="visibilityState"
-      @select="handleChoice"
-    />
+    <template v-if="currentNode">
+      <p class="whitespace-pre-line text-base text-slate-100">{{ currentNode.text }}</p>
+      <p v-if="lastRollSummary" class="mt-4 rounded border border-slate-600 bg-slate-800 p-2 text-sm text-slate-200">
+        {{ lastRollSummary }}
+      </p>
+      <ChoiceList
+        v-if="currentNode.choices && currentNode.choices.length > 0"
+        :choices="currentNode.choices"
+        :state="visibilityState"
+        @select="handleChoice"
+      />
+    </template>
+    <div v-else class="rounded border border-red-700 bg-slate-900/90 p-6">
+      <p class="text-base font-medium text-red-300">Missing node</p>
+      <p class="mt-1 text-sm text-slate-400">Node ID: {{ playerStore.metadata.currentNodeId }}</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button
+          class="rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
+          @click="emit('requestQuit')"
+        >
+          Return to Main Menu
+        </button>
+        <button
+          class="rounded border border-slate-500 bg-slate-700 px-3 py-2 text-sm text-slate-100 hover:bg-slate-600"
+          @click="goToStart"
+        >
+          Go to Start
+        </button>
+      </div>
+    </div>
   </section>
 </template>

@@ -6,8 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build:data": "node scripts/build-data.js",
+    "validate:data": "node scripts/build-data.js --validate-only",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@capacitor/android": "^8.1.0",
@@ -20,12 +23,16 @@
     "vue": "^3.5.25"
   },
   "devDependencies": {
+    "@pinia/testing": "^1.0.3",
     "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.2",
+    "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
+    "jsdom": "^27.0.1",
     "papaparse": "^5.5.3",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
+    "vitest": "^4.0.18",
     "vue-tsc": "^3.1.5"
   }
 }

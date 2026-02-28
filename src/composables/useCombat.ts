@@ -1,8 +1,11 @@
 import { computed, ref } from 'vue'
 import { ENEMY_DICTIONARY } from '../data/enemies'
 import { ITEM_DICTIONARY } from '../data/items'
+import { GAME_CONFIG } from '../config'
 import type { CombatEncounter, CombatEnemyState } from '../types/combat'
 import { rollDice } from '../utils/dice'
+
+const { combat: combatConfig } = GAME_CONFIG
 
 type CombatTurn = 'player' | 'enemy'
 type CombatOutcome = 'victory' | 'defeat' | null
@@ -35,6 +38,7 @@ export function useCombat() {
     encounter.enemies.forEach((spawn) => {
       const template = ENEMY_DICTIONARY[spawn.enemyId]
       if (!template) {
+        console.warn('[useCombat] initCombat: missing enemy template for id:', spawn.enemyId)
         return
       }
 
@@ -67,9 +71,14 @@ export function useCombat() {
     }
 
     const weapon = playerWeaponId ? ITEM_DICTIONARY[playerWeaponId] : undefined
-    const hitRoll = rollDice(`1d20${playerAttackBonus >= 0 ? '+' : ''}${playerAttackBonus}`)
+    if (playerWeaponId && !weapon) {
+      console.warn('[useCombat] playerAttack: equipped weapon not in dictionary:', playerWeaponId)
+    }
+    const hitRoll = rollDice(
+      `${combatConfig.attackRollDice}${playerAttackBonus >= 0 ? '+' : ''}${playerAttackBonus}`,
+    )
     if (hitRoll.total >= target.ac) {
-      const damageDice = weapon?.damage ?? '1d2'
+      const damageDice = weapon?.damage ?? combatConfig.unarmedDamage
       const damageResult = rollDice(damageDice)
       target.hpCurrent = Math.max(0, target.hpCurrent - damageResult.total)
       addLog(`You hit ${target.name} for ${damageResult.total} damage.`)
@@ -87,7 +96,7 @@ export function useCombat() {
     }
 
     livingEnemies.forEach((enemy) => {
-      const hitRoll = rollDice(`1d20+${enemy.attackBonus}`)
+      const hitRoll = rollDice(`${combatConfig.attackRollDice}+${enemy.attackBonus}`)
       if (hitRoll.total >= playerAc) {
         const damage = rollDice(enemy.damage).total
         onDamagePlayer(damage)

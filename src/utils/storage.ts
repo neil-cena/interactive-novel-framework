@@ -1,7 +1,8 @@
+import { GAME_CONFIG, type SaveSlotId } from '../config'
 import type { PlayerState } from '../types/player'
 
-export const SLOT_KEYS = ['save_slot_1', 'save_slot_2', 'save_slot_3'] as const
-export type SaveSlotId = (typeof SLOT_KEYS)[number]
+export const SLOT_KEYS = GAME_CONFIG.save.slotKeys
+export type { SaveSlotId }
 
 type PersistedPlayerState = Omit<PlayerState, 'activeSaveSlot'>
 
@@ -35,7 +36,14 @@ export function loadSave(slotId: SaveSlotId): PlayerState | null {
       activeSaveSlot: null,
       ...parsed,
     }
-  } catch {
+  } catch (err) {
+    console.error(
+      '[storage] loadSave: failed to parse slot',
+      slotId,
+      'preview:',
+      rawState.substring(0, 80) + (rawState.length > 80 ? '...' : ''),
+      err,
+    )
     return null
   }
 }
@@ -47,7 +55,7 @@ export function saveGame(slotId: SaveSlotId, state: PlayerState): void {
 
   saveDebounceTimer = setTimeout(() => {
     localStorage.setItem(slotId, JSON.stringify(stripRuntimeState(state)))
-  }, 500)
+  }, GAME_CONFIG.save.debounceDelayMs)
 }
 
 export function saveGameNow(slotId: SaveSlotId, state: PlayerState): void {

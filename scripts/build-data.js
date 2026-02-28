@@ -74,6 +74,7 @@ function asBoolean(value, fallback = false) {
 function parseAction(actionToken) {
   const [action, ...parts] = actionToken.split(':').map((token) => token.trim())
   if (!action) {
+    console.warn('[build-data] parseAction: empty or invalid action token:', JSON.stringify(actionToken))
     return null
   }
 
@@ -81,6 +82,7 @@ function parseAction(actionToken) {
     case 'set_flag': {
       const [key, rawValue] = parts
       if (!key) {
+        console.warn('[build-data] parseAction: set_flag missing key. Token:', JSON.stringify(actionToken))
         return null
       }
       return {
@@ -93,6 +95,7 @@ function parseAction(actionToken) {
     case 'remove_item': {
       const [itemId, qtyValue] = parts
       if (!itemId) {
+        console.warn('[build-data] parseAction: add_item/remove_item missing itemId. Token:', JSON.stringify(actionToken))
         return null
       }
       return {
@@ -110,6 +113,7 @@ function parseAction(actionToken) {
       }
     }
     default:
+      console.warn('[build-data] parseAction: unknown action type:', action, 'Token:', JSON.stringify(actionToken))
       return null
   }
 }
@@ -124,22 +128,32 @@ function parseVisibility(value) {
     .map((token) => {
       const [type, ...parts] = token.split(':').map((segment) => segment.trim())
       if (!type) {
+        console.warn('[build-data] parseVisibility: missing type. Token:', JSON.stringify(token))
         return null
       }
 
       if (type === 'has_flag') {
         const [key] = parts
-        return key ? { type: 'has_flag', key } : null
+        if (!key) {
+          console.warn('[build-data] parseVisibility: has_flag missing key. Token:', JSON.stringify(token))
+          return null
+        }
+        return { type: 'has_flag', key }
       }
 
       if (type === 'has_item') {
         const [itemId] = parts
-        return itemId ? { type: 'has_item', itemId } : null
+        if (!itemId) {
+          console.warn('[build-data] parseVisibility: has_item missing itemId. Token:', JSON.stringify(token))
+          return null
+        }
+        return { type: 'has_item', itemId }
       }
 
       if (type === 'stat_check') {
         const [stat, operator, rawValue] = parts
         if (!stat || !operator || rawValue === undefined || rawValue === '') {
+          console.warn('[build-data] parseVisibility: stat_check missing stat/operator/value. Token:', JSON.stringify(token))
           return null
         }
         return {
@@ -150,6 +164,7 @@ function parseVisibility(value) {
         }
       }
 
+      console.warn('[build-data] parseVisibility: unknown type:', type, 'Token:', JSON.stringify(token))
       return null
     })
     .filter(Boolean)
@@ -162,22 +177,32 @@ function parseMechanic(value) {
     .split(':')
     .map((segment) => segment.trim())
   if (!mechanicType) {
+    console.warn('[build-data] parseMechanic: empty or missing mechanic type. Value:', JSON.stringify(value))
     return null
   }
 
   if (mechanicType === 'navigate') {
     const [nextNodeId] = parts
-    return nextNodeId ? { type: 'navigate', nextNodeId } : null
+    if (!nextNodeId) {
+      console.warn('[build-data] parseMechanic: navigate missing nextNodeId. Value:', JSON.stringify(value))
+      return null
+    }
+    return { type: 'navigate', nextNodeId }
   }
 
   if (mechanicType === 'combat_init') {
     const [encounterId] = parts
-    return encounterId ? { type: 'combat_init', encounterId } : null
+    if (!encounterId) {
+      console.warn('[build-data] parseMechanic: combat_init missing encounterId. Value:', JSON.stringify(value))
+      return null
+    }
+    return { type: 'combat_init', encounterId }
   }
 
   if (mechanicType === 'skill_check') {
     const [dice, dcValue, successNodeId, failureNodeId, onFailureEncounterId] = parts
     if (!dice || !dcValue || !successNodeId || !failureNodeId) {
+      console.warn('[build-data] parseMechanic: skill_check missing dice/dc/successNodeId/failureNodeId. Value:', JSON.stringify(value))
       return null
     }
 
@@ -196,6 +221,7 @@ function parseMechanic(value) {
     return mechanic
   }
 
+  console.warn('[build-data] parseMechanic: unknown mechanic type:', mechanicType, 'Value:', JSON.stringify(value))
   return null
 }
 
@@ -386,7 +412,153 @@ function writeDataFile(fileName, content) {
   fs.writeFileSync(outputPath, content, 'utf8')
 }
 
+const NODE_TYPES = new Set(['narrative', 'encounter', 'ending'])
+const ITEM_TYPES = new Set(['weapon', 'consumable', 'tool'])
+const STAT_CHECK_OPERATORS = new Set(['>=', '<=', '==', '>', '<'])
+const STAT_CHECK_STATS = new Set(['hpCurrent', 'currency'])
+const DICE_NOTATION_REGEX = /^\d+d\d+([+-]\d+)?$/i
+
+function validateData(nodes, items, enemies, encounters) {
+  const errors = []
+  const warnings = []
+  const nodeIds = new Set(Object.keys(nodes))
+  const itemIds = new Set(Object.keys(items))
+  const enemyIds = new Set(Object.keys(enemies))
+  const encounterIds = new Set(Object.keys(encounters))
+
+  function err(msg) {
+    errors.push(msg)
+  }
+  function warn(msg) {
+    warnings.push(msg)
+  }
+
+  for (const [id, node] of Object.entries(nodes)) {
+    if (!NODE_TYPES.has(node.type)) {
+      err(`Node "${id}": invalid type "${node.type}". Must be one of: narrative, encounter, ending`)
+    }
+    if (!node.choices) continue
+    for (const choice of node.choices) {
+      const m = choice.mechanic
+      if (!m) continue
+      if (m.type === 'navigate') {
+        if (!nodeIds.has(m.nextNodeId)) {
+          err(`Node "${id}" choice "${choice.id}": navigate targets missing node "${m.nextNodeId}"`)
+        }
+      } else if (m.type === 'combat_init') {
+        if (!encounterIds.has(m.encounterId)) {
+          err(`Node "${id}" choice "${choice.id}": combat_init targets missing encounter "${m.encounterId}"`)
+        }
+      } else if (m.type === 'skill_check') {
+        if (!nodeIds.has(m.onSuccess?.nextNodeId)) {
+          err(`Node "${id}" choice "${choice.id}": skill_check onSuccess targets missing node "${m.onSuccess?.nextNodeId}"`)
+        }
+        if (!nodeIds.has(m.onFailure?.nextNodeId)) {
+          err(`Node "${id}" choice "${choice.id}": skill_check onFailure targets missing node "${m.onFailure?.nextNodeId}"`)
+        }
+        if (m.onFailureEncounterId && !encounterIds.has(m.onFailureEncounterId)) {
+          err(`Node "${id}" choice "${choice.id}": skill_check onFailureEncounterId missing encounter "${m.onFailureEncounterId}"`)
+        }
+        if (m.dice && !DICE_NOTATION_REGEX.test(m.dice) && Number.isNaN(Number(m.dice))) {
+          warn(`Node "${id}" choice "${choice.id}": skill_check dice "${m.dice}" is not valid notation`)
+        }
+      }
+      if (choice.visibilityRequirements) {
+        for (const req of choice.visibilityRequirements) {
+          if (req.type === 'has_item' && req.itemId && !itemIds.has(req.itemId)) {
+            err(`Node "${id}" choice "${choice.id}": has_item references missing item "${req.itemId}"`)
+          }
+          if (req.type === 'stat_check') {
+            if (req.operator && !STAT_CHECK_OPERATORS.has(req.operator)) {
+              err(`Node "${id}" choice "${choice.id}": stat_check invalid operator "${req.operator}"`)
+            }
+            if (req.stat && !STAT_CHECK_STATS.has(req.stat)) {
+              err(`Node "${id}" choice "${choice.id}": stat_check invalid stat "${req.stat}"`)
+            }
+          }
+        }
+      }
+    }
+    if (node.onEnter) {
+      for (const action of node.onEnter) {
+        if ((action.action === 'add_item' || action.action === 'remove_item') && action.itemId && !itemIds.has(action.itemId)) {
+          err(`Node "${id}" onEnter: ${action.action} references missing item "${action.itemId}"`)
+        }
+      }
+    }
+  }
+
+  for (const [id, encounter] of Object.entries(encounters)) {
+    if (!encounter.enemies || encounter.enemies.length === 0) {
+      err(`Encounter "${id}": has no enemies`)
+    }
+    for (const spawn of encounter.enemies || []) {
+      if (!enemyIds.has(spawn.enemyId)) {
+        err(`Encounter "${id}": references missing enemy "${spawn.enemyId}"`)
+      }
+    }
+    const onVictory = encounter.resolution?.onVictory?.nextNodeId
+    const onDefeat = encounter.resolution?.onDefeat?.nextNodeId
+    if (onVictory && !nodeIds.has(onVictory)) {
+      err(`Encounter "${id}": onVictory targets missing node "${onVictory}"`)
+    }
+    if (onDefeat && !nodeIds.has(onDefeat)) {
+      err(`Encounter "${id}": onDefeat targets missing node "${onDefeat}"`)
+    }
+  }
+
+  for (const [id, item] of Object.entries(items)) {
+    if (!ITEM_TYPES.has(item.type)) {
+      err(`Item "${id}": invalid type "${item.type}". Must be one of: weapon, consumable, tool`)
+    }
+    if (item.type === 'weapon' && !item.damage) {
+      warn(`Item "${id}": weapon missing damage field`)
+    }
+    if (item.effect?.action === 'add_item' && item.effect.itemId && !itemIds.has(item.effect.itemId)) {
+      err(`Item "${id}" effect: add_item references missing item "${item.effect.itemId}"`)
+    }
+  }
+
+  for (const [id, enemy] of Object.entries(enemies)) {
+    if (enemy.hp <= 0) {
+      err(`Enemy "${id}": hp must be > 0`)
+    }
+    if (enemy.ac < 0) {
+      err(`Enemy "${id}": ac must be >= 0`)
+    }
+    if (enemy.damage && !DICE_NOTATION_REGEX.test(enemy.damage) && Number.isNaN(Number(enemy.damage))) {
+      warn(`Enemy "${id}": damage "${enemy.damage}" is not valid dice notation`)
+    }
+  }
+
+  const seenNodeIds = new Set()
+  for (const id of Object.keys(nodes)) {
+    if (seenNodeIds.has(id)) warn(`Duplicate node id: "${id}"`)
+    seenNodeIds.add(id)
+  }
+  const seenItemIds = new Set()
+  for (const id of Object.keys(items)) {
+    if (seenItemIds.has(id)) warn(`Duplicate item id: "${id}"`)
+    seenItemIds.add(id)
+  }
+  const seenEnemyIds = new Set()
+  for (const id of Object.keys(enemies)) {
+    if (seenEnemyIds.has(id)) warn(`Duplicate enemy id: "${id}"`)
+    seenEnemyIds.add(id)
+  }
+  const seenEncounterIds = new Set()
+  for (const id of Object.keys(encounters)) {
+    if (seenEncounterIds.has(id)) warn(`Duplicate encounter id: "${id}"`)
+    seenEncounterIds.add(id)
+  }
+
+  return { errors, warnings }
+}
+
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(__filename)
+
 function run() {
+  const validateOnly = process.argv.includes('--validate-only')
   const nodesRows = readCsv('nodes.csv')
   const itemsRows = readCsv('items.csv')
   const enemiesRows = readCsv('enemies.csv')
@@ -396,6 +568,23 @@ function run() {
   const items = parseItems(itemsRows)
   const enemies = parseEnemies(enemiesRows)
   const encounters = parseEncounters(encountersRows)
+
+  const { errors, warnings } = validateData(nodes, items, enemies, encounters)
+  for (const w of warnings) {
+    console.warn('Warning:', w)
+  }
+  for (const e of errors) {
+    console.error('Error:', e)
+  }
+  if (errors.length > 0) {
+    process.exitCode = 1
+    if (validateOnly) return
+    return
+  }
+  if (validateOnly) {
+    console.log('Validation complete.', errors.length ? 'Errors found.' : 'No errors.')
+    return
+  }
 
   writeDataFile('nodes.ts', generateTsFile('../types/story', 'StoryNode', 'STORY_NODES', nodes))
   writeDataFile('items.ts', generateTsFile('../types/items', 'ItemTemplate', 'ITEM_DICTIONARY', items))
@@ -415,4 +604,27 @@ function run() {
   )
 }
 
-run()
+if (isMain) {
+  run()
+}
+
+export {
+  splitPipe,
+  asNumber,
+  asBoolean,
+  parseAction,
+  parseOnEnter,
+  parseVisibility,
+  parseMechanic,
+  parseNodes,
+  parseItems,
+  parseEnemies,
+  parseEncounterEnemies,
+  parseEncounters,
+  validateData,
+  NODE_TYPES,
+  ITEM_TYPES,
+  STAT_CHECK_OPERATORS,
+  STAT_CHECK_STATS,
+  DICE_NOTATION_REGEX,
+}

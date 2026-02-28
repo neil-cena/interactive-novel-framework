@@ -130,8 +130,9 @@ export const STORY_NODES: Record<string, StoryNode> = {
             "nextNodeId": "n_safehouse_hall"
           },
           "onFailure": {
-            "nextNodeId": "combat_alley_thug"
-          }
+            "nextNodeId": "n_game_over"
+          },
+          "onFailureEncounterId": "combat_alley_thug"
         }
       },
       {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { GAME_CONFIG } from '../config'
 import type { PlayerState } from '../types/player'
 import { deleteSave, getAllSaves, type SaveSlotId } from '../utils/storage'
 
@@ -45,7 +46,7 @@ onMounted(() => {
 <template>
   <main class="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 p-4">
     <header class="rounded-lg border border-slate-700 bg-slate-900 p-6">
-      <h1 class="text-3xl font-bold text-slate-50">The Cellar Debt</h1>
+      <h1 class="text-3xl font-bold text-slate-50">{{ GAME_CONFIG.ui.gameTitle }}</h1>
       <p class="mt-2 text-sm text-slate-300">Choose one of three save slots.</p>
     </header>
 

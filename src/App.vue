@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import CombatView from './components/CombatView.vue'
+import ErrorBoundary from './components/ErrorBoundary.vue'
 import MainMenu from './components/MainMenu.vue'
 import NarrativeView from './components/NarrativeView.vue'
 import PlayerHud from './components/PlayerHud.vue'
 import { COMBAT_ENCOUNTERS } from './data/encounters'
 import { usePlayerStore } from './stores/playerStore'
 import type { PlayerState } from './types/player'
+import { GAME_CONFIG } from './config'
 import { isSaveSlotId, saveGame, saveGameNow, type SaveSlotId } from './utils/storage'
 
 const playerStore = usePlayerStore()
@@ -55,6 +57,10 @@ function handleSaveAndQuit(): void {
   gameMode.value = 'narrative'
 }
 
+function handleReturnToMenu(): void {
+  handleSaveAndQuit()
+}
+
 onMounted(() => {
   playerStore.$subscribe(
     (_mutation, state) => {
@@ -72,21 +78,23 @@ onMounted(() => {
 <template>
   <MainMenu v-if="currentView === 'menu'" @start-game="handleStartGame" />
 
-  <main v-else class="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-4 p-4">
-    <header class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-slate-50">The Cellar Debt</h1>
-      <button
-        class="rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
-        @click="handleSaveAndQuit"
-      >
-        Save and Quit
-      </button>
-    </header>
+  <ErrorBoundary v-else @return-to-menu="handleReturnToMenu">
+    <main class="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-4 p-4">
+      <header class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-slate-50">{{ GAME_CONFIG.ui.gameTitle }}</h1>
+        <button
+          class="rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
+          @click="handleSaveAndQuit"
+        >
+          Save and Quit
+        </button>
+      </header>
 
-    <PlayerHud />
+      <PlayerHud />
 
-    <NarrativeView v-if="gameMode === 'narrative'" @combat-start="handleCombatStart" />
+      <NarrativeView v-if="gameMode === 'narrative'" @combat-start="handleCombatStart" @request-quit="handleReturnToMenu" />
 
-    <CombatView v-else :encounter-id="activeEncounterId" @resolved="handleCombatResolved" />
-  </main>
+      <CombatView v-else :encounter-id="activeEncounterId" @resolved="handleCombatResolved" @error="handleReturnToMenu" />
+    </main>
+  </ErrorBoundary>
 </template>
