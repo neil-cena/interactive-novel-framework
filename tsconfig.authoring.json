@@ -1,0 +1,13 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "@data-core/*": ["../scripts/data-core/*"] },
+    "types": ["vite/client"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": ["authoring/**/*.ts", "authoring/**/*.vue"],
+  "exclude": ["authoring/**/__tests__/**"]
+}

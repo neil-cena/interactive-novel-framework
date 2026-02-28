@@ -86,7 +86,42 @@ npm run dev
 
 Vite will start a local server (typically at `http://localhost:5173`). The page hot-reloads on source file changes.
 
-> **Note**: If you have modified any CSV files in `data/csv/`, you must run `npm run build:data` first to regenerate the TypeScript data files before the dev server will reflect those changes.
+> **Note**: If you have modified any CSV files in `data/csv/`, run `npm run build:data` to regenerate TypeScript data, or use `npm run dev:full` to run the dev server and a CSV watcher together so data rebuilds automatically on save.
+
+### Data tooling
+
+| Command | Description |
+| ------- | ----------- |
+| `npm run build:data` | Compile CSV → TypeScript (same as below). |
+| `npm run validate:data` | Validate CSVs only (no write). |
+| `npm run lint:data` | Lint all CSVs with diagnostic codes; exit 1 if errors. |
+| `npm run lint:data:json` | Same as `lint:data` with `--format=json` for CI. |
+| `npm run dev:data` | Watch `data/csv/` and rebuild `src/data/*.ts` on change. |
+| `npm run dev:full` | Run `vite` and `dev:data` in parallel. |
+
+Lint options: `--format=json`, `--max-warnings=N`, `--strict` (warnings as errors).
+
+### Story authoring app (Phase 3)
+
+A standalone visual editor for the node graph and CSV content:
+
+```bash
+npm run authoring:dev    # Dev server at http://localhost:5174
+npm run authoring:build  # Production build of the authoring app
+npm run authoring:preview # Preview the authoring build
+```
+
+Open the app, click **Load** to read project CSVs, edit nodes/choices in the graph and side inspector, then **Save** to write back to `data/csv/`. Save is validated server-side; invalid data is rejected. Use `dev:data` or `dev:full` so the game picks up changes after save.
+
+### Playtest mode (QA)
+
+In **development** only (`npm run dev`), a **QA** button appears (bottom-right). Press **Ctrl+Shift+P** or click it to open the playtest panel. You can:
+
+- **Teleport** to any story node by ID.
+- View and mutate **state** (flags, items, HP, currency, XP, attributes).
+- **Reset to defaults** for a clean slate.
+
+Playtest is gated by `import.meta.env.DEV` and is not included in production builds.
 
 ## Building for Production
 
@@ -198,7 +233,20 @@ interactive-novel-framework/
 │   └── encounters.csv         #   Combat encounter setups
 │
 ├── scripts/
-│   └── build-data.js          # CSV → TypeScript compiler
+│   ├── build-data.js          # CSV → TypeScript compiler
+│   ├── lint-data.js           # CSV linter (diagnostics, exit codes)
+│   ├── dev-data.js            # CSV watcher (auto-rebuild)
+│   ├── authoring-server-plugin.js  # Authoring API (load/validate/save)
+│   └── data-core/             # Shared parsing/validate/graph/export (no Node in browser-safe modules)
+│
+├── authoring/                 # Standalone story authoring app (Vue Flow)
+│   ├── index.html
+│   ├── main.ts
+│   ├── App.vue
+│   ├── components/            # GraphCanvas, NodeInspector, DiagnosticsPanel
+│   ├── composables/           # useAuthoringData, useGraphLayout
+│   ├── adapters/              # graphAdapter, csvAdapter
+│   └── api/                   # authoringClient (load/validate/save)
 │
 ├── src/
 │   ├── main.ts                # Vue app entry point
@@ -210,7 +258,8 @@ interactive-novel-framework/
 │   │   ├── NarrativeView.vue  # Story text + choice handling
 │   │   ├── CombatView.vue     # Turn-based combat UI
 │   │   ├── ChoiceList.vue     # Filtered choice buttons
-│   │   └── PlayerHud.vue      # HP, gold, weapon, stats display
+│   │   ├── PlayerHud.vue      # HP, gold, weapon, stats display
+│   │   └── PlaytestPanel.vue  # DEV-only QA panel (teleport, state mutation)
 │   │
 │   ├── composables/
 │   │   └── useCombat.ts       # Combat logic (attack rolls, turns, resolution)

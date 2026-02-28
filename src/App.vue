@@ -5,6 +5,7 @@ import ErrorBoundary from './components/ErrorBoundary.vue'
 import InventoryPanel from './components/InventoryPanel.vue'
 import MainMenu from './components/MainMenu.vue'
 import NarrativeView from './components/NarrativeView.vue'
+import PlaytestPanel from './components/PlaytestPanel.vue'
 import PlayerHud from './components/PlayerHud.vue'
 import { COMBAT_ENCOUNTERS } from './data/encounters'
 import { ENEMY_DICTIONARY } from './data/enemies'
@@ -130,5 +131,7 @@ onMounted(() => {
     </main>
 
     <InventoryPanel v-if="showInventory" @close="showInventory = false" />
+
+    <PlaytestPanel />
   </ErrorBoundary>
 </template>

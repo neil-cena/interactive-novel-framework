@@ -15,6 +15,13 @@ import {
   DICE_NOTATION_REGEX,
   VALID_ATTRIBUTES,
 } from '../build-data.js'
+import { analyzeGraph } from '../data-core/graph.js'
+import {
+  serializeNodesToCsv,
+  serializeItemsToCsv,
+  serializeEnemiesToCsv,
+  serializeEncountersToCsv,
+} from '../data-core/export-csv.js'
 
 describe('splitPipe', () => {
   it('returns empty array for empty string', () => {
@@ -176,7 +183,7 @@ describe('validateData', () => {
       n_a: { id: 'n_a', type: 'encounter', text: '', choices: [{ id: 'c1', label: 'Go', mechanic: { type: 'navigate', nextNodeId: 'n_missing' } }] },
     }
     const { errors } = validateData(nodes, {}, {}, {})
-    expect(errors.some((e) => e.includes('n_missing') && e.includes('navigate'))).toBe(true)
+    expect(errors.some((e) => e.message.includes('n_missing') && e.message.includes('navigate'))).toBe(true)
   })
   it('reports error when encounter references missing enemy', () => {
     const encounters = {
@@ -184,7 +191,7 @@ describe('validateData', () => {
     }
     const nodes = { n_a: { id: 'n_a', type: 'encounter', text: '' } }
     const { errors } = validateData(nodes, {}, {}, encounters)
-    expect(errors.some((e) => e.includes('missing_enemy'))).toBe(true)
+    expect(errors.some((e) => e.message.includes('missing_enemy'))).toBe(true)
   })
   it('reports error when encounter has no enemies', () => {
     const encounters = {
@@ -192,12 +199,12 @@ describe('validateData', () => {
     }
     const nodes = { n_a: { id: 'n_a', type: 'encounter', text: '' } }
     const { errors } = validateData(nodes, {}, {}, encounters)
-    expect(errors.some((e) => e.includes('no enemies'))).toBe(true)
+    expect(errors.some((e) => e.message.includes('no enemies'))).toBe(true)
   })
   it('reports error for invalid node type', () => {
     const nodes = { n_a: { id: 'n_a', type: 'invalid', text: '' } }
     const { errors } = validateData(nodes, {}, {}, {})
-    expect(errors.some((e) => e.includes('invalid type'))).toBe(true)
+    expect(errors.some((e) => e.message.includes('invalid type'))).toBe(true)
   })
   it('returns no errors for valid minimal data', () => {
     const nodes = { n_start: { id: 'n_start', type: 'encounter', text: 'Hi' } }
@@ -253,12 +260,12 @@ describe('validateData (Phase 2)', () => {
   it('reports error for invalid scalingAttribute on item', () => {
     const items = { sword: { id: 'sword', name: 'Sword', type: 'weapon', damage: '1d6', scalingAttribute: 'dexteirty' } }
     const { errors } = validateData({}, items, {}, {})
-    expect(errors.some((e) => e.includes('invalid scalingAttribute') && e.includes('dexteirty'))).toBe(true)
+    expect(errors.some((e) => e.message.includes('invalid scalingAttribute') && e.message.includes('dexteirty'))).toBe(true)
   })
   it('passes validation for valid scalingAttribute', () => {
     const items = { sword: { id: 'sword', name: 'Sword', type: 'weapon', damage: '1d6', scalingAttribute: 'dexterity' } }
     const { errors } = validateData({}, items, {}, {})
-    expect(errors.some((e) => e.includes('scalingAttribute'))).toBe(false)
+    expect(errors.some((e) => e.message.includes('scalingAttribute'))).toBe(false)
   })
   it('reports error for invalid skill_check attribute', () => {
     const nodes = {
@@ -267,7 +274,55 @@ describe('validateData (Phase 2)', () => {
       }] },
     }
     const { errors } = validateData(nodes, {}, {}, {})
-    expect(errors.some((e) => e.includes('invalid attribute') && e.includes('charisma'))).toBe(true)
+    expect(errors.some((e) => e.message.includes('invalid attribute') && e.message.includes('charisma'))).toBe(true)
+  })
+})
+
+describe('analyzeGraph', () => {
+  it('reports orphan node when no inbound edges', () => {
+    const nodes = {
+      n_start: { id: 'n_start', type: 'narrative', text: 'Start' },
+      n_orphan: { id: 'n_orphan', type: 'narrative', text: 'Orphan' },
+    }
+    const { orphans } = analyzeGraph(nodes, {}, { allowedStartIds: ['n_start'] })
+    expect(orphans).toContain('n_orphan')
+    expect(orphans).not.toContain('n_start')
+  })
+  it('reports dead-end node when no outgoing choices', () => {
+    const nodes = {
+      n_end: { id: 'n_end', type: 'narrative', text: 'End', choices: [] },
+    }
+    const { deadEnds } = analyzeGraph(nodes, {})
+    expect(deadEnds).toContain('n_end')
+  })
+  it('does not report ending type as dead-end', () => {
+    const nodes = {
+      n_end: { id: 'n_end', type: 'ending', text: 'The End' },
+    }
+    const { deadEnds } = analyzeGraph(nodes, {})
+    expect(deadEnds).not.toContain('n_end')
+  })
+})
+
+describe('export-csv round-trip', () => {
+  it('serializes nodes to CSV with ids and types', () => {
+    const nodes = {
+      n_1: { id: 'n_1', type: 'narrative', text: 'Hello', choices: [{ id: 'c1', label: 'Go', mechanic: { type: 'navigate', nextNodeId: 'n_2' } }] },
+      n_2: { id: 'n_2', type: 'ending', text: 'Done' },
+    }
+    const csv = serializeNodesToCsv(nodes)
+    expect(csv).toContain('n_1')
+    expect(csv).toContain('narrative')
+    expect(csv).toContain('id')
+    expect(csv.split('\n').length).toBeGreaterThanOrEqual(2)
+  })
+  it('serializes items and encounters to CSV shape', () => {
+    const items = { potion: { id: 'potion', name: 'Potion', type: 'consumable' } }
+    const enemies = { goblin: { id: 'goblin', name: 'Goblin', hp: 5, ac: 10, attackBonus: 0, damage: '1d4', xpReward: 10 } }
+    const encounters = { enc_1: { id: 'enc_1', type: 'combat', enemies: [{ enemyId: 'goblin', count: 1 }], resolution: { onVictory: { nextNodeId: 'n_win' }, onDefeat: { nextNodeId: 'n_lose' } } } }
+    expect(serializeItemsToCsv(items)).toContain('potion')
+    expect(serializeEnemiesToCsv(enemies)).toContain('goblin')
+    expect(serializeEncountersToCsv(encounters)).toContain('enc_1')
   })
 })
 

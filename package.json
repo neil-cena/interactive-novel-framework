@@ -7,10 +7,17 @@
     "dev": "vite",
     "build:data": "node scripts/build-data.js",
     "validate:data": "node scripts/build-data.js --validate-only",
+    "lint:data": "node scripts/lint-data.js",
+    "lint:data:json": "node scripts/lint-data.js --format=json",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "dev:data": "node scripts/dev-data.js",
+    "dev:full": "concurrently \"npm run dev\" \"npm run dev:data\"",
+    "authoring:dev": "vite --config vite.authoring.config.ts",
+    "authoring:build": "vite build --config vite.authoring.config.ts",
+    "authoring:preview": "vite preview --config vite.authoring.config.ts --port 5174"
   },
   "dependencies": {
     "@capacitor/android": "^8.1.0",
@@ -23,6 +30,9 @@
     "vue": "^3.5.25"
   },
   "devDependencies": {
+    "@vue-flow/core": "^1.48.0",
+    "chokidar": "^4.0.1",
+    "concurrently": "^9.1.2",
     "@pinia/testing": "^1.0.3",
     "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.2",

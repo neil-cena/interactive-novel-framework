@@ -49,6 +49,7 @@ A comprehensive reference for every feature in the Interactive Novel Framework, 
   - [9.1 Action Resolver](#91-action-resolver)
   - [9.2 Visibility Resolver](#92-visibility-resolver)
 - [10. Cross-Platform Support](#10-cross-platform-support)
+- [11. Phase 3 Tooling and QA](#11-phase-3-tooling-and-qa)
 
 ---
 
@@ -424,3 +425,37 @@ An iOS project exists under `ios/` with Xcode project files, a `Podfile` for Coc
 ### Responsive Design
 
 The UI is built with Tailwind's responsive utilities and a flexible layout that works from 320px mobile screens up to desktop widths, with a `max-w-3xl` content column for readability.
+
+---
+
+## 11. Phase 3 Tooling and QA
+
+### 11.1 Data Linter (`lint:data`)
+
+The `npm run lint:data` command validates all CSV files and reports diagnostics with stable codes (e.g. `DATA001` duplicate ID, `DATA002` missing node reference). Output can be table (default) or `--format=json` for CI. Exit code: 0 (no errors), 1 (errors or over warning limit), 2 (fatal parse failure). Options: `--strict` (warnings as errors), `--max-warnings=N`.
+
+### 11.2 CSV Watch Mode (`dev:data`)
+
+`npm run dev:data` watches `data/csv/` and rebuilds `src/data/*.ts` on add/change/delete. If validation fails, generated files are not overwritten unless `--force-write`. Use `npm run dev:full` to run the main app dev server and the data watcher in parallel.
+
+### 11.3 Standalone Authoring App
+
+A separate Vue app (Vue Flow) provides a visual node graph of the story. Run with `npm run authoring:dev` (port 5174). Features:
+
+- **Load** — Fetches CSVs via `/api/authoring/load` (Node-side) and displays nodes/edges.
+- **Edit** — Select a node to edit type, text, and choices (navigate/combat_init) in the side inspector; add/remove choices.
+- **Validate** — Client or server validation returns diagnostics.
+- **Save** — Validated model is serialized to CSV and written to `data/csv/` via `/api/authoring/save` (with timestamped backups). The browser cannot write to disk; the Vite plugin performs file I/O.
+
+CSV round-trip limits: inline comments and custom whitespace are not preserved; quoting may be normalized.
+
+### 11.4 Playtest Mode (QA Panel)
+
+In development builds only, a **QA** button (and **Ctrl+Shift+P**) opens a playtest panel. QA can:
+
+- **Teleport** to any node by ID (filter by type/text).
+- **View state** — metadata, vitals, attributes, progression, flags, inventory/equipment.
+- **Mutate state** — set/clear flags, add/remove items, adjust HP/currency, grant XP, grant attribute points.
+- **Reset to defaults** — full state reset.
+
+The panel is gated by `import.meta.env.DEV` and is not present in production builds.
