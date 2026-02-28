@@ -43,14 +43,14 @@ watch(
         <div
           class="custom-node"
           :class="{
-            orphan: data.isOrphan,
-            'dead-end': data.isDeadEnd,
-            selected: selectedId === node.id,
+            orphan: data?.isOrphan,
+            'dead-end': data?.isDeadEnd,
+            selected: selectedId === (node?.id ?? data?.id),
           }"
-          :style="{ backgroundColor: data.backgroundColor ?? '#f5f5f5' }"
+          :style="{ backgroundColor: data?.backgroundColor ?? '#f5f5f5' }"
         >
-          <div class="node-label">{{ data.label }}</div>
-          <div class="node-meta">{{ data.nodeType }} · {{ data.id }}</div>
+          <div class="node-label">{{ data?.label ?? node?.id ?? 'Node' }}</div>
+          <div class="node-meta">{{ data?.nodeType ?? 'node' }} · {{ node?.id ?? data?.id ?? '?' }}</div>
         </div>
       </template>
     </VueFlow>

@@ -163,7 +163,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_safehouse_hall_smoke": {
     "id": "n_safehouse_hall_smoke",
     "type": "encounter",
-    "text": "The bomb detonates. You slip past the coughing guard and lose the bomb in the process.",
+    "text": "The bomb detonates! You slip past the coughing guard and lose the bomb in the process.",
     "onEnter": [
       {
         "action": "remove_item",

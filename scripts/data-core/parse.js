@@ -171,7 +171,7 @@ export function parseMechanic(value, logPrefix = '[parse]') {
     return { type: 'combat_init', encounterId }
   }
   if (mechanicType === 'skill_check') {
-    const [dice, dcValue, successNodeId, failureNodeId, onFailureEncounterId, attribute] = parts
+    const [dice, dcValue, successNodeId, failureNodeId, rawPart5, rawPart6] = parts
     if (!dice || !dcValue || !successNodeId || !failureNodeId) {
       if (typeof console !== 'undefined' && console.warn) {
         console.warn(`${logPrefix} parseMechanic: skill_check missing dice/dc/successNodeId/failureNodeId. Value:`, JSON.stringify(value))
@@ -185,8 +185,22 @@ export function parseMechanic(value, logPrefix = '[parse]') {
       onSuccess: { nextNodeId: successNodeId },
       onFailure: { nextNodeId: failureNodeId },
     }
-    if (onFailureEncounterId) mechanic.onFailureEncounterId = onFailureEncounterId
-    if (attribute) mechanic.attribute = attribute
+
+    // Backward-compatible parsing for optional fields:
+    //  - skill_check:dice:dc:success:failure
+    //  - skill_check:dice:dc:success:failure::attribute
+    //  - skill_check:dice:dc:success:failure:attribute         (legacy shorthand)
+    //  - skill_check:dice:dc:success:failure:encounter:attribute
+    if (rawPart6) {
+      if (rawPart5) mechanic.onFailureEncounterId = rawPart5
+      mechanic.attribute = rawPart6
+    } else if (rawPart5) {
+      if (VALID_ATTRIBUTES.has(rawPart5)) {
+        mechanic.attribute = rawPart5
+      } else {
+        mechanic.onFailureEncounterId = rawPart5
+      }
+    }
     return mechanic
   }
   if (typeof console !== 'undefined' && console.warn) {

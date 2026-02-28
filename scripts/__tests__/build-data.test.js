@@ -135,6 +135,11 @@ describe('parseMechanic', () => {
     expect(result?.onFailureEncounterId).toBe('enc_1')
     expect(result?.attribute).toBe('intelligence')
   })
+  it('parses skill_check with attribute-only shorthand in 5th slot', () => {
+    const result = parseMechanic('skill_check:1d20:14:n_office_in:n_office_caught:intelligence')
+    expect(result?.onFailureEncounterId).toBeUndefined()
+    expect(result?.attribute).toBe('intelligence')
+  })
   it('parses skill_check without attribute (backward compat)', () => {
     const result = parseMechanic('skill_check:1d20+2:12:n_win:n_fail')
     expect(result?.attribute).toBeUndefined()
