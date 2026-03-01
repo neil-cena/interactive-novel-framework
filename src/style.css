@@ -17,3 +17,38 @@ body {
   background-color: #0f172a;
   color: #e2e8f0;
 }
+
+/* High-contrast mode: stronger borders and text contrast */
+.high-contrast button,
+.high-contrast [role="button"] {
+  border-width: 2px;
+  border-color: #94a3b8;
+}
+.high-contrast button:disabled,
+.high-contrast [aria-disabled="true"] {
+  border-color: #64748b;
+  opacity: 1;
+  filter: contrast(0.9);
+}
+.high-contrast .rounded.border {
+  border-width: 2px;
+  border-color: #64748b;
+}
+.high-contrast .text-slate-100,
+.high-contrast .text-slate-50 {
+  color: #f1f5f9;
+}
+.high-contrast .text-amber-200,
+.high-contrast .text-red-300,
+.high-contrast .text-emerald-400 {
+  filter: contrast(1.2);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

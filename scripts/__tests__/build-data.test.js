@@ -7,6 +7,7 @@ import {
   parseVisibility,
   parseMechanic,
   parseOnEnter,
+  parseNodes,
   parseItems,
   parseEnemies,
   validateData,
@@ -309,6 +310,34 @@ describe('analyzeGraph', () => {
   })
 })
 
+describe('parseNodes', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('parses node with image column', () => {
+    const rows = [
+      { id: 'n1', type: 'narrative', text: 'Hello', image: '/images/scene1.png' },
+    ]
+    const nodes = parseNodes(rows)
+    expect(nodes.n1).toBeDefined()
+    expect(nodes.n1.image).toBe('/images/scene1.png')
+  })
+
+  it('omits image when empty or whitespace', () => {
+    const rows = [
+      { id: 'n1', type: 'narrative', text: 'Hi', image: '' },
+      { id: 'n2', type: 'ending', text: 'End', image: '   ' },
+    ]
+    const nodes = parseNodes(rows)
+    expect(nodes.n1.image).toBeUndefined()
+    expect(nodes.n2.image).toBeUndefined()
+  })
+})
+
 describe('export-csv round-trip', () => {
   it('serializes nodes to CSV with ids and types', () => {
     const nodes = {
@@ -320,6 +349,21 @@ describe('export-csv round-trip', () => {
     expect(csv).toContain('narrative')
     expect(csv).toContain('id')
     expect(csv.split('\n').length).toBeGreaterThanOrEqual(2)
+  })
+
+  it('serializes node image column and round-trips with parseNodes', () => {
+    const nodes = {
+      n_img: { id: 'n_img', type: 'narrative', text: 'Scene', image: '/img/room.png' },
+    }
+    const csv = serializeNodesToCsv(nodes)
+    expect(csv).toContain('image')
+    expect(csv).toContain('/img/room.png')
+    const header = csv.split('\n')[0]
+    const cols = header.split(',')
+    expect(cols).toContain('image')
+    const rows = [{ id: 'n_img', type: 'narrative', text: 'Scene', image: '/img/room.png' }]
+    const parsed = parseNodes(rows)
+    expect(parsed.n_img.image).toBe('/img/room.png')
   })
   it('serializes items and encounters to CSV shape', () => {
     const items = { potion: { id: 'potion', name: 'Potion', type: 'consumable' } }

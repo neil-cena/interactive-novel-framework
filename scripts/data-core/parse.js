@@ -233,6 +233,7 @@ export function parseNodes(rows, logPrefix = '[parse]') {
       choices.push(choice)
     }
     const node = { id, type: row.type, text: row.text ?? '' }
+    if (row.image != null && String(row.image).trim()) node.image = String(row.image).trim()
     const onEnter = parseOnEnter(row.onEnter, logPrefix)
     if (onEnter) node.onEnter = onEnter
     if (choices.length > 0) node.choices = choices

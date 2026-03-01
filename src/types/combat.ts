@@ -10,6 +10,7 @@ export interface CombatResolution {
 
 export interface CombatEncounter {
   id: string
+  name?: string
   type: 'combat'
   enemies: EnemySpawn[]
   resolution: CombatResolution

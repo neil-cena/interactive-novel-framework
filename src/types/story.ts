@@ -60,6 +60,8 @@ export interface StoryNode {
   id: string
   type: 'narrative' | 'encounter' | 'ending'
   text: string
+  /** Optional image path (e.g. /images/... from public). */
+  image?: string
   onEnter?: ActionPayload[]
   choices?: Choice[]
 }

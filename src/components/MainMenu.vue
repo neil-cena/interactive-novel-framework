@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useAudio } from '../composables/useAudio'
 import { GAME_CONFIG } from '../config'
 import type { PlayerState } from '../types/player'
 import { deleteSave, getAllSaves, type SaveSlotId } from '../utils/storage'
+
+const { unlock, playMusic } = useAudio()
+function unlockAndPlayMenuMusic(): void {
+  unlock()
+  playMusic('menu', { loop: true, fadeMs: 200 })
+}
 
 interface SaveSlotMeta {
   slotId: SaveSlotId
@@ -44,7 +51,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 p-4">
+  <main
+    class="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 p-4"
+    role="main"
+    aria-label="Main menu"
+    @click.once="unlockAndPlayMenuMusic"
+  >
     <header class="rounded-lg border border-slate-700 bg-slate-900 p-6">
       <h1 class="text-3xl font-bold text-slate-50">{{ GAME_CONFIG.ui.gameTitle }}</h1>
       <p class="mt-2 text-sm text-slate-300">Choose one of three save slots.</p>
@@ -72,7 +84,9 @@ onMounted(() => {
 
         <div class="mt-4 flex flex-wrap gap-2">
           <button
+            type="button"
             class="rounded border border-slate-500 bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
+            :aria-label="slot.data ? `Continue from slot ${index + 1}` : `Start new game in slot ${index + 1}`"
             @click="handleStart(slot.slotId, slot.data)"
           >
             {{ slot.data ? 'Continue' : 'New Game' }}
@@ -81,21 +95,27 @@ onMounted(() => {
           <template v-if="slot.data">
             <button
               v-if="confirmingDeleteSlot !== slot.slotId"
+              type="button"
               class="rounded border border-red-700 bg-red-900/40 px-3 py-2 text-sm text-red-200 hover:bg-red-900/70"
+              aria-label="Delete save slot"
               @click="requestDelete(slot.slotId)"
             >
               Delete
             </button>
             <button
               v-else
+              type="button"
               class="rounded border border-red-700 bg-red-900 px-3 py-2 text-sm text-red-100 hover:bg-red-800"
+              aria-label="Confirm delete save slot"
               @click="confirmDelete(slot.slotId)"
             >
               Confirm Delete
             </button>
             <button
               v-if="confirmingDeleteSlot === slot.slotId"
+              type="button"
               class="rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-200 hover:bg-slate-700"
+              aria-label="Cancel delete"
               @click="cancelDelete"
             >
               Cancel

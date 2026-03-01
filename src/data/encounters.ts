@@ -4,6 +4,7 @@ import type { CombatEncounter } from '../types/combat'
 export const COMBAT_ENCOUNTERS: Record<string, CombatEncounter> = {
   "combat_alley_thug": {
     "id": "combat_alley_thug",
+    "name": "combat_alley_thug",
     "type": "combat",
     "enemies": [
       {
@@ -22,6 +23,7 @@ export const COMBAT_ENCOUNTERS: Record<string, CombatEncounter> = {
   },
   "combat_boss_garrick": {
     "id": "combat_boss_garrick",
+    "name": "combat_boss_garrick",
     "type": "combat",
     "enemies": [
       {

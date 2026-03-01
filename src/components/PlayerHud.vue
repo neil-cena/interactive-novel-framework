@@ -18,7 +18,7 @@ const totalAttackBonus = computed(() => {
 </script>
 
 <template>
-  <section class="rounded-lg border border-slate-700 bg-slate-900/80 p-4">
+  <section class="rounded-lg border border-slate-700 bg-slate-900/80 p-4" aria-label="Player status">
     <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-300">Player</h2>
     <div class="mt-2 grid grid-cols-2 gap-2 text-sm text-slate-100">
       <p>HP: {{ playerStore.vitals.hpCurrent }} / {{ playerStore.vitals.hpMax }}</p>
