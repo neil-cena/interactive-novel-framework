@@ -22,6 +22,24 @@ allprojects {
         google()
         mavenCentral()
     }
+    // Avoid duplicate Kotlin classes: stdlib 1.8+ already includes jdk7/jdk8 APIs;
+    // exclude old separate artifacts pulled in by Capacitor/Cordova deps.
+    configurations.all {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+    }
+}
+
+// Force Java 17 for all Android modules so build works with JDK 17 (Capacitor defaults to 21).
+subprojects { subproject ->
+    subproject.afterEvaluate {
+        if (subproject.plugins.hasPlugin('com.android.application') || subproject.plugins.hasPlugin('com.android.library')) {
+            if (subproject.android.hasProperty('compileOptions')) {
+                subproject.android.compileOptions.sourceCompatibility = org.gradle.api.JavaVersion.VERSION_17
+                subproject.android.compileOptions.targetCompatibility = org.gradle.api.JavaVersion.VERSION_17
+            }
+        }
+    }
 }
 
 task clean(type: Delete) {
