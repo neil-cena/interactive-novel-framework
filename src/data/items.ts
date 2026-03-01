@@ -16,5 +16,92 @@ export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
     "id": "macguffin_collar",
     "name": "Leather Collar",
     "type": "tool"
+  },
+  "dagger_iron": {
+    "id": "dagger_iron",
+    "name": "Iron Dagger",
+    "type": "weapon",
+    "damage": "1d4",
+    "scalingAttribute": "dexterity"
+  },
+  "greatsword_iron": {
+    "id": "greatsword_iron",
+    "name": "Iron Greatsword",
+    "type": "weapon",
+    "damage": "2d6",
+    "scalingAttribute": "strength"
+  },
+  "blade_of_shadows": {
+    "id": "blade_of_shadows",
+    "name": "Blade of Shadows",
+    "type": "weapon",
+    "damage": "1d6",
+    "attackBonus": 1,
+    "scalingAttribute": "dexterity"
+  },
+  "mace_iron": {
+    "id": "mace_iron",
+    "name": "Iron Mace",
+    "type": "weapon",
+    "damage": "1d6",
+    "scalingAttribute": "strength"
+  },
+  "robe_scholar": {
+    "id": "robe_scholar",
+    "name": "Scholar's Robes",
+    "type": "armor",
+    "acBonus": 0
+  },
+  "chainmail": {
+    "id": "chainmail",
+    "name": "Chainmail",
+    "type": "armor",
+    "acBonus": 6
+  },
+  "leather_armor": {
+    "id": "leather_armor",
+    "name": "Leather Armor",
+    "type": "armor",
+    "acBonus": 2
+  },
+  "scale_mail": {
+    "id": "scale_mail",
+    "name": "Scale Mail",
+    "type": "armor",
+    "acBonus": 4
+  },
+  "spellbook": {
+    "id": "spellbook",
+    "name": "Spellbook",
+    "type": "tool"
+  },
+  "holy_symbol": {
+    "id": "holy_symbol",
+    "name": "Holy Symbol",
+    "type": "tool"
+  },
+  "lockpick_set": {
+    "id": "lockpick_set",
+    "name": "Thieves' Tools",
+    "type": "tool"
+  },
+  "health_potion": {
+    "id": "health_potion",
+    "name": "Health Potion",
+    "type": "consumable",
+    "effect": {
+      "action": "heal",
+      "amount": "2d4+2"
+    }
+  },
+  "smoke_bomb": {
+    "id": "smoke_bomb",
+    "name": "Smoke Bomb",
+    "type": "consumable",
+    "effect": {
+      "action": "set_flag",
+      "key": "has_surprise",
+      "value": true
+    }
   }
 }

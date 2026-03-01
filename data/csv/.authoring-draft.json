@@ -1,101 +1,77 @@
 {
-  "savedAt": "2026-03-01T18:48:37.529Z",
+  "savedAt": "2026-03-01T19:42:29.943Z",
   "model": {
     "nodes": {},
     "items": {
-      "dagger_iron": {
-        "id": "dagger_iron",
-        "name": "Iron Dagger",
-        "type": "weapon",
-        "damage": "1d4",
-        "attackBonus": 0,
-        "acBonus": 0,
-        "scalingAttribute": "dexterity",
-        "aoe": false
-      },
-      "blade_of_shadows": {
-        "id": "blade_of_shadows",
-        "name": "Blade of Shadows",
-        "type": "weapon",
-        "damage": "1d6",
-        "attackBonus": 1,
-        "acBonus": 0,
-        "scalingAttribute": "dexterity",
-        "aoe": false
-      },
-      "health_potion": {
-        "id": "health_potion",
-        "name": "Health Potion",
-        "type": "consumable",
-        "effect": {
-          "action": "heal",
-          "amount": "2d4+2"
-        }
-      },
-      "smoke_bomb": {
-        "id": "smoke_bomb",
-        "name": "Smoke Bomb",
+      "receipt": {
+        "id": "receipt",
+        "name": "Crumpled Receipt",
         "type": "tool"
       },
-      "guard_cloak": {
-        "id": "guard_cloak",
-        "name": "Silk Mask Cloak",
+      "drow_baby": {
+        "id": "drow_baby",
+        "name": "Drow Baby",
+        "type": "tool"
+      },
+      "macguffin_collar": {
+        "id": "macguffin_collar",
+        "name": "Leather Collar",
         "type": "tool"
       }
     },
     "enemies": {
-      "silk_thug": {
-        "id": "silk_thug",
-        "name": "Silk Mask Thug",
-        "hp": 15,
-        "ac": 12,
-        "attackBonus": 3,
-        "damage": "1d6",
-        "xpReward": 35
+      "owlbear": {
+        "id": "owlbear",
+        "name": "MacGuffin the Owlbear",
+        "hp": 59,
+        "ac": 13,
+        "attackBonus": 7,
+        "damage": "1d10+5",
+        "xpReward": 200
       },
-      "silk_enforcer": {
-        "id": "silk_enforcer",
-        "name": "Garrick the Enforcer",
-        "hp": 25,
-        "ac": 14,
-        "attackBonus": 4,
-        "damage": "1d8",
-        "xpReward": 100
+      "mik_tystone": {
+        "id": "mik_tystone",
+        "name": "Mik Tystone",
+        "hp": 80,
+        "ac": 15,
+        "attackBonus": 8,
+        "damage": "1d6+4",
+        "xpReward": 500
       }
     },
     "encounters": {
-      "combat_alley_thug": {
-        "id": "combat_alley_thug",
-        "name": "combat_alley_thug",
+      "enc_bathroom": {
+        "id": "enc_bathroom",
+        "name": "enc_bathroom",
         "type": "combat",
         "enemies": [
           {
-            "enemyId": "silk_thug",
+            "enemyId": "owlbear",
             "count": 1
           }
         ],
         "resolution": {
           "onVictory": {
-            "nextNodeId": "n_alley_thug_looted"
+            "nextNodeId": "n_bathroom_victory"
           },
           "onDefeat": {
             "nextNodeId": "n_game_over"
           }
         }
       },
-      "combat_boss_garrick": {
-        "id": "combat_boss_garrick",
-        "name": "combat_boss_garrick",
+      "enc_boss": {
+        "id": "enc_boss",
+        "name": "enc_boss",
         "type": "combat",
         "enemies": [
           {
-            "enemyId": "silk_enforcer",
+            "enemyId": "mik_tystone",
             "count": 1
           }
         ],
         "resolution": {
           "onVictory": {
-            "nextNodeId": "n_boss_defeated"
+            "nextNodeId": "n_victory"
           },
           "onDefeat": {
             "nextNodeId": "n_game_over"

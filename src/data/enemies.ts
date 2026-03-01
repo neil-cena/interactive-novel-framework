@@ -5,19 +5,19 @@ export const ENEMY_DICTIONARY: Record<string, EnemyTemplate> = {
   "owlbear": {
     "id": "owlbear",
     "name": "MacGuffin the Owlbear",
-    "hp": 59,
+    "hp": 34,
     "ac": 13,
-    "attackBonus": 7,
-    "damage": "1d10+5",
-    "xpReward": 200
+    "attackBonus": 4,
+    "damage": "1d8+2",
+    "xpReward": 140
   },
   "mik_tystone": {
     "id": "mik_tystone",
     "name": "Mik Tystone",
-    "hp": 80,
-    "ac": 15,
-    "attackBonus": 8,
-    "damage": "1d6+4",
-    "xpReward": 500
+    "hp": 48,
+    "ac": 14,
+    "attackBonus": 5,
+    "damage": "1d8+3",
+    "xpReward": 280
   }
 }

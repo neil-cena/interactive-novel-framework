@@ -2,15 +2,248 @@
 import type { StoryNode } from '../types/story'
 
 export const STORY_NODES: Record<string, StoryNode> = {
+  "n_character_select": {
+    "id": "n_character_select",
+    "type": "narrative",
+    "text": "Before the headache sets in... who are you?",
+    "choices": [
+      {
+        "id": "c_pick_wizard",
+        "label": "[High Elf Wizard]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_setup_wizard"
+        }
+      },
+      {
+        "id": "c_pick_paladin",
+        "label": "[Half-Orc Paladin]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_setup_paladin"
+        }
+      },
+      {
+        "id": "c_more_classes",
+        "label": "[More classes]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_character_select_2"
+        }
+      }
+    ]
+  },
+  "n_character_select_2": {
+    "id": "n_character_select_2",
+    "type": "narrative",
+    "text": "Pick your role in this catastrophe.",
+    "choices": [
+      {
+        "id": "c_pick_rogue",
+        "label": "[Halfling Rogue]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_setup_rogue"
+        }
+      },
+      {
+        "id": "c_pick_cleric",
+        "label": "[Dwarf Cleric]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_setup_cleric"
+        }
+      },
+      {
+        "id": "c_back_classes",
+        "label": "[Back]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_character_select"
+        }
+      }
+    ]
+  },
+  "n_setup_wizard": {
+    "id": "n_setup_wizard",
+    "type": "narrative",
+    "text": "Arannis Moonwhisper. Scholar, spellcaster, and probably hungover.",
+    "onEnter": [
+      {
+        "action": "set_flag",
+        "key": "class_wizard",
+        "value": true
+      },
+      {
+        "action": "adjust_hp",
+        "amount": -2
+      },
+      {
+        "action": "add_item",
+        "itemId": "dagger_iron",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "robe_scholar",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "spellbook",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "health_potion",
+        "qty": 1
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_start_wizard",
+        "label": "[Begin the nightmare]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_start"
+        }
+      }
+    ]
+  },
+  "n_setup_paladin": {
+    "id": "n_setup_paladin",
+    "type": "narrative",
+    "text": "Thonk the Pious. Smite first, questions never.",
+    "onEnter": [
+      {
+        "action": "set_flag",
+        "key": "class_paladin",
+        "value": true
+      },
+      {
+        "action": "adjust_hp",
+        "amount": 4
+      },
+      {
+        "action": "add_item",
+        "itemId": "greatsword_iron",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "chainmail",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "holy_symbol",
+        "qty": 1
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_start_paladin",
+        "label": "[Begin the nightmare]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_start"
+        }
+      }
+    ]
+  },
+  "n_setup_rogue": {
+    "id": "n_setup_rogue",
+    "type": "narrative",
+    "text": "Lila Tealeaf. Sneaky, sharp, and one bad decision from disaster.",
+    "onEnter": [
+      {
+        "action": "set_flag",
+        "key": "class_rogue",
+        "value": true
+      },
+      {
+        "action": "add_item",
+        "itemId": "blade_of_shadows",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "leather_armor",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "lockpick_set",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "smoke_bomb",
+        "qty": 2
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_start_rogue",
+        "label": "[Begin the nightmare]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_start"
+        }
+      }
+    ]
+  },
+  "n_setup_cleric": {
+    "id": "n_setup_cleric",
+    "type": "narrative",
+    "text": "Bofur Stonefist. Healing, faith, and occasional blunt force theology.",
+    "onEnter": [
+      {
+        "action": "set_flag",
+        "key": "class_cleric",
+        "value": true
+      },
+      {
+        "action": "adjust_hp",
+        "amount": 2
+      },
+      {
+        "action": "add_item",
+        "itemId": "mace_iron",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "scale_mail",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "holy_symbol",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "health_potion",
+        "qty": 2
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_start_cleric",
+        "label": "[Begin the nightmare]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_start"
+        }
+      }
+    ]
+  },
   "n_start": {
     "id": "n_start",
     "type": "narrative",
-    "text": "You awaken to rude morning light. Your head is pounding. The room is destroyed—furniture smashed, curtains torn. A white chicken pecks aimlessly at a spilled potion on the rug. You have no memory of last night.",
+    "text": "You awaken to rude morning light. Your head is pounding. The room is destroyed. A white chicken pecks aimlessly at a spilled potion on the rug. You have no memory of last night.",
     "onEnter": [
-      {
-        "action": "adjust_hp",
-        "amount": 20
-      },
       {
         "action": "adjust_currency",
         "amount": 50
@@ -26,8 +259,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
         }
       },
       {
-        "id": "c_bathroom",
-        "label": "[Check the Bathroom]",
+        "id": "c_check_bathroom",
+        "label": "[Check the bathroom]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_bathroom_door"
@@ -38,7 +271,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_inventory_check": {
     "id": "n_inventory_check",
     "type": "narrative",
-    "text": "You rummage through your ruined clothes. You find a crumpled piece of paper.",
+    "text": "You rummage through your ruined clothes and find a crumpled receipt.",
     "onEnter": [
       {
         "action": "add_item",
@@ -54,7 +287,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
     "choices": [
       {
         "id": "c_read_receipt",
-        "label": "[Read the paper]",
+        "label": "[Read the receipt]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_read_receipt"
@@ -65,10 +298,10 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_read_receipt": {
     "id": "n_read_receipt",
     "type": "narrative",
-    "text": "It's a receipt from 'Dude Fiero's Kitchen'. Scrawled on the back is the word: 'OBLIVION'.",
+    "text": "It's from Dude Fiero's Kitchen. A scribble on the back reads: OBLIVION.",
     "choices": [
       {
-        "id": "c_back_start",
+        "id": "c_to_room_hub",
         "label": "[Look around the room]",
         "mechanic": {
           "type": "navigate",
@@ -80,27 +313,27 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_room_hub": {
     "id": "n_room_hub",
     "type": "narrative",
-    "text": "The hotel room is a disaster scene.",
+    "text": "The suite is chaos: broken furniture, spilled drinks, and poor life choices.",
     "choices": [
       {
-        "id": "c_bathroom",
-        "label": "[Open Bathroom Door]",
+        "id": "c_open_bathroom",
+        "label": "[Open bathroom door]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_bathroom_door"
         }
       },
       {
-        "id": "c_closet",
-        "label": "[Check the Closet]",
+        "id": "c_check_closet",
+        "label": "[Check the closet]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_closet"
         }
       },
       {
-        "id": "c_leave",
-        "label": "[Leave Hotel]",
+        "id": "c_leave_hotel",
+        "label": "[Leave hotel]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_streets"
@@ -111,7 +344,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_closet": {
     "id": "n_closet",
     "type": "narrative",
-    "text": "You open the closet. A Drow baby wearing a spider-themed pacifier stares up at you. It gurgles.",
+    "text": "Inside the closet: a drow baby with a spider-shaped pacifier. Long story.",
     "onEnter": [
       {
         "action": "add_item",
@@ -122,7 +355,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
     "choices": [
       {
         "id": "c_take_baby",
-        "label": "[Take the baby (carefully)]",
+        "label": "[Take the baby, carefully]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_room_hub"
@@ -133,10 +366,10 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_bathroom_door": {
     "id": "n_bathroom_door",
     "type": "encounter",
-    "text": "You open the bathroom door. A massive Owlbear is drinking from the bathtub! It turns to you and roars.",
+    "text": "You crack the bathroom door. A massive owlbear stares back and roars.",
     "choices": [
       {
-        "id": "c_fight",
+        "id": "c_fight_owlbear",
         "label": "[Attack!]",
         "mechanic": {
           "type": "combat_init",
@@ -144,8 +377,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
         }
       },
       {
-        "id": "c_calm",
-        "label": "[Calm Down (Animal Handling DC 14)]",
+        "id": "c_calm_owlbear",
+        "label": "[Calm it down (DC 14)]",
         "mechanic": {
           "type": "skill_check",
           "dice": "1d20",
@@ -165,7 +398,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_calm_success": {
     "id": "n_calm_success",
     "type": "narrative",
-    "text": "The beast sniffs your hand and purrs like a giant, feathered kitten. You notice a collar on it labeled 'MacGuffin'.",
+    "text": "The owlbear sniffs your hand and settles. Its collar reads: MacGuffin.",
     "onEnter": [
       {
         "action": "add_item",
@@ -175,8 +408,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_leave_bath",
-        "label": "[Back to Room]",
+        "id": "c_back_room",
+        "label": "[Back to room]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_room_hub"
@@ -187,11 +420,11 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_calm_fail": {
     "id": "n_calm_fail",
     "type": "narrative",
-    "text": "The Owlbear does not appreciate your shushing. It swipes at you!",
+    "text": "The owlbear rejects your soothing tone and swings a heavy claw.",
     "choices": [
       {
-        "id": "c_defend",
-        "label": "[Defend Yourself]",
+        "id": "c_defend_self",
+        "label": "[Defend yourself]",
         "mechanic": {
           "type": "combat_init",
           "encounterId": "enc_bathroom"
@@ -202,7 +435,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_bathroom_victory": {
     "id": "n_bathroom_victory",
     "type": "narrative",
-    "text": "The beast lies defeated. You find a leather collar on it labeled 'MacGuffin'.",
+    "text": "The beast is down. You recover a collar tagged MacGuffin.",
     "onEnter": [
       {
         "action": "add_item",
@@ -212,8 +445,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_back",
-        "label": "[Back to Room]",
+        "id": "c_leave_bathroom_victory",
+        "label": "[Back to room]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_room_hub"
@@ -224,11 +457,11 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_streets": {
     "id": "n_streets",
     "type": "narrative",
-    "text": "The bright sun of Sigil hurts your eyes. You recall you were heading to 'Drowtown' for the party.",
+    "text": "Sunlight stabs your eyes as Sigil buzzes outside. Drowtown calls.",
     "choices": [
       {
         "id": "c_go_drowtown",
-        "label": "[Go to Drowtown Gate]",
+        "label": "[Go to Drowtown gate]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_drowtown_gate"
@@ -239,11 +472,11 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_drowtown_gate": {
     "id": "n_drowtown_gate",
     "type": "narrative",
-    "text": "A massive bouncer blocks the gate. 'Private party. Password?'",
+    "text": "A bouncer blocks the way. \"Private. Password?\"",
     "choices": [
       {
-        "id": "c_password",
-        "label": "[Say 'OBLIVION']",
+        "id": "c_say_password",
+        "label": "[Say: OBLIVION]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_mansion"
@@ -257,7 +490,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
       },
       {
         "id": "c_show_baby",
-        "label": "[Show the Drow Baby]",
+        "label": "[Show the drow baby]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_mansion_baby"
@@ -270,7 +503,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
         ]
       },
       {
-        "id": "c_no_clue",
+        "id": "c_leave_gate",
         "label": "[Leave]",
         "mechanic": {
           "type": "navigate",
@@ -282,7 +515,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_mansion": {
     "id": "n_mansion",
     "type": "encounter",
-    "text": "You enter Mik Tystone's mansion. He stands by a fountain. 'You stole my tiger! And my chicken!'",
+    "text": "At Mik Tystone's mansion, the host is furious and ready to throw fists.",
     "choices": [
       {
         "id": "c_fight_mik",
@@ -297,11 +530,11 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_mansion_baby": {
     "id": "n_mansion_baby",
     "type": "narrative",
-    "text": "The bouncer's eyes go wide. 'That's Mik's kid! Get in here!' You are ushered into the VIP lounge.",
+    "text": "The bouncer goes pale. \"That's Mik's kid! VIP access, now.\"",
     "choices": [
       {
-        "id": "c_win",
-        "label": "[Finish the Adventure]",
+        "id": "c_finish_soft",
+        "label": "[Finish the adventure]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_victory"
@@ -312,19 +545,19 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_victory": {
     "id": "n_victory",
     "type": "ending",
-    "text": "You return the baby/chicken/tiger. Tystone laughs and offers you a drink. 'Hair of the dog?' The nightmare starts all over again."
+    "text": "Baby returned. Chicken accounted for. Pride destroyed. Someone offers a drink and the cycle threatens to restart."
   },
   "n_game_over": {
     "id": "n_game_over",
     "type": "ending",
-    "text": "The Hangover claims another victim.",
+    "text": "The hangover claims another victim.",
     "choices": [
       {
         "id": "c_restart",
         "label": "[Restart]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_start"
+          "nextNodeId": "n_character_select"
         }
       }
     ]
