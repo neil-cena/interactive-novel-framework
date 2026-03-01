@@ -46,14 +46,21 @@ export class LocalAuthProvider implements AuthProvider {
     }
   }
 
-  async signInWithEmail(email: string): Promise<AuthSession> {
+  async signInWithEmail(email: string, _password: string): Promise<AuthSession> {
     const trimmed = email.trim().toLowerCase()
+    if (!trimmed) {
+      return { status: 'anonymous', user: { id: 'anonymous', isAnonymous: true } }
+    }
     const userId = `user_${trimmed.replace(/[^a-z0-9]/g, '_') || 'player'}`
     localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify({ userId, email: trimmed, signedInAt: nowIso() }))
     return {
       status: 'authenticated',
       user: { id: userId, email: trimmed, isAnonymous: false },
     }
+  }
+
+  async signUpWithEmail(email: string, _password: string): Promise<AuthSession> {
+    return this.signInWithEmail(email, _password)
   }
 
   async signOut(): Promise<void> {

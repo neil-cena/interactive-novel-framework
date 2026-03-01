@@ -10,7 +10,8 @@ import type {
 
 export interface AuthProvider {
   getSession(): Promise<AuthSession>
-  signInWithEmail(email: string): Promise<AuthSession>
+  signInWithEmail(email: string, password: string): Promise<AuthSession>
+  signUpWithEmail(email: string, password: string): Promise<AuthSession>
   signOut(): Promise<void>
 }
 

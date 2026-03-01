@@ -82,17 +82,11 @@ export class FirebaseAuthProvider implements AuthProvider {
     })
   }
 
-  async signInWithEmail(email: string): Promise<AuthSession> {
+  async signInWithEmail(email: string, password: string): Promise<AuthSession> {
     const { auth: a } = requireFirebase()
     const trimmed = email.trim().toLowerCase()
-    if (!trimmed) {
-      throw new Error('Please enter an email address.')
-    }
-    const password =
-      (import.meta.env.VITE_FIREBASE_DEMO_PASSWORD as string) || 'phase5-demo-password'
-    if (!password) {
-      throw new Error('Demo password not configured. Set VITE_FIREBASE_DEMO_PASSWORD in .env')
-    }
+    if (!trimmed) throw new Error('Please enter an email address.')
+    if (!password) throw new Error('Please enter your password.')
     try {
       const credential = await signInWithEmailAndPassword(a, trimmed, password)
       const user = credential.user
@@ -101,36 +95,45 @@ export class FirebaseAuthProvider implements AuthProvider {
         JSON.stringify({ userId: user.uid, email: user.email ?? undefined }),
       )
       return { status: 'authenticated', user: userToSessionUser(user) }
-    } catch (signInErr: unknown) {
-      const code = (signInErr as { code?: string })?.code
-      // Don't try create for invalid email or disabled user
-      if (code === 'auth/invalid-email' || code === 'auth/user-disabled') {
-        throw signInErr
+    } catch (err: unknown) {
+      const code = (err as { code?: string })?.code
+      if (code === 'auth/invalid-email') throw new Error('Please enter a valid email address.')
+      if (code === 'auth/user-disabled') throw new Error('This account has been disabled.')
+      if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+        throw new Error('Invalid email or password.')
       }
-      // Sign-in failed (user not found, wrong password, or invalid-credential): try creating account
-      try {
-        const credential = await createUserWithEmailAndPassword(a, trimmed, password)
-        const user = credential.user
-        localStorage.setItem(
-          AUTH_SESSION_KEY,
-          JSON.stringify({ userId: user.uid, email: user.email ?? undefined }),
-        )
-        return { status: 'authenticated', user: userToSessionUser(user) }
-      } catch (createErr: unknown) {
-        const createCode = (createErr as { code?: string })?.code
-        if (createCode === 'auth/email-already-in-use') {
-          throw new Error(
-            'An account with this email already exists with a different password. ' +
-              'Use the same password this app uses (see .env VITE_FIREBASE_DEMO_PASSWORD), or sign in with that account elsewhere.',
-          )
-        }
-        if (createCode === 'auth/operation-not-allowed') {
-          throw new Error(
-            'Email/Password sign-in is not enabled. Enable it in Firebase Console → Authentication → Sign-in method.',
-          )
-        }
-        throw createErr
+      if (code === 'auth/operation-not-allowed') {
+        throw new Error('Email/Password sign-in is not enabled in Firebase Console.')
       }
+      throw err
+    }
+  }
+
+  async signUpWithEmail(email: string, password: string): Promise<AuthSession> {
+    const { auth: a } = requireFirebase()
+    const trimmed = email.trim().toLowerCase()
+    if (!trimmed) throw new Error('Please enter an email address.')
+    if (!password) throw new Error('Please choose a password.')
+    if (password.length < 6) throw new Error('Password must be at least 6 characters.')
+    try {
+      const credential = await createUserWithEmailAndPassword(a, trimmed, password)
+      const user = credential.user
+      localStorage.setItem(
+        AUTH_SESSION_KEY,
+        JSON.stringify({ userId: user.uid, email: user.email ?? undefined }),
+      )
+      return { status: 'authenticated', user: userToSessionUser(user) }
+    } catch (err: unknown) {
+      const code = (err as { code?: string })?.code
+      if (code === 'auth/invalid-email') throw new Error('Please enter a valid email address.')
+      if (code === 'auth/email-already-in-use') {
+        throw new Error('An account with this email already exists. Sign in instead.')
+      }
+      if (code === 'auth/weak-password') throw new Error('Password is too weak. Use at least 6 characters.')
+      if (code === 'auth/operation-not-allowed') {
+        throw new Error('Email/Password sign-in is not enabled in Firebase Console.')
+      }
+      throw err
     }
   }
 

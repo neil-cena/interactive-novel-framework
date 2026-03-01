@@ -38,14 +38,24 @@ export const useAuthStore = defineStore('auth', {
         this.setSession('error', null, e instanceof Error ? e.message : 'Failed to bootstrap auth')
       }
     },
-    async signInWithEmail(email: string) {
+    async signInWithEmail(email: string, password: string) {
       this.setSession('authenticating', this.user)
       try {
         const { authProvider } = getProviders()
-        const session = await authProvider.signInWithEmail(email)
+        const session = await authProvider.signInWithEmail(email, password)
         this.setSession(session.status, session.user, session.error)
       } catch (e) {
         this.setSession('error', null, e instanceof Error ? e.message : 'Failed to sign in')
+      }
+    },
+    async signUpWithEmail(email: string, password: string) {
+      this.setSession('authenticating', this.user)
+      try {
+        const { authProvider } = getProviders()
+        const session = await authProvider.signUpWithEmail(email, password)
+        this.setSession(session.status, session.user, session.error)
+      } catch (e) {
+        this.setSession('error', null, e instanceof Error ? e.message : 'Failed to create account')
       }
     },
     async signOut() {

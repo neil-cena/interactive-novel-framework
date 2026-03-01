@@ -1,6 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getSaveSyncState, queueCloudSave, syncQueuedCloudSaves } from '../saveRepository'
 
+const mockSaveProvider = {
+  listSaves: vi.fn(() => Promise.resolve({})),
+  getSave: vi.fn(() => Promise.resolve(null)),
+  upsertSave: vi.fn(() => Promise.resolve({ ok: true })),
+  deleteSave: vi.fn(() => Promise.resolve()),
+}
+
+vi.mock('../providers/providerFactory', () => ({
+  getProviders: () => ({
+    authProvider: {},
+    saveProvider: mockSaveProvider,
+    analyticsProvider: {},
+    storyPackageProvider: {},
+  }),
+}))
+
 function makeStorage() {
   const data = new Map<string, string>()
   return {

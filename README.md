@@ -140,7 +140,6 @@ Cloud save, shared outcomes, and story package listing can use **Firebase** (Aut
    | `VITE_FIREBASE_AUTH_DOMAIN` | Project auth domain |
    | `VITE_FIREBASE_PROJECT_ID` | Project ID |
    | `VITE_FIREBASE_APP_ID` | Web app ID |
-   | `VITE_FIREBASE_DEMO_PASSWORD` | (Optional) Password for email sign-in; default `phase5-demo-password` for dev |
 
 4. Deploy Firestore rules (from project root):
 
@@ -154,7 +153,7 @@ Cloud save, shared outcomes, and story package listing can use **Firebase** (Aut
 
 **Troubleshooting**
 
-- **400 on sign-in**: The app tries to sign in first, then creates an account if the user doesn’t exist. If you see “An account with this email already exists with a different password”, the email was registered elsewhere; use the same password as this app (e.g. `VITE_FIREBASE_DEMO_PASSWORD` in `.env`) or sign in with that account.
+- **Invalid email or password**: Sign in with the email and password you used when creating the account, or use “Need an account? Sign up” to create one.
 - **Firestore `net::ERR_BLOCKED_BY_CLIENT`**: Often caused by an ad blocker or browser extension blocking `firestore.googleapis.com`. Disable the blocker for this app’s origin or allow Firebase in the extension so cloud save and analytics work.
 - **Music “failed to load”**: Optional; add `public/audio/music/menu.mp3` (and other tracks) if you want menu music, or ignore the console message.
 
