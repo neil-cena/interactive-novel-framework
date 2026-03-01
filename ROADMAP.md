@@ -325,7 +325,7 @@ Making the game available to wider audiences.
 - Cache all static assets and the game data for offline play.
 - localStorage already works offline, so saves are unaffected.
 
-### 6.2 Electron Desktop Build
+### 6.2 Electron Desktop Build *(Deferred — future improvement)*
 
 **What**: Package the web app as a native desktop application using Electron or Tauri.
 
@@ -349,7 +349,7 @@ Making the game available to wider audiences.
 - Write store listing metadata (description, screenshots, categories).
 - Handle app review requirements and content ratings.
 
-### 6.4 Internationalization (i18n)
+### 6.4 Internationalization (i18n) *(Deferred — future improvement)*
 
 **What**: Support multiple languages for both the UI chrome and story content.
 
@@ -372,6 +372,15 @@ Making the game available to wider audiences.
 - Track node visits, choice selections, combat outcomes, and session duration.
 - Provide a dashboard for content authors.
 - Ensure GDPR compliance with proper consent flows.
+
+---
+
+## Deferred / Future Improvements
+
+The following items are explicitly deferred to a later release. Backlog criteria for when to pick them up:
+
+- **6.2 Electron Desktop Build:** Desktop runtime decision (Electron vs Tauri), filesystem save migration plan, auto-update strategy. See `docs/phase6-checklist.md`.
+- **6.4 Internationalization (i18n):** i18n strategy (CSV schema vs split locale files), RTL acceptance criteria, language-switch UX. See `docs/phase6-checklist.md`.
 
 ---
 

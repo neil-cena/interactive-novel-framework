@@ -42,6 +42,12 @@ watch(
 
     node.onEnter.forEach((payload) => resolveAction(payload, playerStore))
     processedNodes.value.add(node.id)
+    trackOutcomeEvent({
+      storyId: 'default',
+      type: 'node_visit',
+      ts: Date.now(),
+      metadata: { nodeId: node.id, nodeType: node.type ?? 'standard' },
+    })
     if (node.type === 'ending') {
       trackOutcomeEvent({
         storyId: 'default',
@@ -56,6 +62,16 @@ watch(
 
 function handleChoice(choice: Choice): void {
   emitGameEvent('choiceSelected', { nodeId: playerStore.metadata.currentNodeId, choiceId: choice.id })
+  trackOutcomeEvent({
+    storyId: 'default',
+    type: 'choice_selected',
+    ts: Date.now(),
+    metadata: {
+      nodeId: playerStore.metadata.currentNodeId,
+      choiceId: choice.id,
+      mechanicType: choice.mechanic.type,
+    },
+  })
   if (choice.mechanic.type === 'navigate') {
     const shouldStartNewRun =
       choice.mechanic.nextNodeId === GAME_CONFIG.player.startingNodeId &&

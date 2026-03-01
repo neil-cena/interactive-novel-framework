@@ -17,15 +17,18 @@
     "dev:full": "concurrently \"npm run dev\" \"npm run dev:data\"",
     "authoring:dev": "vite --config vite.authoring.config.ts",
     "authoring:build": "vite build --config vite.authoring.config.ts",
-    "authoring:preview": "vite preview --config vite.authoring.config.ts --port 5174"
+    "authoring:preview": "vite preview --config vite.authoring.config.ts --port 5174",
+    "mobile:sync": "npm run build && npx cap sync",
+    "mobile:android:release": "npm run mobile:sync && cd android && ./gradlew bundleRelease",
+    "mobile:ios:archive": "npm run mobile:sync && npx cap open ios"
   },
   "dependencies": {
-    "firebase": "^11.0.0",
     "@capacitor/android": "^8.1.0",
     "@capacitor/cli": "^7.5.0",
     "@capacitor/core": "^8.1.0",
     "@capacitor/ios": "^8.1.0",
     "@tailwindcss/vite": "^4.2.1",
+    "firebase": "^11.0.0",
     "howler": "^2.2.4",
     "pinia": "^3.0.4",
     "tailwindcss": "^4.2.1",
@@ -45,6 +48,7 @@
     "papaparse": "^5.5.3",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
+    "vite-plugin-pwa": "^1.2.0",
     "vitest": "^4.0.18",
     "vue-tsc": "^3.1.5"
   }

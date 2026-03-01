@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import AuthPanel from './AuthPanel.vue'
 import OutcomeStatsPanel from './OutcomeStatsPanel.vue'
 import StoryLibrary from './StoryLibrary.vue'
+import TelemetryDashboard from './TelemetryDashboard.vue'
 import { useAudio } from '../composables/useAudio'
 import { GAME_CONFIG } from '../config'
 import { useAuthStore } from '../stores/authStore'
@@ -96,6 +97,7 @@ onMounted(() => {
 
     <AuthPanel v-if="GAME_CONFIG.features.cloudSave" />
     <OutcomeStatsPanel v-if="GAME_CONFIG.features.sharedOutcomes" />
+    <TelemetryDashboard v-if="GAME_CONFIG.features.sharedOutcomes" />
     <StoryLibrary v-if="GAME_CONFIG.features.storyPackages" />
 
     <section class="space-y-4">

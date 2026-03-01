@@ -1,6 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { flushOutcomeEvents, getOutcomeStats, resetAnalyticsSession, trackOutcomeEvent } from '../analyticsClient'
 
+const TELEMETRY_CONSENT_KEY = 'telemetry_consent'
+
+function makeStorage() {
+  const data = new Map<string, string>()
+  return {
+    getItem: (k: string) => data.get(k) ?? null,
+    setItem: (k: string, v: string) => { data.set(k, v) },
+    removeItem: (k: string) => { data.delete(k) },
+  }
+}
+
 const mockAnalyticsProvider = {
   ingestEvents: vi.fn(() => Promise.resolve()),
   ingestSessionSummary: vi.fn(() => Promise.resolve()),
@@ -22,8 +33,34 @@ vi.mock('../phase5Diagnostics', () => ({
 
 describe('analyticsClient', () => {
   beforeEach(() => {
+    vi.stubGlobal('localStorage', makeStorage())
     resetAnalyticsSession()
     vi.clearAllMocks()
+    localStorage.setItem(TELEMETRY_CONSENT_KEY, 'accepted')
+  })
+
+  it('does not buffer or flush when consent is declined', async () => {
+    localStorage.setItem(TELEMETRY_CONSENT_KEY, 'declined')
+    trackOutcomeEvent({
+      storyId: 'default',
+      type: 'ending_reached',
+      ts: Date.now(),
+    })
+    await flushOutcomeEvents('default')
+    expect(mockAnalyticsProvider.ingestEvents).not.toHaveBeenCalled()
+    expect(mockAnalyticsProvider.ingestSessionSummary).not.toHaveBeenCalled()
+  })
+
+  it('does not buffer or flush when consent is not set', async () => {
+    localStorage.removeItem(TELEMETRY_CONSENT_KEY)
+    trackOutcomeEvent({
+      storyId: 'default',
+      type: 'ending_reached',
+      ts: Date.now(),
+    })
+    await flushOutcomeEvents('default')
+    expect(mockAnalyticsProvider.ingestEvents).not.toHaveBeenCalled()
+    expect(mockAnalyticsProvider.ingestSessionSummary).not.toHaveBeenCalled()
   })
 
   it('buffers only allowlisted event types', () => {
@@ -49,6 +86,28 @@ describe('analyticsClient', () => {
     await flushOutcomeEvents('default')
     expect(mockAnalyticsProvider.ingestEvents).not.toHaveBeenCalled()
     expect(mockAnalyticsProvider.ingestSessionSummary).toHaveBeenCalledTimes(1)
+  })
+
+  it('buffers and allows node_visit, choice_selected, combat_outcome', () => {
+    trackOutcomeEvent({
+      storyId: 'default',
+      type: 'node_visit',
+      ts: Date.now(),
+      metadata: { nodeId: 'n_start' },
+    })
+    trackOutcomeEvent({
+      storyId: 'default',
+      type: 'choice_selected',
+      ts: Date.now(),
+      metadata: { nodeId: 'n_start', choiceId: 'c1', mechanicType: 'navigate' },
+    })
+    trackOutcomeEvent({
+      storyId: 'default',
+      type: 'combat_outcome',
+      ts: Date.now(),
+      metadata: { encounterId: 'combat_1', outcome: 'victory' },
+    })
+    expect(mockAnalyticsProvider.ingestEvents).not.toHaveBeenCalled()
   })
 
   it('flush calls ingestEvents and ingestSessionSummary', async () => {

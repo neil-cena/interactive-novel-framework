@@ -49,6 +49,9 @@ export type AnalyticsEventType =
   | 'ending_reached'
   | 'run_failed'
   | 'rare_milestone_unlocked'
+  | 'node_visit'
+  | 'choice_selected'
+  | 'combat_outcome'
 
 export interface AnalyticsEventEnvelope {
   storyId: string

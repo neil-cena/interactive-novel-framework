@@ -7,7 +7,9 @@ import ErrorBoundary from './components/ErrorBoundary.vue'
 import InventoryPanel from './components/InventoryPanel.vue'
 import MainMenu from './components/MainMenu.vue'
 import NarrativeView from './components/NarrativeView.vue'
+import PwaUpdateNotice from './components/PwaUpdateNotice.vue'
 import PlaytestPanel from './components/PlaytestPanel.vue'
+import TelemetryConsentBanner from './components/TelemetryConsentBanner.vue'
 import PlayerHud from './components/PlayerHud.vue'
 import { useAudio } from './composables/useAudio'
 import { useAccessibilityStore } from './stores/accessibilityStore'
@@ -60,6 +62,12 @@ function handleCombatResolved(outcome: 'victory' | 'defeat'): void {
   }
   playSfx(outcome)
   emitGameEvent('combatResolved', { outcome, encounterId: activeEncounterId.value })
+  trackOutcomeEvent({
+    storyId: 'default',
+    type: 'combat_outcome',
+    ts: Date.now(),
+    metadata: { encounterId: activeEncounterId.value, outcome },
+  })
   trackOutcomeEvent({
     storyId: 'default',
     type: outcome === 'victory' ? 'chapter_completed' : 'run_failed',
@@ -258,6 +266,8 @@ watch(
     />
 
     <PlaytestPanel />
+    <PwaUpdateNotice />
+    <TelemetryConsentBanner />
     </ErrorBoundary>
   </AuthGate>
 </template>

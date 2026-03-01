@@ -2,11 +2,24 @@ import type { AnalyticsEventEnvelope, AnalyticsEventType, SessionOutcomeSummary 
 import { getProviders } from './providers/providerFactory'
 import { recordAnalyticsIngestError } from './phase5Diagnostics'
 
+const TELEMETRY_CONSENT_KEY = 'telemetry_consent'
+
+function hasTelemetryConsent(): boolean {
+  try {
+    return localStorage.getItem(TELEMETRY_CONSENT_KEY) === 'accepted'
+  } catch {
+    return false
+  }
+}
+
 const ALLOWLIST: ReadonlySet<AnalyticsEventType> = new Set([
   'chapter_completed',
   'ending_reached',
   'run_failed',
   'rare_milestone_unlocked',
+  'node_visit',
+  'choice_selected',
+  'combat_outcome',
 ])
 
 const MAX_EVENTS_PER_SESSION = 32
@@ -46,6 +59,7 @@ function sanitizeEnvelope(ev: AnalyticsEventEnvelope): Omit<AnalyticsEventEnvelo
 }
 
 export function trackOutcomeEvent(event: AnalyticsEventEnvelope): void {
+  if (!hasTelemetryConsent()) return
   if (!ALLOWLIST.has(event.type)) return
   if (eventBuffer.length >= MAX_EVENTS_PER_SESSION) return
   eventBuffer.push(sanitizeEnvelope(event) as AnalyticsEventEnvelope)
@@ -57,6 +71,10 @@ export function trackOutcomeEvent(event: AnalyticsEventEnvelope): void {
 }
 
 export async function flushOutcomeEvents(storyId: string, storyVersion?: string): Promise<void> {
+  if (!hasTelemetryConsent()) {
+    resetAnalyticsSession()
+    return
+  }
   if (flushing) return
   flushing = true
   try {

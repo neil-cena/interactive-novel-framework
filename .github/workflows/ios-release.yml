@@ -1,0 +1,54 @@
+# Build iOS app and optionally archive for TestFlight/App Store.
+# Signing and upload require Apple certs and provisioning profiles in CI.
+# See docs/release/ios-signing.md. For local release use: npm run mobile:ios:archive
+name: iOS Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build data
+        run: npm run build:data
+
+      - name: Build web app
+        run: npm run build
+
+      - name: Sync Capacitor
+        run: npx cap sync ios
+
+      - name: Install CocoaPods dependencies
+        run: |
+          cd ios/App
+          pod install
+
+      - name: Build iOS app (no signing)
+        run: |
+          xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+
+      - name: Upload build artifacts
+        if: success()
+        run: |
+          mkdir -p ios-artifacts
+          echo "iOS build completed. For signed archive and upload, run locally: npm run mobile:ios:archive" > ios-artifacts/README.txt
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-info
+          path: ios-artifacts/
