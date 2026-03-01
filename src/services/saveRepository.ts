@@ -7,6 +7,7 @@ import type {
   SaveSyncState,
 } from '../types/cloud'
 import { getProviders } from './providers/providerFactory'
+import { recordConflict, recordSyncFailure } from './phase5Diagnostics'
 import { enqueueSaveWrite, getQueuedSaveWrites, clearQueuedSaveWrites } from './sync/offlineQueue'
 
 const syncStates = new Map<SaveSlotId, SaveSyncState>()
@@ -55,37 +56,67 @@ export async function syncQueuedCloudSaves(): Promise<void> {
   if (!userId) return
   const { saveProvider } = getProviders()
   const queued = getQueuedSaveWrites()
-  if (queued.length === 0) return
-  for (const queuedWrite of queued) {
-    const current = await saveProvider.getSave(userId, queuedWrite.slotId)
-    const nextDoc: CloudSaveDocument = {
-      slotId: queuedWrite.slotId,
-      userId,
-      data: queuedWrite.data,
-      revision: (current?.revision ?? 0) + 1,
-      updatedAt: nowIso(),
-      source: 'cloud',
-    }
-    const result = await saveProvider.upsertSave(nextDoc, { expectedRevision: current?.revision ?? null })
-    if (!result.ok && result.conflict) {
-      const conflict: SaveConflict = {
-        slotId: queuedWrite.slotId,
-        local: {
+  try {
+    for (const queuedWrite of queued) {
+      try {
+        const current = await saveProvider.getSave(userId, queuedWrite.slotId)
+        const nextDoc: CloudSaveDocument = {
           slotId: queuedWrite.slotId,
           userId,
           data: queuedWrite.data,
-          revision: current?.revision ?? 0,
-          updatedAt: queuedWrite.enqueuedAt,
-          source: 'local',
-        },
-        cloud: result.conflict,
+          revision: (current?.revision ?? 0) + 1,
+          updatedAt: nowIso(),
+          source: 'cloud',
+        }
+        const result = await saveProvider.upsertSave(nextDoc, { expectedRevision: current?.revision ?? null })
+        if (!result.ok && result.conflict) {
+          recordConflict(queuedWrite.slotId)
+          const conflict: SaveConflict = {
+            slotId: queuedWrite.slotId,
+            local: {
+              slotId: queuedWrite.slotId,
+              userId,
+              data: queuedWrite.data,
+              revision: current?.revision ?? 0,
+              updatedAt: queuedWrite.enqueuedAt,
+              source: 'local',
+            },
+            cloud: result.conflict,
+          }
+          setSyncState(queuedWrite.slotId, { status: 'conflict', conflict, message: 'Cloud conflict detected' })
+          continue
+        }
+        setSyncState(queuedWrite.slotId, { status: 'synced', updatedAt: nextDoc.updatedAt, message: 'Synced' })
+      } catch (slotErr) {
+        recordSyncFailure(slotErr instanceof Error ? slotErr.message : String(slotErr))
+        setSyncState(queuedWrite.slotId, {
+          status: 'error',
+          message: slotErr instanceof Error ? slotErr.message : 'Sync failed',
+        })
       }
-      setSyncState(queuedWrite.slotId, { status: 'conflict', conflict, message: 'Cloud conflict detected' })
-      continue
     }
-    setSyncState(queuedWrite.slotId, { status: 'synced', updatedAt: nextDoc.updatedAt, message: 'Synced' })
+    clearQueuedSaveWrites()
+    await reconcileFromCloud(userId)
+  } catch (err) {
+    recordSyncFailure(err instanceof Error ? err.message : String(err))
+    throw err
   }
-  clearQueuedSaveWrites()
+}
+
+/** Pull cloud saves and write to localStorage so Continue/Load reflects cloud state. */
+export async function reconcileFromCloud(userId: string): Promise<void> {
+  const { saveProvider } = getProviders()
+  const cloudSlots = await saveProvider.listSaves(userId)
+  for (const slotId of GAME_CONFIG.save.slotKeys) {
+    const doc = cloudSlots[slotId]
+    if (doc?.data) {
+      try {
+        localStorage.setItem(slotId, JSON.stringify(doc.data))
+      } catch {
+        // ignore quota or serialization errors
+      }
+    }
+  }
 }
 
 export async function resolveCloudConflict(conflict: SaveConflict, choice: SaveMergeChoice): Promise<void> {
@@ -114,7 +145,20 @@ export async function resolveCloudConflict(conflict: SaveConflict, choice: SaveM
     await saveProvider.upsertSave(localWinner)
   } else {
     await saveProvider.upsertSave(conflict.cloud, { expectedRevision: conflict.cloud.revision })
+    try {
+      localStorage.setItem(conflict.slotId, JSON.stringify(conflict.cloud.data))
+    } catch {
+      // ignore
+    }
   }
   setSyncState(conflict.slotId, { status: 'synced', conflict: undefined, message: 'Conflict resolved', updatedAt: nowIso() })
   void userId
+}
+
+/** Delete save from cloud when authenticated. Call before clearing local slot. */
+export async function deleteCloudSave(slotId: SaveSlotId): Promise<void> {
+  const userId = getCurrentUserId()
+  if (!userId) return
+  const { saveProvider } = getProviders()
+  await saveProvider.deleteSave(userId, slotId)
 }

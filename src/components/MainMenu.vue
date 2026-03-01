@@ -49,8 +49,8 @@ function cancelDelete(): void {
   confirmingDeleteSlot.value = null
 }
 
-function confirmDelete(slotId: SaveSlotId): void {
-  deleteSave(slotId)
+async function confirmDelete(slotId: SaveSlotId): Promise<void> {
+  await deleteSave(slotId)
   confirmingDeleteSlot.value = null
   refreshSlots()
 }

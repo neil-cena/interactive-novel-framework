@@ -270,7 +270,7 @@ Visual and UX improvements that make the game feel complete.
 
 ## Phase 5: Multiplayer and Social
 
-Features that extend the game beyond a single-player experience.
+Features that extend the game beyond a single-player experience. **Implementation complete; phase closed.** Use `docs/phase5-rollout-checklist.md` for rollout and manual smoke verification.
 
 ### 5.1 Cloud Save Sync
 

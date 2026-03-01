@@ -158,6 +158,9 @@ describe('parseVisibility', () => {
   it('parses has_flag', () => {
     expect(parseVisibility('has_flag:ready')).toEqual([{ type: 'has_flag', key: 'ready' }])
   })
+  it('parses not_has_flag', () => {
+    expect(parseVisibility('not_has_flag:robbed_armory')).toEqual([{ type: 'not_has_flag', key: 'robbed_armory' }])
+  })
   it('parses has_item', () => {
     expect(parseVisibility('has_item:sword')).toEqual([{ type: 'has_item', itemId: 'sword' }])
   })

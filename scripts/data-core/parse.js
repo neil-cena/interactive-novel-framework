@@ -111,6 +111,16 @@ export function parseVisibility(value, logPrefix = '[parse]') {
         }
         return { type: 'has_flag', key }
       }
+      if (type === 'not_has_flag') {
+        const [key] = parts
+        if (!key) {
+          if (typeof console !== 'undefined' && console.warn) {
+            console.warn(`${logPrefix} parseVisibility: not_has_flag missing key. Token:`, JSON.stringify(token))
+          }
+          return null
+        }
+        return { type: 'not_has_flag', key }
+      }
       if (type === 'has_item') {
         const [itemId] = parts
         if (!itemId) {

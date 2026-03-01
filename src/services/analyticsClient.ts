@@ -1,5 +1,6 @@
 import type { AnalyticsEventEnvelope, AnalyticsEventType, SessionOutcomeSummary } from '../types/cloud'
 import { getProviders } from './providers/providerFactory'
+import { recordAnalyticsIngestError } from './phase5Diagnostics'
 
 const ALLOWLIST: ReadonlySet<AnalyticsEventType> = new Set([
   'chapter_completed',
@@ -23,6 +24,7 @@ let startedAt = Date.now()
 const eventBuffer: AnalyticsEventEnvelope[] = []
 const counters: Partial<Record<AnalyticsEventType, number>> = {}
 const milestoneSet = new Set<string>()
+let flushing = false
 
 export function resetAnalyticsSession(): void {
   sessionId = generateSessionId()
@@ -34,13 +36,19 @@ export function resetAnalyticsSession(): void {
   }
 }
 
+/** Strip PII and allowlisted fields only; never send userId to analytics. */
+function sanitizeEnvelope(ev: AnalyticsEventEnvelope): Omit<AnalyticsEventEnvelope, 'userId'> {
+  const { userId: _uid, metadata, ...rest } = ev
+  const meta = metadata
+    ? Object.fromEntries(Object.entries(metadata).slice(0, MAX_METADATA_KEYS))
+    : undefined
+  return { ...rest, ...(meta && { metadata: meta }) }
+}
+
 export function trackOutcomeEvent(event: AnalyticsEventEnvelope): void {
   if (!ALLOWLIST.has(event.type)) return
   if (eventBuffer.length >= MAX_EVENTS_PER_SESSION) return
-  const metadata = event.metadata
-    ? Object.fromEntries(Object.entries(event.metadata).slice(0, MAX_METADATA_KEYS))
-    : undefined
-  eventBuffer.push({ ...event, metadata })
+  eventBuffer.push(sanitizeEnvelope(event) as AnalyticsEventEnvelope)
   counters[event.type] = (counters[event.type] ?? 0) + 1
   if (event.type === 'rare_milestone_unlocked') {
     const milestone = String(event.metadata?.milestone ?? '')
@@ -49,21 +57,38 @@ export function trackOutcomeEvent(event: AnalyticsEventEnvelope): void {
 }
 
 export async function flushOutcomeEvents(storyId: string, storyVersion?: string): Promise<void> {
-  const { analyticsProvider } = getProviders()
-  if (eventBuffer.length > 0) {
-    await analyticsProvider.ingestEvents([...eventBuffer])
+  if (flushing) return
+  flushing = true
+  try {
+    const { analyticsProvider } = getProviders()
+    const toIngest = eventBuffer.length > 0 ? [...eventBuffer] : []
+    if (toIngest.length > 0) {
+      try {
+        await analyticsProvider.ingestEvents(toIngest)
+      } catch (e) {
+        recordAnalyticsIngestError(e instanceof Error ? e.message : String(e))
+        throw e
+      }
+    }
+    const summary: SessionOutcomeSummary = {
+      storyId,
+      ...(storyVersion !== undefined && { storyVersion }),
+      sessionId,
+      startedAt,
+      endedAt: Date.now(),
+      counters: { ...counters },
+      milestones: Array.from(milestoneSet),
+    }
+    try {
+      await analyticsProvider.ingestSessionSummary(summary)
+    } catch (e) {
+      recordAnalyticsIngestError(e instanceof Error ? e.message : String(e))
+      throw e
+    }
+  } finally {
+    resetAnalyticsSession()
+    flushing = false
   }
-  const summary: SessionOutcomeSummary = {
-    storyId,
-    ...(storyVersion !== undefined && { storyVersion }),
-    sessionId,
-    startedAt,
-    endedAt: Date.now(),
-    counters: { ...counters },
-    milestones: Array.from(milestoneSet),
-  }
-  await analyticsProvider.ingestSessionSummary(summary)
-  resetAnalyticsSession()
 }
 
 export async function getOutcomeStats(storyId: string) {

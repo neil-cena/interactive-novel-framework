@@ -48,6 +48,7 @@ function serializeAction(action) {
 function serializeVisibility(req) {
   if (!req?.type) return ''
   if (req.type === 'has_flag') return `has_flag:${req.key ?? ''}`
+  if (req.type === 'not_has_flag') return `not_has_flag:${req.key ?? ''}`
   if (req.type === 'has_item') return `has_item:${req.itemId ?? ''}`
   if (req.type === 'stat_check') return `stat_check:${req.stat ?? ''}:${req.operator ?? ''}:${req.value ?? 0}`
   return ''

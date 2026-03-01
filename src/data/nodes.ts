@@ -223,7 +223,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_armory"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "robbed_armory"
+          }
+        ]
       },
       {
         "id": "c_2",

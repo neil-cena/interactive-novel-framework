@@ -42,7 +42,11 @@ onMounted(() => {
     <p v-else-if="stats.length === 0" class="mt-2 text-sm text-slate-400">
       No shared outcomes yet.
     </p>
-    <ul v-else class="mt-3 space-y-2 text-sm">
+    <template v-else>
+      <p class="mt-2 text-xs text-slate-400">
+        Based on {{ stats[0]?.sampleSize ?? 0 }} session(s). Percentages are share of sessions with that outcome.
+      </p>
+      <ul class="mt-3 space-y-2 text-sm">
       <li v-for="stat in stats" :key="stat.key" class="rounded border border-slate-700 bg-slate-800/50 p-2">
         <div class="flex items-center justify-between">
           <span class="text-slate-200">{{ stat.key }}</span>
@@ -50,6 +54,7 @@ onMounted(() => {
         </div>
         <p class="text-xs text-slate-400">Count {{ stat.count }} • Sample {{ stat.sampleSize }}</p>
       </li>
-    </ul>
+      </ul>
+    </template>
   </section>
 </template>

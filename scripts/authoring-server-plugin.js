@@ -298,6 +298,10 @@ function handleImportPackage(body, res, csvDir) {
     const hasErrors = diagnostics.some((d) => d.severity === 'error')
 
     if (hasErrors || !commit) {
+      const failureReasons = diagnostics.filter((d) => d.severity === 'error').map((d) => d.message || d.code)
+      if (failureReasons.length > 0 && typeof console !== 'undefined' && console.warn) {
+        console.warn('[phase5] package import not committed:', failureReasons.join('; '))
+      }
       res.setHeader('Content-Type', 'application/json')
       res.end(
         JSON.stringify({

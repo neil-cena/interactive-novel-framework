@@ -151,10 +151,14 @@ Cloud save, shared outcomes, and story package listing can use **Firebase** (Aut
 
 5. In `src/config.ts`, set `features.cloudSave: true` to use Firebase when env is present. Optional: set `VITE_PROVIDER_MODE=local` or `VITE_PROVIDER_MODE=firebase` to force a provider for testing.
 
+**Feature flag progression**: Enable flags in `src/config.ts` for dev first; after QA, promote to staging, then enable in production gradually (e.g. internal users, then sampled, then full). See `docs/phase5-rollout-checklist.md`.
+
+**Phase 5 observability (QA)**: In development, run `window.__phase5_diagnostics()` in the console to read sync failure count, conflict count, and analytics ingest error count.
+
 **Troubleshooting**
 
 - **Invalid email or password**: Sign in with the email and password you used when creating the account, or use “Need an account? Sign up” to create one.
-- **Firestore `net::ERR_BLOCKED_BY_CLIENT`**: Often caused by an ad blocker or browser extension blocking `firestore.googleapis.com`. Disable the blocker for this app’s origin or allow Firebase in the extension so cloud save and analytics work.
+- **Firestore `net::ERR_BLOCKED_BY_CLIENT`**: Often caused by an ad blocker or browser extension blocking `firestore.googleapis.com`. Disable the blocker for this app’s origin or allow Firebase in the extension so cloud save and analytics work. If this appears when you click **Sign out**, sign-out still completes; the message is from Firestore closing its connection and can be ignored (or allow Firebase in the extension to remove it).
 - **Music “failed to load”**: Optional; add `public/audio/music/menu.mp3` (and other tracks) if you want menu music, or ignore the console message.
 
 ### Playtest mode (QA)

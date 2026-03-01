@@ -15,7 +15,7 @@ export interface ActionPayload {
   qty?: number
 }
 
-export type VisibilityType = 'has_flag' | 'has_item' | 'stat_check'
+export type VisibilityType = 'has_flag' | 'not_has_flag' | 'has_item' | 'stat_check'
 
 export interface VisibilityRequirement {
   type: VisibilityType

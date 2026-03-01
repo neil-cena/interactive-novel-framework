@@ -33,6 +33,10 @@ export function isChoiceVisible(
       return Boolean(state.flags[requirement.key])
     }
 
+    if (requirement.type === 'not_has_flag' && requirement.key) {
+      return !Boolean(state.flags[requirement.key])
+    }
+
     if (requirement.type === 'has_item' && requirement.itemId) {
       return (state.inventory.items[requirement.itemId] ?? 0) > 0
     }

@@ -27,6 +27,17 @@ describe('isChoiceVisible', () => {
     expect(isChoiceVisible([{ type: 'has_flag', key: 'met_npc' }], state)).toBe(false)
   })
 
+  it('not_has_flag: returns true when flag is falsy or missing', () => {
+    expect(isChoiceVisible([{ type: 'not_has_flag', key: 'robbed_armory' }], baseState)).toBe(true)
+    const state = { ...baseState, flags: { robbed_armory: false } }
+    expect(isChoiceVisible([{ type: 'not_has_flag', key: 'robbed_armory' }], state)).toBe(true)
+  })
+
+  it('not_has_flag: returns false when flag is set', () => {
+    const state = { ...baseState, flags: { robbed_armory: true } }
+    expect(isChoiceVisible([{ type: 'not_has_flag', key: 'robbed_armory' }], state)).toBe(false)
+  })
+
   it('has_item: returns true when qty > 0', () => {
     const state = {
       ...baseState,

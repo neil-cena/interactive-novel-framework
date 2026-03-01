@@ -32,6 +32,35 @@ describe('story package schema', () => {
     expect(sanitized.nodes.n1.text).not.toContain('<script>')
     expect(sanitized.nodes.n1.choices[0].label).not.toContain('<script>')
   })
+
+  it('sanitizes node and choice ids', () => {
+    const model = {
+      nodes: {
+        n1: {
+          id: 'n1',
+          type: 'narrative',
+          text: 'OK',
+          choices: [{ id: 'c1', label: 'Go', mechanic: {} }],
+        },
+      },
+      items: {},
+      enemies: {},
+      encounters: {},
+    }
+    const sanitized = sanitizeModelTextFields(model)
+    expect(sanitized.nodes.n1.id).toBe('n1')
+    expect(sanitized.nodes.n1.choices[0].id).toBe('c1')
+    const withDangerousId = {
+      nodes: {
+        n_evil: { id: 'javascript:evil', type: 'narrative', text: 'X', choices: [] },
+      },
+      items: {},
+      enemies: {},
+      encounters: {},
+    }
+    const sanitized2 = sanitizeModelTextFields(withDangerousId)
+    expect(sanitized2.nodes.n_evil.id).not.toContain('javascript:')
+  })
 })
 
 describe('story package asset checks', () => {

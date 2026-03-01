@@ -1,6 +1,6 @@
 import { GAME_CONFIG, type SaveSlotId } from '../config'
 import type { PlayerState } from '../types/player'
-import { getSaveSyncState, queueCloudSave, resolveCloudConflict, syncQueuedCloudSaves, toPersistedState } from '../services/saveRepository'
+import { deleteCloudSave, getSaveSyncState, queueCloudSave, resolveCloudConflict, syncQueuedCloudSaves, toPersistedState } from '../services/saveRepository'
 import type { SaveConflict, SaveMergeChoice, SaveSyncState } from '../types/cloud'
 
 export const SLOT_KEYS = GAME_CONFIG.save.slotKeys
@@ -73,7 +73,8 @@ export function saveGameNow(slotId: SaveSlotId, state: PlayerState): void {
   void queueCloudSave(slotId, toPersistedState({ activeSaveSlot: state.activeSaveSlot, ...persisted }))
 }
 
-export function deleteSave(slotId: SaveSlotId): void {
+export async function deleteSave(slotId: SaveSlotId): Promise<void> {
+  await deleteCloudSave(slotId)
   localStorage.removeItem(slotId)
 }
 

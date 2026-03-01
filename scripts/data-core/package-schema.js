@@ -15,10 +15,14 @@ export function sanitizeModelTextFields(model) {
 
   const nodes = cloned.nodes ?? {}
   Object.values(nodes).forEach((node) => {
-    if (node && typeof node.text === 'string') node.text = sanitizeText(node.text)
-    if (Array.isArray(node?.choices)) {
+    if (!node) return
+    if (typeof node.text === 'string') node.text = sanitizeText(node.text)
+    if (typeof node.id === 'string') node.id = sanitizeText(node.id)
+    if (Array.isArray(node.choices)) {
       node.choices.forEach((choice) => {
-        if (choice && typeof choice.label === 'string') choice.label = sanitizeText(choice.label)
+        if (!choice) return
+        if (typeof choice.label === 'string') choice.label = sanitizeText(choice.label)
+        if (typeof choice.id === 'string') choice.id = sanitizeText(choice.id)
       })
     }
   })

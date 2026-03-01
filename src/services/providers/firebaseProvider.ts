@@ -139,7 +139,15 @@ export class FirebaseAuthProvider implements AuthProvider {
 
   async signOut(): Promise<void> {
     const { auth: a } = requireFirebase()
-    await fbSignOut(a)
+    try {
+      await fbSignOut(a)
+    } catch (err) {
+      // Firestore may tear down the Listen channel on sign-out; ad blockers can cause
+      // net::ERR_BLOCKED_BY_CLIENT. Auth state is still cleared; clear local session regardless.
+      if (import.meta.env.DEV) {
+        console.warn('[phase5] signOut: Firestore teardown failed (often ad blocker):', err)
+      }
+    }
     localStorage.removeItem(AUTH_SESSION_KEY)
   }
 }
@@ -192,7 +200,7 @@ export class FirebaseAnalyticsProvider implements AnalyticsProvider {
     const coll = collection(db, ANALYTICS_EVENTS_COLLECTION)
     for (const ev of events) {
       const ref = doc(coll)
-      batch.set(ref, withoutUndefined(ev as Record<string, unknown>))
+      batch.set(ref, withoutUndefined(ev as unknown as Record<string, unknown>))
     }
     await batch.commit()
   }
@@ -200,7 +208,7 @@ export class FirebaseAnalyticsProvider implements AnalyticsProvider {
   async ingestSessionSummary(summary: SessionOutcomeSummary): Promise<void> {
     const { firestore: db } = requireFirebase()
     const ref = doc(db, ANALYTICS_SUMMARIES_COLLECTION, summary.sessionId)
-    await setDoc(ref, withoutUndefined(summary as Record<string, unknown>))
+    await setDoc(ref, withoutUndefined(summary as unknown as Record<string, unknown>))
   }
 
   async getOutcomeStats(storyId: string): Promise<OutcomeStat[]> {
