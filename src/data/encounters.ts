@@ -2,38 +2,38 @@
 import type { CombatEncounter } from '../types/combat'
 
 export const COMBAT_ENCOUNTERS: Record<string, CombatEncounter> = {
-  "combat_alley_thug": {
-    "id": "combat_alley_thug",
-    "name": "combat_alley_thug",
+  "enc_bathroom": {
+    "id": "enc_bathroom",
+    "name": "enc_bathroom",
     "type": "combat",
     "enemies": [
       {
-        "enemyId": "silk_thug",
+        "enemyId": "owlbear",
         "count": 1
       }
     ],
     "resolution": {
       "onVictory": {
-        "nextNodeId": "n_alley_thug_looted"
+        "nextNodeId": "n_bathroom_victory"
       },
       "onDefeat": {
         "nextNodeId": "n_game_over"
       }
     }
   },
-  "combat_boss_garrick": {
-    "id": "combat_boss_garrick",
-    "name": "combat_boss_garrick",
+  "enc_boss": {
+    "id": "enc_boss",
+    "name": "enc_boss",
     "type": "combat",
     "enemies": [
       {
-        "enemyId": "silk_enforcer",
+        "enemyId": "mik_tystone",
         "count": 1
       }
     ],
     "resolution": {
       "onVictory": {
-        "nextNodeId": "n_boss_defeated"
+        "nextNodeId": "n_victory"
       },
       "onDefeat": {
         "nextNodeId": "n_game_over"

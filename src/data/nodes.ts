@@ -4,427 +4,327 @@ import type { StoryNode } from '../types/story'
 export const STORY_NODES: Record<string, StoryNode> = {
   "n_start": {
     "id": "n_start",
-    "type": "encounter",
-    "text": "You escaped the cellar, but the Silk Masks are hunting you. You need to break into their safehouse, steal the ledger containing your debt, and burn it.",
+    "type": "narrative",
+    "text": "You awaken to rude morning light. Your head is pounding. The room is destroyed—furniture smashed, curtains torn. A white chicken pecks aimlessly at a spilled potion on the rug. You have no memory of last night.",
     "onEnter": [
+      {
+        "action": "adjust_hp",
+        "amount": 20
+      },
       {
         "action": "adjust_currency",
-        "amount": 25
+        "amount": 50
       }
     ],
     "choices": [
       {
-        "id": "c_1",
-        "label": "[Visit the Black Market]",
+        "id": "c_check_pockets",
+        "label": "[Check your pockets]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_market"
+          "nextNodeId": "n_inventory_check"
         }
       },
       {
-        "id": "c_2",
-        "label": "[Head to the Safehouse]",
+        "id": "c_bathroom",
+        "label": "[Check the Bathroom]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_safehouse_ext"
+          "nextNodeId": "n_bathroom_door"
         }
       }
     ]
   },
-  "n_market": {
-    "id": "n_market",
-    "type": "encounter",
-    "text": "A hooded merchant gestures to his wares. \"Quickly now. The guards are patrolling.\"",
-    "choices": [
-      {
-        "id": "c_buy_1",
-        "label": "[Buy Smoke Bomb - 15g]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_buy_smoke"
-        }
-      },
-      {
-        "id": "c_buy_2",
-        "label": "[Buy Health Potion - 20g]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_buy_potion"
-        }
-      },
-      {
-        "id": "c_leave",
-        "label": "[Leave Market]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_safehouse_ext"
-        }
-      }
-    ]
-  },
-  "n_buy_smoke": {
-    "id": "n_buy_smoke",
-    "type": "encounter",
-    "text": "You hand over the coin and pocket the explosive.",
-    "onEnter": [
-      {
-        "action": "adjust_currency",
-        "amount": -15
-      },
-      {
-        "action": "add_item",
-        "itemId": "smoke_bomb",
-        "qty": 1
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_1",
-        "label": "[Back to Market]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_market"
-        }
-      },
-      {
-        "id": "c_n_buy_smoke_2",
-        "label": "Actually cheating",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_node_1"
-        }
-      }
-    ]
-  },
-  "n_buy_potion": {
-    "id": "n_buy_potion",
-    "type": "encounter",
-    "text": "You secure the red vial.",
-    "onEnter": [
-      {
-        "action": "adjust_currency",
-        "amount": -20
-      },
-      {
-        "action": "add_item",
-        "itemId": "health_potion",
-        "qty": 1
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_1",
-        "label": "[Back to Market]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_market"
-        }
-      }
-    ]
-  },
-  "n_safehouse_ext": {
-    "id": "n_safehouse_ext",
-    "type": "encounter",
-    "text": "You crouch in the alley outside the safehouse. A burly thug guards the front door, unaware of your presence.",
-    "choices": [
-      {
-        "id": "c_1",
-        "label": "[Sneak Past]",
-        "mechanic": {
-          "type": "skill_check",
-          "dice": "1d20",
-          "dc": 12,
-          "onSuccess": {
-            "nextNodeId": "n_safehouse_hall"
-          },
-          "onFailure": {
-            "nextNodeId": "n_game_over"
-          },
-          "onFailureEncounterId": "combat_alley_thug",
-          "attribute": "dexterity"
-        }
-      },
-      {
-        "id": "c_2",
-        "label": "[Throw Smoke Bomb]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_safehouse_hall_smoke"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "has_item",
-            "itemId": "smoke_bomb"
-          }
-        ]
-      },
-      {
-        "id": "c_3",
-        "label": "[Ambush Him]",
-        "mechanic": {
-          "type": "combat_init",
-          "encounterId": "combat_alley_thug"
-        }
-      }
-    ]
-  },
-  "n_safehouse_hall_smoke": {
-    "id": "n_safehouse_hall_smoke",
-    "type": "encounter",
-    "text": "The bomb detonates! You slip past the coughing guard and lose the bomb in the process.",
-    "onEnter": [
-      {
-        "action": "remove_item",
-        "itemId": "smoke_bomb",
-        "qty": 1
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_1",
-        "label": "[Enter the Hallway]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_safehouse_hall"
-        }
-      }
-    ]
-  },
-  "n_alley_thug_looted": {
-    "id": "n_alley_thug_looted",
-    "type": "encounter",
-    "text": "The guard falls. You quickly drag his body into the shadows and find a Silk Mask cloak.",
+  "n_inventory_check": {
+    "id": "n_inventory_check",
+    "type": "narrative",
+    "text": "You rummage through your ruined clothes. You find a crumpled piece of paper.",
     "onEnter": [
       {
         "action": "add_item",
-        "itemId": "guard_cloak",
-        "qty": 1
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_1",
-        "label": "[Enter the Hallway]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_safehouse_hall"
-        }
-      }
-    ]
-  },
-  "n_safehouse_hall": {
-    "id": "n_safehouse_hall",
-    "type": "encounter",
-    "text": "Inside, the air is thick with cigar smoke. To the left is the Armory. Straight ahead is the Boss's Office.",
-    "choices": [
-      {
-        "id": "c_1",
-        "label": "[Enter Armory]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_armory"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "not_has_flag",
-            "key": "robbed_armory"
-          }
-        ]
-      },
-      {
-        "id": "c_2",
-        "label": "[Enter Office]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_office_door"
-        }
-      }
-    ]
-  },
-  "n_armory": {
-    "id": "n_armory",
-    "type": "encounter",
-    "text": "The armory is unguarded. You find a wicked-looking blade resting on a velvet cushion.",
-    "onEnter": [
-      {
-        "action": "add_item",
-        "itemId": "blade_of_shadows",
+        "itemId": "receipt",
         "qty": 1
       },
       {
         "action": "set_flag",
-        "key": "robbed_armory",
+        "key": "has_clue",
         "value": true
       }
     ],
     "choices": [
       {
-        "id": "c_1",
-        "label": "[Equip it and leave]",
+        "id": "c_read_receipt",
+        "label": "[Read the paper]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_safehouse_hall"
+          "nextNodeId": "n_read_receipt"
         }
       }
     ]
   },
-  "n_office_door": {
-    "id": "n_office_door",
-    "type": "encounter",
-    "text": "The heavy oak door to the office is locked. You can hear heavy breathing on the other side.",
+  "n_read_receipt": {
+    "id": "n_read_receipt",
+    "type": "narrative",
+    "text": "It's a receipt from 'Dude Fiero's Kitchen'. Scrawled on the back is the word: 'OBLIVION'.",
     "choices": [
       {
-        "id": "c_1",
-        "label": "[Pick the Lock]",
+        "id": "c_back_start",
+        "label": "[Look around the room]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_room_hub"
+        }
+      }
+    ]
+  },
+  "n_room_hub": {
+    "id": "n_room_hub",
+    "type": "narrative",
+    "text": "The hotel room is a disaster scene.",
+    "choices": [
+      {
+        "id": "c_bathroom",
+        "label": "[Open Bathroom Door]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_bathroom_door"
+        }
+      },
+      {
+        "id": "c_closet",
+        "label": "[Check the Closet]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_closet"
+        }
+      },
+      {
+        "id": "c_leave",
+        "label": "[Leave Hotel]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_streets"
+        }
+      }
+    ]
+  },
+  "n_closet": {
+    "id": "n_closet",
+    "type": "narrative",
+    "text": "You open the closet. A Drow baby wearing a spider-themed pacifier stares up at you. It gurgles.",
+    "onEnter": [
+      {
+        "action": "add_item",
+        "itemId": "drow_baby",
+        "qty": 1
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_take_baby",
+        "label": "[Take the baby (carefully)]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_room_hub"
+        }
+      }
+    ]
+  },
+  "n_bathroom_door": {
+    "id": "n_bathroom_door",
+    "type": "encounter",
+    "text": "You open the bathroom door. A massive Owlbear is drinking from the bathtub! It turns to you and roars.",
+    "choices": [
+      {
+        "id": "c_fight",
+        "label": "[Attack!]",
+        "mechanic": {
+          "type": "combat_init",
+          "encounterId": "enc_bathroom"
+        }
+      },
+      {
+        "id": "c_calm",
+        "label": "[Calm Down (Animal Handling DC 14)]",
         "mechanic": {
           "type": "skill_check",
           "dice": "1d20",
           "dc": 14,
           "onSuccess": {
-            "nextNodeId": "n_office_in"
+            "nextNodeId": "n_calm_success"
           },
           "onFailure": {
-            "nextNodeId": "n_office_caught"
+            "nextNodeId": "n_calm_fail"
           },
+          "onFailureEncounterId": "enc_bathroom",
           "attribute": "intelligence"
         }
-      },
+      }
+    ]
+  },
+  "n_calm_success": {
+    "id": "n_calm_success",
+    "type": "narrative",
+    "text": "The beast sniffs your hand and purrs like a giant, feathered kitten. You notice a collar on it labeled 'MacGuffin'.",
+    "onEnter": [
       {
-        "id": "c_2",
-        "label": "[Knock wearing Cloak]",
+        "action": "add_item",
+        "itemId": "macguffin_collar",
+        "qty": 1
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_leave_bath",
+        "label": "[Back to Room]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_office_bluff"
+          "nextNodeId": "n_room_hub"
+        }
+      }
+    ]
+  },
+  "n_calm_fail": {
+    "id": "n_calm_fail",
+    "type": "narrative",
+    "text": "The Owlbear does not appreciate your shushing. It swipes at you!",
+    "choices": [
+      {
+        "id": "c_defend",
+        "label": "[Defend Yourself]",
+        "mechanic": {
+          "type": "combat_init",
+          "encounterId": "enc_bathroom"
+        }
+      }
+    ]
+  },
+  "n_bathroom_victory": {
+    "id": "n_bathroom_victory",
+    "type": "narrative",
+    "text": "The beast lies defeated. You find a leather collar on it labeled 'MacGuffin'.",
+    "onEnter": [
+      {
+        "action": "add_item",
+        "itemId": "macguffin_collar",
+        "qty": 1
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_back",
+        "label": "[Back to Room]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_room_hub"
+        }
+      }
+    ]
+  },
+  "n_streets": {
+    "id": "n_streets",
+    "type": "narrative",
+    "text": "The bright sun of Sigil hurts your eyes. You recall you were heading to 'Drowtown' for the party.",
+    "choices": [
+      {
+        "id": "c_go_drowtown",
+        "label": "[Go to Drowtown Gate]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_drowtown_gate"
+        }
+      }
+    ]
+  },
+  "n_drowtown_gate": {
+    "id": "n_drowtown_gate",
+    "type": "narrative",
+    "text": "A massive bouncer blocks the gate. 'Private party. Password?'",
+    "choices": [
+      {
+        "id": "c_password",
+        "label": "[Say 'OBLIVION']",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_mansion"
         },
         "visibilityRequirements": [
           {
             "type": "has_item",
-            "itemId": "guard_cloak"
+            "itemId": "receipt"
           }
         ]
-      }
-    ]
-  },
-  "n_office_bluff": {
-    "id": "n_office_bluff",
-    "type": "encounter",
-    "text": "\"Yeah? Come in,\" a gruff voice yells. You step inside, your face hidden by the cloak. Garrick looks up from the ledger.",
-    "onEnter": [
+      },
       {
-        "action": "set_flag",
-        "key": "has_surprise",
-        "value": true
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_1",
-        "label": "[Attack with Surprise]",
+        "id": "c_show_baby",
+        "label": "[Show the Drow Baby]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_boss_pre_combat"
+          "nextNodeId": "n_mansion_baby"
+        },
+        "visibilityRequirements": [
+          {
+            "type": "has_item",
+            "itemId": "drow_baby"
+          }
+        ]
+      },
+      {
+        "id": "c_no_clue",
+        "label": "[Leave]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_streets"
         }
       }
     ]
   },
-  "n_office_in": {
-    "id": "n_office_in",
+  "n_mansion": {
+    "id": "n_mansion",
     "type": "encounter",
-    "text": "The lock clicks. You push the door open to find Garrick, the Enforcer, staring right at you.",
+    "text": "You enter Mik Tystone's mansion. He stands by a fountain. 'You stole my tiger! And my chicken!'",
     "choices": [
       {
-        "id": "c_1",
-        "label": "[Draw Weapon]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_boss_pre_combat"
-        }
-      }
-    ]
-  },
-  "n_office_caught": {
-    "id": "n_office_caught",
-    "type": "encounter",
-    "text": "Your lockpick snaps loudly! The door rips open, and Garrick backhands you across the room.",
-    "onEnter": [
-      {
-        "action": "adjust_hp",
-        "amount": -3
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_1",
-        "label": "[Recover and Fight]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_boss_pre_combat"
-        }
-      }
-    ]
-  },
-  "n_boss_pre_combat": {
-    "id": "n_boss_pre_combat",
-    "type": "encounter",
-    "text": "Garrick cracks his knuckles. \"Nobody leaves the Silk Masks alive.\"",
-    "choices": [
-      {
-        "id": "c_1",
-        "label": "[Fight]",
+        "id": "c_fight_mik",
+        "label": "[Fight Mik Tystone]",
         "mechanic": {
           "type": "combat_init",
-          "encounterId": "combat_boss_garrick"
+          "encounterId": "enc_boss"
         }
       }
     ]
   },
-  "n_boss_defeated": {
-    "id": "n_boss_defeated",
-    "type": "encounter",
-    "text": "Garrick is dead. You grab the ledger from his desk and toss it into the fireplace. The debt is erased. You are truly free.",
+  "n_mansion_baby": {
+    "id": "n_mansion_baby",
+    "type": "narrative",
+    "text": "The bouncer's eyes go wide. 'That's Mik's kid! Get in here!' You are ushered into the VIP lounge.",
     "choices": [
       {
-        "id": "c_1",
-        "label": "[End Game]",
+        "id": "c_win",
+        "label": "[Finish the Adventure]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_start"
+          "nextNodeId": "n_victory"
         }
       }
     ]
+  },
+  "n_victory": {
+    "id": "n_victory",
+    "type": "ending",
+    "text": "You return the baby/chicken/tiger. Tystone laughs and offers you a drink. 'Hair of the dog?' The nightmare starts all over again."
   },
   "n_game_over": {
     "id": "n_game_over",
-    "type": "encounter",
-    "text": "Your vision fades to black. The Silk Masks always collect their dues.",
+    "type": "ending",
+    "text": "The Hangover claims another victim.",
     "choices": [
       {
-        "id": "c_1",
-        "label": "[Restart from Beginning]",
+        "id": "c_restart",
+        "label": "[Restart]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_start"
-        }
-      }
-    ]
-  },
-  "n_node_1": {
-    "id": "n_node_1",
-    "type": "narrative",
-    "text": "You are happy. finally.",
-    "onEnter": [
-      {
-        "action": "heal",
-        "amount": "20"
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_n_node_1_1",
-        "label": "New choice",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_boss_defeated"
         }
       }
     ]

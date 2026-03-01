@@ -2,22 +2,22 @@
 import type { EnemyTemplate } from '../types/combat'
 
 export const ENEMY_DICTIONARY: Record<string, EnemyTemplate> = {
-  "silk_thug": {
-    "id": "silk_thug",
-    "name": "Silk Mask Thug",
-    "hp": 15,
-    "ac": 12,
-    "attackBonus": 3,
-    "damage": "1d6",
-    "xpReward": 35
+  "owlbear": {
+    "id": "owlbear",
+    "name": "MacGuffin the Owlbear",
+    "hp": 59,
+    "ac": 13,
+    "attackBonus": 7,
+    "damage": "1d10+5",
+    "xpReward": 200
   },
-  "silk_enforcer": {
-    "id": "silk_enforcer",
-    "name": "Garrick the Enforcer",
-    "hp": 25,
-    "ac": 14,
-    "attackBonus": 4,
-    "damage": "1d8",
-    "xpReward": 100
+  "mik_tystone": {
+    "id": "mik_tystone",
+    "name": "Mik Tystone",
+    "hp": 80,
+    "ac": 15,
+    "attackBonus": 8,
+    "damage": "1d6+4",
+    "xpReward": 500
   }
 }

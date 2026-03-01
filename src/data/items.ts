@@ -2,43 +2,19 @@
 import type { ItemTemplate } from '../types/items'
 
 export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
-  "dagger_iron": {
-    "id": "dagger_iron",
-    "name": "Iron Dagger",
-    "type": "weapon",
-    "damage": "1d4",
-    "attackBonus": 0,
-    "acBonus": 0,
-    "scalingAttribute": "dexterity",
-    "aoe": false
-  },
-  "blade_of_shadows": {
-    "id": "blade_of_shadows",
-    "name": "Blade of Shadows",
-    "type": "weapon",
-    "damage": "1d6",
-    "attackBonus": 1,
-    "acBonus": 0,
-    "scalingAttribute": "dexterity",
-    "aoe": false
-  },
-  "health_potion": {
-    "id": "health_potion",
-    "name": "Health Potion",
-    "type": "consumable",
-    "effect": {
-      "action": "heal",
-      "amount": "2d4+2"
-    }
-  },
-  "smoke_bomb": {
-    "id": "smoke_bomb",
-    "name": "Smoke Bomb",
+  "receipt": {
+    "id": "receipt",
+    "name": "Crumpled Receipt",
     "type": "tool"
   },
-  "guard_cloak": {
-    "id": "guard_cloak",
-    "name": "Silk Mask Cloak",
+  "drow_baby": {
+    "id": "drow_baby",
+    "name": "Drow Baby",
+    "type": "tool"
+  },
+  "macguffin_collar": {
+    "id": "macguffin_collar",
+    "name": "Leather Collar",
     "type": "tool"
   }
 }

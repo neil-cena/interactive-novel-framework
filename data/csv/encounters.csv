@@ -1,3 +1,3 @@
 id,name,enemies,onVictory,onDefeat
-combat_alley_thug,combat_alley_thug,silk_thug:1,n_alley_thug_looted,n_game_over
-combat_boss_garrick,combat_boss_garrick,silk_enforcer:1,n_boss_defeated,n_game_over
+enc_bathroom,enc_bathroom,owlbear:1,n_bathroom_victory,n_game_over
+enc_boss,enc_boss,mik_tystone:1,n_victory,n_game_over
