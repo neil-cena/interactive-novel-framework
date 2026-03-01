@@ -335,7 +335,7 @@ export function parseEncounters(rows, logPrefix = '[parse]') {
 }
 
 export const NODE_TYPES = new Set(['narrative', 'encounter', 'ending'])
-export const ITEM_TYPES = new Set(['weapon', 'consumable', 'tool'])
+export const ITEM_TYPES = new Set(['weapon', 'consumable', 'tool', 'armor'])
 export const VALID_ATTRIBUTES = new Set(['strength', 'dexterity', 'intelligence'])
 export const STAT_CHECK_OPERATORS = new Set(['>=', '<=', '==', '>', '<'])
 export const STAT_CHECK_STATS = new Set(['hpCurrent', 'currency'])

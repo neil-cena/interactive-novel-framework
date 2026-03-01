@@ -22,6 +22,7 @@ export const defaultPlayerState = (): PlayerState => ({
   },
   equipment: {
     mainHand: playerConfig.startingWeaponId,
+    armor: null,
   },
   attributes: {
     ...playerConfig.startingAttributes,
@@ -58,7 +59,10 @@ export function playerStateFromSheet(payload: CharacterSheetPayload): PlayerStat
         ...base.inventory,
         items: { ...preset.startingItems },
       },
-      equipment: { mainHand: preset.startingWeaponId },
+      equipment: {
+        mainHand: preset.startingWeaponId,
+        armor: preset.startingArmorId ?? null,
+      },
       attributes: { ...preset.startingAttributes },
       flags: { ...preset.startingFlags },
     }
@@ -78,7 +82,10 @@ export function playerStateFromSheet(payload: CharacterSheetPayload): PlayerStat
       ...base.inventory,
       items: { ...payload.startingItems },
     },
-    equipment: { mainHand: payload.startingWeaponId },
+    equipment: {
+      mainHand: payload.startingWeaponId,
+      armor: payload.startingArmorId ?? null,
+    },
     attributes: { ...payload.startingAttributes },
     flags: { ...payload.startingFlags },
   }
@@ -192,7 +199,7 @@ export const usePlayerStore = defineStore('player', {
       this.attributes[attr] += 1
       this.progression.unspentAttributePoints -= 1
     },
-    equipItem(slot: 'mainHand', itemId: string | null) {
+    equipItem(slot: 'mainHand' | 'armor', itemId: string | null) {
       this.equipment[slot] = itemId
     },
     resetToDefaults() {

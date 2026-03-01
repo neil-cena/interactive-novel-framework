@@ -3,7 +3,7 @@ import type { ActionPayload } from './story'
 export interface ItemTemplate {
   id: string
   name: string
-  type: 'weapon' | 'consumable' | 'tool'
+  type: 'weapon' | 'consumable' | 'tool' | 'armor'
   damage?: string
   attackBonus?: number
   acBonus?: number

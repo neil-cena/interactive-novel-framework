@@ -241,7 +241,7 @@ export function validateData(nodes, items, enemies, encounters) {
         diag(
           E,
           'DATA006',
-          `Item "${id}": invalid type "${item.type}". Must be one of: weapon, consumable, tool`,
+          `Item "${id}": invalid type "${item.type}". Must be one of: weapon, consumable, tool, armor`,
           { itemId: id, type: item.type },
         ),
       )

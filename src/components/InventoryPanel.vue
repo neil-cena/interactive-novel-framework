@@ -39,6 +39,11 @@ const equippedWeapon = computed(() => {
   return id ? { id, ...ITEM_DICTIONARY[id] } : null
 })
 
+const equippedArmor = computed(() => {
+  const id = playerStore.equipment.armor
+  return id ? { id, ...ITEM_DICTIONARY[id] } : null
+})
+
 const inventoryItems = computed(() => {
   return Object.entries(playerStore.inventory.items).map(([id, qty]) => {
     const template = ITEM_DICTIONARY[id]
@@ -49,10 +54,13 @@ const inventoryItems = computed(() => {
       type: template?.type ?? 'unknown',
       damage: template?.damage,
       attackBonus: template?.attackBonus,
+      acBonus: template?.acBonus,
       scalingAttribute: template?.scalingAttribute,
       isConsumable: template?.type === 'consumable' && !!template.effect,
       isWeapon: template?.type === 'weapon',
+      isArmor: template?.type === 'armor',
       isEquipped: playerStore.equipment.mainHand === id,
+      isArmorEquipped: playerStore.equipment.armor === id,
     }
   })
 })
@@ -63,6 +71,14 @@ function handleEquip(itemId: string) {
 
 function handleUnequip() {
   playerStore.equipItem('mainHand', null)
+}
+
+function handleEquipArmor(itemId: string) {
+  playerStore.equipItem('armor', itemId)
+}
+
+function handleUnequipArmor() {
+  playerStore.equipItem('armor', null)
 }
 
 function handleUseConsumable(itemId: string) {
@@ -124,6 +140,25 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
       </section>
 
       <section class="mt-4">
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Equipped Armor</h3>
+        <div v-if="equippedArmor" class="mt-2 rounded border border-slate-600 bg-slate-800/60 p-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="font-medium text-slate-100">{{ equippedArmor.name }}</span>
+            <button
+              type="button"
+              class="rounded border border-slate-500 bg-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-600"
+              aria-label="Unequip armor"
+              @click="handleUnequipArmor"
+            >
+              Unequip
+            </button>
+          </div>
+          <div v-if="equippedArmor.acBonus != null" class="mt-1 text-xs text-slate-400">AC: +{{ equippedArmor.acBonus }}</div>
+        </div>
+        <p v-else class="mt-2 text-sm text-slate-500">No armor</p>
+      </section>
+
+      <section class="mt-4">
         <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Items</h3>
         <div v-if="inventoryItems.length === 0" class="mt-2 text-sm text-slate-500">No items.</div>
         <ul v-else class="mt-2 space-y-2">
@@ -141,6 +176,7 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
                   'bg-red-900/40 text-red-300': item.type === 'weapon',
                   'bg-emerald-900/40 text-emerald-300': item.type === 'consumable',
                   'bg-sky-900/40 text-sky-300': item.type === 'tool',
+                  'bg-slate-600/40 text-slate-300': item.type === 'armor',
                 }"
               >
                 {{ item.type }}
@@ -151,7 +187,7 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
                 v-if="item.isWeapon && !item.isEquipped"
                 type="button"
                 class="rounded border border-amber-700 bg-amber-900/40 px-3 py-2 text-sm text-amber-200 hover:bg-amber-900/70"
-                :aria-label="`Equip ${item.name}`"
+                :aria-label="`Equip weapon ${item.name}`"
                 @click="handleEquip(item.id)"
               >
                 Equip
@@ -161,6 +197,21 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
                 class="rounded bg-amber-900/30 px-2 py-1 text-xs text-amber-400"
               >
                 Equipped
+              </span>
+              <button
+                v-if="item.isArmor && !item.isArmorEquipped"
+                type="button"
+                class="rounded border border-slate-500 bg-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-600"
+                :aria-label="`Equip armor ${item.name}`"
+                @click="handleEquipArmor(item.id)"
+              >
+                Equip armor
+              </button>
+              <span
+                v-if="item.isArmor && item.isArmorEquipped"
+                class="rounded bg-slate-700/50 px-2 py-1 text-xs text-slate-400"
+              >
+                Worn
               </span>
               <button
                 v-if="item.isConsumable"

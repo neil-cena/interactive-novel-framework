@@ -25,8 +25,10 @@ const encounterNotFound = ref(false)
 
 const playerAc = computed(() => {
   const weaponId = playerStore.equipment.mainHand
-  const acBonus = weaponId ? ITEM_DICTIONARY[weaponId]?.acBonus ?? 0 : 0
-  return GAME_CONFIG.combat.baseAc + acBonus
+  const armorId = playerStore.equipment.armor
+  const weaponBonus = weaponId ? ITEM_DICTIONARY[weaponId]?.acBonus ?? 0 : 0
+  const armorBonus = armorId ? ITEM_DICTIONARY[armorId]?.acBonus ?? 0 : 0
+  return GAME_CONFIG.combat.baseAc + weaponBonus + armorBonus
 })
 
 const playerAttackBonus = computed(() => {

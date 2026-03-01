@@ -18,6 +18,7 @@ export interface PlayerInventory {
 
 export interface PlayerEquipment {
   mainHand: string | null
+  armor: string | null
 }
 
 export interface PlayerAttributes {

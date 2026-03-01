@@ -77,6 +77,7 @@ export function buildCustomSheetPayload(
     type: 'custom',
     startingHp: hp,
     startingWeaponId: GAME_CONFIG.player.startingWeaponId,
+    startingArmorId: null,
     startingItems: { ...GAME_CONFIG.player.startingItems },
     startingFlags: { ...GAME_CONFIG.player.startingFlags },
     startingAttributes: { ...attributes },

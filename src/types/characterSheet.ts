@@ -9,6 +9,8 @@ export interface CharacterSheetPreset {
   class?: string
   startingHp: number
   startingWeaponId: string | null
+  /** Optional starting armor item id (e.g. robe_scholar, chainmail). */
+  startingArmorId?: string | null
   startingItems: Record<string, number>
   startingFlags: Record<string, boolean>
   startingAttributes: PlayerAttributes
@@ -37,6 +39,7 @@ export type CharacterSheetPayload =
       type: 'custom'
       startingHp: number
       startingWeaponId: string | null
+      startingArmorId?: string | null
       startingItems: Record<string, number>
       startingFlags: Record<string, boolean>
       startingAttributes: PlayerAttributes
