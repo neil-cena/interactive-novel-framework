@@ -55,7 +55,7 @@ export async function flushOutcomeEvents(storyId: string, storyVersion?: string)
   }
   const summary: SessionOutcomeSummary = {
     storyId,
-    storyVersion,
+    ...(storyVersion !== undefined && { storyVersion }),
     sessionId,
     startedAt,
     endedAt: Date.now(),

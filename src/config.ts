@@ -39,7 +39,7 @@ export const GAME_CONFIG = {
 
   /** Feature flags (Phase 5 rollout controls) */
   features: {
-    cloudSave: false,
+    cloudSave: true,
     sharedOutcomes: true,
     storyPackages: true,
   },

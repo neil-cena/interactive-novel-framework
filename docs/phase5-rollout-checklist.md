@@ -2,6 +2,16 @@
 
 Use this checklist to roll out Phase 5 safely with feature flags and observability.
 
+## Implementation (Firebase)
+
+- [x] Firebase client module and env template (`.env.example`, `src/services/firebase/firebaseClient.ts`).
+- [x] Firebase providers: Auth, Save, Analytics, StoryPackage (`src/services/providers/firebaseProvider.ts`).
+- [x] Provider factory selects Firebase when `cloudSave` is true and Firebase env is set (`src/services/providers/providerFactory.ts`).
+- [x] Firestore security rules (`firestore.rules`): per-user saves, analytics write/read, story_packages read-only.
+- [x] `npm run build` and `npm run test` pass. Manual smoke test (sign in, save, conflict resolve) should be run with a real Firebase project and `features.cloudSave: true`.
+
+See README section **Firebase (Phase 5 cloud features)** for env setup and deployment steps.
+
 ## Feature Flags
 
 - [ ] `GAME_CONFIG.features.cloudSave` enabled in dev only.
@@ -42,7 +52,7 @@ Use this checklist to roll out Phase 5 safely with feature flags and observabili
 
 ## Production Gate
 
-- [ ] `npm run build` passes.
-- [ ] `npm run authoring:build` passes.
-- [ ] `npm run test` passes.
-- [ ] Manual smoke test: menu -> sign in -> play -> save -> quit -> relaunch -> conflict resolve.
+- [x] `npm run build` passes.
+- [x] `npm run authoring:build` passes.
+- [x] `npm run test` passes.
+- [ ] Manual smoke test: menu -> sign in -> play -> save -> quit -> relaunch -> conflict resolve (run with Firebase configured and `cloudSave: true`).

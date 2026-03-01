@@ -8,6 +8,7 @@ A data-driven interactive fiction engine with D&D-style combat, built with Vue 3
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Running the Development Server](#running-the-development-server)
+- [Firebase (Phase 5)](#firebase-phase-5-cloud-features)
 - [Building for Production](#building-for-production)
 - [The Data Pipeline (CSV to TypeScript)](#the-data-pipeline-csv-to-typescript)
 - [Mobile Builds with Capacitor](#mobile-builds-with-capacitor)
@@ -112,6 +113,50 @@ npm run authoring:preview # Preview the authoring build
 ```
 
 Open the app, click **Load** to read project CSVs, edit nodes/choices in the graph and side inspector, then **Save** to write back to `data/csv/`. Save is validated server-side; invalid data is rejected. Use `dev:data` or `dev:full` so the game picks up changes after save.
+
+### Firebase (Phase 5 cloud features)
+
+Cloud save, shared outcomes, and story package listing can use **Firebase** (Auth + Firestore) when enabled.
+
+**Local vs Firebase provider**
+
+- By default the app uses **local providers**: auth and saves are in-memory/localStorage only. No backend required.
+- When `GAME_CONFIG.features.cloudSave` is `true` and Firebase env vars are set, the app uses **Firebase providers** for auth, save sync, analytics, and story package listing.
+
+**Firebase setup**
+
+1. Create a [Firebase project](https://console.firebase.google.com/) and enable **Authentication** (Email/Password) and **Firestore** (native mode).
+2. Register a web app and copy the config. Create `.env.local` from the template:
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+3. Fill in `.env.local` with your project values:
+
+   | Variable | Description |
+   | -------- | ----------- |
+   | `VITE_FIREBASE_API_KEY` | Web API key |
+   | `VITE_FIREBASE_AUTH_DOMAIN` | Project auth domain |
+   | `VITE_FIREBASE_PROJECT_ID` | Project ID |
+   | `VITE_FIREBASE_APP_ID` | Web app ID |
+   | `VITE_FIREBASE_DEMO_PASSWORD` | (Optional) Password for email sign-in; default `phase5-demo-password` for dev |
+
+4. Deploy Firestore rules (from project root):
+
+   ```bash
+   firebase deploy --only firestore:rules
+   ```
+
+   Rules are in `firestore.rules`: per-user saves under `users/{uid}/saves`, analytics write-only, story packages read-only.
+
+5. In `src/config.ts`, set `features.cloudSave: true` to use Firebase when env is present. Optional: set `VITE_PROVIDER_MODE=local` or `VITE_PROVIDER_MODE=firebase` to force a provider for testing.
+
+**Troubleshooting**
+
+- **400 on sign-in**: The app tries to sign in first, then creates an account if the user doesn’t exist. If you see “An account with this email already exists with a different password”, the email was registered elsewhere; use the same password as this app (e.g. `VITE_FIREBASE_DEMO_PASSWORD` in `.env`) or sign in with that account.
+- **Firestore `net::ERR_BLOCKED_BY_CLIENT`**: Often caused by an ad blocker or browser extension blocking `firestore.googleapis.com`. Disable the blocker for this app’s origin or allow Firebase in the extension so cloud save and analytics work.
+- **Music “failed to load”**: Optional; add `public/audio/music/menu.mp3` (and other tracks) if you want menu music, or ignore the console message.
 
 ### Playtest mode (QA)
 
@@ -338,4 +383,4 @@ interactive-novel-framework/
 | Bundler        | Vite 7                          | Fast HMR in dev, optimized production    |
 | Data Pipeline  | PapaParse + Node.js script      | CSV-to-TypeScript code generation        |
 | Mobile         | Capacitor (Android + iOS)       | Native mobile wrappers for the web app   |
-| Persistence    | localStorage                    | Client-side save/load with 3 slots       |
+| Persistence    | localStorage (+ Firebase when Phase 5 enabled) | Client-side save/load; cloud sync via Firestore when configured |

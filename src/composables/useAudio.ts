@@ -47,7 +47,9 @@ function getSfx(key: SfxKey, volume: number): Howl | null {
       src: [path],
       volume,
       onloaderror: () => {
-        console.warn('[audio] SFX failed to load:', key, path)
+        if (import.meta.env.DEV) {
+          console.debug('[audio] SFX failed to load:', key, path)
+        }
       },
     })
     sfxCache.set(key, howl)
@@ -71,7 +73,9 @@ function getMusic(key: MusicKey, volume: number): Howl | null {
       volume,
       html5: true,
       onloaderror: () => {
-        console.warn('[audio] Music failed to load:', key, path)
+        if (import.meta.env.DEV) {
+          console.debug('[audio] Music failed to load:', key, path)
+        }
       },
     })
     musicCache.set(key, howl)
