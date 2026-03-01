@@ -96,6 +96,26 @@ export interface LoadDraftResponse {
   model?: AuthoringModel
 }
 
+export interface StoryPackage {
+  manifest: {
+    storyId: string
+    version: string
+    title: string
+    author: string
+    description?: string
+    createdAt?: string
+  }
+  model: AuthoringModel
+  assets?: Array<{ name: string; base64: string }>
+}
+
+export interface ImportPackageResponse {
+  success: boolean
+  committed: boolean
+  diagnostics: Diagnostic[]
+  manifest: StoryPackage['manifest']
+}
+
 export async function loadFromApi(): Promise<LoadResponse> {
   const res = await fetch('/api/authoring/load')
   if (!res.ok) throw new Error(await res.text())
@@ -139,4 +159,22 @@ export async function loadDraftFromApi(): Promise<LoadDraftResponse> {
   const data = await res.json().catch(() => ({}))
   if (!res.ok) throw new Error((data as { error?: string }).error || res.statusText)
   return data as LoadDraftResponse
+}
+
+export async function exportPackageFromApi(): Promise<StoryPackage> {
+  const res = await fetch('/api/authoring/export-package')
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error((data as { error?: string }).error || res.statusText)
+  return data as StoryPackage
+}
+
+export async function importPackageOnApi(payload: StoryPackage, commit = false): Promise<ImportPackageResponse> {
+  const res = await fetch('/api/authoring/import-package', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...payload, commit }),
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error((data as { error?: string }).error || res.statusText)
+  return data as ImportPackageResponse
 }

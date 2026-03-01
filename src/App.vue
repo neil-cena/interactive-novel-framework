@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
 import AudioControls from './components/AudioControls.vue'
+import AuthGate from './components/AuthGate.vue'
 import CombatView from './components/CombatView.vue'
 import ErrorBoundary from './components/ErrorBoundary.vue'
 import InventoryPanel from './components/InventoryPanel.vue'
@@ -10,15 +11,19 @@ import PlaytestPanel from './components/PlaytestPanel.vue'
 import PlayerHud from './components/PlayerHud.vue'
 import { useAudio } from './composables/useAudio'
 import { useAccessibilityStore } from './stores/accessibilityStore'
+import { useAuthStore } from './stores/authStore'
+import { flushOutcomeEvents, trackOutcomeEvent } from './services/analyticsClient'
+import { emitGameEvent } from './services/events/gameEventBus'
 import { COMBAT_ENCOUNTERS } from './data/encounters'
 import { ENEMY_DICTIONARY } from './data/enemies'
 import { usePlayerStore } from './stores/playerStore'
 import type { PlayerState } from './types/player'
 import { GAME_CONFIG } from './config'
-import { isSaveSlotId, saveGame, saveGameNow, type SaveSlotId } from './utils/storage'
+import { isSaveSlotId, saveGame, saveGameNow, syncCloudSavesNow, type SaveSlotId } from './utils/storage'
 
 const playerStore = usePlayerStore()
 const accessibilityStore = useAccessibilityStore()
+const authStore = useAuthStore()
 const { unlock: unlockAudio, playMusic, stopMusic, playSfx } = useAudio()
 const currentView = ref<'menu' | 'game'>('menu')
 const mainContentRef = ref<HTMLElement | null>(null)
@@ -54,6 +59,13 @@ function handleCombatResolved(outcome: 'victory' | 'defeat'): void {
     return
   }
   playSfx(outcome)
+  emitGameEvent('combatResolved', { outcome, encounterId: activeEncounterId.value })
+  trackOutcomeEvent({
+    storyId: 'default',
+    type: outcome === 'victory' ? 'chapter_completed' : 'run_failed',
+    ts: Date.now(),
+    metadata: { encounterId: activeEncounterId.value, outcome },
+  })
 
   if (outcome === 'victory') {
     let totalXp = 0
@@ -92,6 +104,7 @@ function handleSaveAndQuit(): void {
   playerStore.activeSaveSlot = null
   currentView.value = 'menu'
   gameMode.value = 'narrative'
+  void flushOutcomeEvents('default')
 }
 
 function focusFirstFocusableInGame(): void {
@@ -137,6 +150,9 @@ function onGameKeydown(e: KeyboardEvent): void {
 }
 
 onMounted(() => {
+  if (GAME_CONFIG.features.cloudSave) {
+    void authStore.bootstrap().then(() => syncCloudSavesNow())
+  }
   playerStore.$subscribe(
     (_mutation, state) => {
       if (!state.activeSaveSlot || !isSaveSlotId(state.activeSaveSlot)) {
@@ -148,12 +164,22 @@ onMounted(() => {
     { detached: true },
   )
 })
+
+watch(
+  () => authStore.isAuthenticated,
+  (isAuthenticated) => {
+    if (!GAME_CONFIG.features.cloudSave) return
+    if (!isAuthenticated) return
+    void syncCloudSavesNow()
+  },
+)
 </script>
 
 <template>
-  <MainMenu v-if="currentView === 'menu'" @start-game="handleStartGame" />
+  <AuthGate>
+    <MainMenu v-if="currentView === 'menu'" @start-game="handleStartGame" />
 
-  <ErrorBoundary v-else @return-to-menu="handleReturnToMenu">
+    <ErrorBoundary v-else @return-to-menu="handleReturnToMenu">
     <main
       ref="mainContentRef"
       class="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-4 p-4"
@@ -232,7 +258,8 @@ onMounted(() => {
     />
 
     <PlaytestPanel />
-  </ErrorBoundary>
+    </ErrorBoundary>
+  </AuthGate>
 </template>
 
 <style scoped>

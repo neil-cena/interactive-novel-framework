@@ -8,6 +8,8 @@ import { STORY_NODES } from '../data/nodes'
 import { rollDice } from '../utils/dice'
 import { isSaveSlotId } from '../utils/storage'
 import { resolveAction } from '../engine/actionResolver'
+import { trackOutcomeEvent } from '../services/analyticsClient'
+import { emitGameEvent } from '../services/events/gameEventBus'
 import { usePlayerStore } from '../stores/playerStore'
 import type { Choice } from '../types/story'
 
@@ -40,11 +42,20 @@ watch(
 
     node.onEnter.forEach((payload) => resolveAction(payload, playerStore))
     processedNodes.value.add(node.id)
+    if (node.type === 'ending') {
+      trackOutcomeEvent({
+        storyId: 'default',
+        type: 'ending_reached',
+        ts: Date.now(),
+        metadata: { nodeId: node.id },
+      })
+    }
   },
   { immediate: true },
 )
 
 function handleChoice(choice: Choice): void {
+  emitGameEvent('choiceSelected', { nodeId: playerStore.metadata.currentNodeId, choiceId: choice.id })
   if (choice.mechanic.type === 'navigate') {
     const shouldStartNewRun =
       choice.mechanic.nextNodeId === GAME_CONFIG.player.startingNodeId &&
@@ -83,6 +94,12 @@ function handleChoice(choice: Choice): void {
   }
 
   if (adjustedTotal >= check.dc) {
+    trackOutcomeEvent({
+      storyId: 'default',
+      type: 'chapter_completed',
+      ts: Date.now(),
+      metadata: { nodeId: playerStore.metadata.currentNodeId, choiceId: choice.id, result: 'success' },
+    })
     playerStore.navigateTo(check.onSuccess.nextNodeId)
     return
   }

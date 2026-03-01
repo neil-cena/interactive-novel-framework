@@ -7,6 +7,7 @@ import EntityTabs from './components/EntityTabs.vue'
 import EncountersEditor from './components/EncountersEditor.vue'
 import ItemsEditor from './components/ItemsEditor.vue'
 import EnemiesEditor from './components/EnemiesEditor.vue'
+import PackageImportExportPanel from './components/PackageImportExportPanel.vue'
 import type { EdgeData } from './components/GraphCanvas.vue'
 import { useAuthoringData } from './composables/useAuthoringData'
 
@@ -321,6 +322,7 @@ function handleDiagnosticFocus(diagnostic: { context?: Record<string, unknown> }
       <p v-else-if="saveResult" class="save-result">Saved. {{ saveResult.written.length }} file(s) written.</p>
       <p v-else-if="saveError" class="save-error">Save failed: {{ saveError }}</p>
     </header>
+    <PackageImportExportPanel />
     <div class="main">
       <div class="graph-area">
         <GraphCanvas

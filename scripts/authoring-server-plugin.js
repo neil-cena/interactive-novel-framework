@@ -20,6 +20,8 @@ import {
   serializeEnemiesToCsv,
   serializeEncountersToCsv,
 } from './data-core/export-csv.js'
+import { buildCurrentModelFromCsv, validateAssets } from './data-core/package-io.js'
+import { isValidPackageManifest, sanitizeModelTextFields } from './data-core/package-schema.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -75,6 +77,22 @@ export function authoringServerPlugin() {
         }
         if (req.url === '/api/authoring/load-draft' && req.method === 'GET') {
           handleLoadDraft(res, csvDir, draftFileName)
+          return
+        }
+        if (req.url === '/api/authoring/export-package' && req.method === 'GET') {
+          handleExportPackage(res, csvDir)
+          return
+        }
+        if (req.url === '/api/authoring/import-package' && req.method === 'POST') {
+          collectBody(req, (err, body) => {
+            if (err) {
+              res.statusCode = 400
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: err.message }))
+              return
+            }
+            handleImportPackage(body, res, csvDir)
+          })
           return
         }
         next()
@@ -225,6 +243,85 @@ function handleLoadDraft(res, csvDir, draftFileName) {
         exists: true,
         savedAt: parsed.savedAt,
         model: parsed.model ?? { nodes: {}, items: {}, enemies: {}, encounters: {} },
+      }),
+    )
+  } catch (err) {
+    res.statusCode = 500
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ error: err.message }))
+  }
+}
+
+function handleExportPackage(res, csvDir) {
+  try {
+    const model = buildCurrentModelFromCsv(csvDir)
+    const manifest = {
+      storyId: 'default',
+      version: `v${Date.now()}`,
+      title: 'Exported Story',
+      author: 'local-author',
+      description: 'Exported from authoring tool',
+      createdAt: new Date().toISOString(),
+    }
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ manifest, model, assets: [] }))
+  } catch (err) {
+    res.statusCode = 500
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ error: err.message }))
+  }
+}
+
+function handleImportPackage(body, res, csvDir) {
+  try {
+    const manifest = body?.manifest
+    const model = body?.model ?? {}
+    const commit = body?.commit === true
+    const assets = body?.assets ?? []
+
+    if (!isValidPackageManifest(manifest)) {
+      res.statusCode = 400
+      res.setHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify({ error: 'Invalid package manifest' }))
+      return
+    }
+
+    const assetDiagnostics = validateAssets(assets)
+    const sanitizedModel = sanitizeModelTextFields(model)
+    const { errors, warnings } = validateData(
+      sanitizedModel.nodes ?? {},
+      sanitizedModel.items ?? {},
+      sanitizedModel.enemies ?? {},
+      sanitizedModel.encounters ?? {},
+    )
+    const diagnostics = [...assetDiagnostics, ...errors, ...warnings]
+    const hasErrors = diagnostics.some((d) => d.severity === 'error')
+
+    if (hasErrors || !commit) {
+      res.setHeader('Content-Type', 'application/json')
+      res.end(
+        JSON.stringify({
+          success: !hasErrors && !commit,
+          committed: false,
+          diagnostics,
+          manifest,
+        }),
+      )
+      return
+    }
+
+    writeFileInDir(csvDir, 'nodes.csv', serializeNodesToCsv(sanitizedModel.nodes ?? {}))
+    writeFileInDir(csvDir, 'items.csv', serializeItemsToCsv(sanitizedModel.items ?? {}))
+    writeFileInDir(csvDir, 'enemies.csv', serializeEnemiesToCsv(sanitizedModel.enemies ?? {}))
+    writeFileInDir(csvDir, 'encounters.csv', serializeEncountersToCsv(sanitizedModel.encounters ?? {}))
+
+    res.setHeader('Content-Type', 'application/json')
+    res.end(
+      JSON.stringify({
+        success: true,
+        committed: true,
+        diagnostics,
+        manifest,
       }),
     )
   } catch (err) {

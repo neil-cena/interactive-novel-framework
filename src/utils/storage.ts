@@ -1,5 +1,7 @@
 import { GAME_CONFIG, type SaveSlotId } from '../config'
 import type { PlayerState } from '../types/player'
+import { getSaveSyncState, queueCloudSave, resolveCloudConflict, syncQueuedCloudSaves, toPersistedState } from '../services/saveRepository'
+import type { SaveConflict, SaveMergeChoice, SaveSyncState } from '../types/cloud'
 
 export const SLOT_KEYS = GAME_CONFIG.save.slotKeys
 export type { SaveSlotId }
@@ -54,7 +56,9 @@ export function saveGame(slotId: SaveSlotId, state: PlayerState): void {
   }
 
   saveDebounceTimer = setTimeout(() => {
-    localStorage.setItem(slotId, JSON.stringify(stripRuntimeState(state)))
+    const persisted = stripRuntimeState(state)
+    localStorage.setItem(slotId, JSON.stringify(persisted))
+    void queueCloudSave(slotId, toPersistedState({ activeSaveSlot: state.activeSaveSlot, ...persisted }))
   }, GAME_CONFIG.save.debounceDelayMs)
 }
 
@@ -64,9 +68,23 @@ export function saveGameNow(slotId: SaveSlotId, state: PlayerState): void {
     saveDebounceTimer = null
   }
 
-  localStorage.setItem(slotId, JSON.stringify(stripRuntimeState(state)))
+  const persisted = stripRuntimeState(state)
+  localStorage.setItem(slotId, JSON.stringify(persisted))
+  void queueCloudSave(slotId, toPersistedState({ activeSaveSlot: state.activeSaveSlot, ...persisted }))
 }
 
 export function deleteSave(slotId: SaveSlotId): void {
   localStorage.removeItem(slotId)
+}
+
+export async function syncCloudSavesNow(): Promise<void> {
+  await syncQueuedCloudSaves()
+}
+
+export function getSlotSyncState(slotId: SaveSlotId): SaveSyncState {
+  return getSaveSyncState(slotId)
+}
+
+export async function resolveSlotConflict(conflict: SaveConflict, choice: SaveMergeChoice): Promise<void> {
+  await resolveCloudConflict(conflict, choice)
 }

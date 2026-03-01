@@ -37,6 +37,13 @@ export const GAME_CONFIG = {
     debounceDelayMs: 500,
   },
 
+  /** Feature flags (Phase 5 rollout controls) */
+  features: {
+    cloudSave: false,
+    sharedOutcomes: true,
+    storyPackages: true,
+  },
+
   /** UI strings */
   ui: {
     gameTitle: 'The Cellar Debt',

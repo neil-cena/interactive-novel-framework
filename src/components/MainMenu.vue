@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import AuthPanel from './AuthPanel.vue'
+import OutcomeStatsPanel from './OutcomeStatsPanel.vue'
+import StoryLibrary from './StoryLibrary.vue'
 import { useAudio } from '../composables/useAudio'
 import { GAME_CONFIG } from '../config'
+import { useAuthStore } from '../stores/authStore'
+import type { SaveConflict, SaveSyncState } from '../types/cloud'
 import type { PlayerState } from '../types/player'
-import { deleteSave, getAllSaves, type SaveSlotId } from '../utils/storage'
+import { deleteSave, getAllSaves, getSlotSyncState, resolveSlotConflict, syncCloudSavesNow, type SaveSlotId } from '../utils/storage'
 
 const { unlock, playMusic } = useAudio()
+const authStore = useAuthStore()
 function unlockAndPlayMenuMusic(): void {
   unlock()
   playMusic('menu', { loop: true, fadeMs: 200 })
@@ -14,6 +20,7 @@ function unlockAndPlayMenuMusic(): void {
 interface SaveSlotMeta {
   slotId: SaveSlotId
   data: PlayerState | null
+  sync: SaveSyncState
 }
 
 const emit = defineEmits<{
@@ -24,7 +31,10 @@ const slots = ref<SaveSlotMeta[]>([])
 const confirmingDeleteSlot = ref<SaveSlotId | null>(null)
 
 function refreshSlots(): void {
-  slots.value = getAllSaves()
+  slots.value = getAllSaves().map((slot) => ({
+    ...slot,
+    sync: getSlotSyncState(slot.slotId),
+  }))
 }
 
 function handleStart(slotId: SaveSlotId, savedState: PlayerState | null): void {
@@ -45,6 +55,17 @@ function confirmDelete(slotId: SaveSlotId): void {
   refreshSlots()
 }
 
+async function syncNow(): Promise<void> {
+  if (!GAME_CONFIG.features.cloudSave) return
+  await syncCloudSavesNow()
+  refreshSlots()
+}
+
+async function resolveConflict(conflict: SaveConflict, choice: 'use_local' | 'use_cloud' | 'keep_both'): Promise<void> {
+  await resolveSlotConflict(conflict, choice)
+  refreshSlots()
+}
+
 onMounted(() => {
   refreshSlots()
 })
@@ -60,7 +81,22 @@ onMounted(() => {
     <header class="rounded-lg border border-slate-700 bg-slate-900 p-6">
       <h1 class="text-3xl font-bold text-slate-50">{{ GAME_CONFIG.ui.gameTitle }}</h1>
       <p class="mt-2 text-sm text-slate-300">Choose one of three save slots.</p>
+      <div class="mt-4 flex items-center gap-3 text-xs text-slate-400">
+        <span>Cloud Sync:</span>
+        <span>{{ authStore.isAuthenticated ? 'Enabled' : 'Anonymous mode' }}</span>
+        <button
+          type="button"
+          class="rounded border border-slate-600 bg-slate-800 px-2 py-1 text-xs text-slate-200 hover:bg-slate-700"
+          @click="syncNow"
+        >
+          Sync now
+        </button>
+      </div>
     </header>
+
+    <AuthPanel v-if="GAME_CONFIG.features.cloudSave" />
+    <OutcomeStatsPanel v-if="GAME_CONFIG.features.sharedOutcomes" />
+    <StoryLibrary v-if="GAME_CONFIG.features.storyPackages" />
 
     <section class="space-y-4">
       <article
@@ -73,6 +109,18 @@ onMounted(() => {
           <span class="text-xs uppercase tracking-wide text-slate-400">
             {{ slot.data ? 'Occupied' : 'Empty' }}
           </span>
+        </div>
+        <p class="mt-2 text-xs text-slate-400">
+          Sync status: {{ slot.sync.status }}
+          <span v-if="slot.sync.updatedAt"> • {{ new Date(slot.sync.updatedAt).toLocaleTimeString() }}</span>
+        </p>
+        <div v-if="slot.sync.status === 'conflict' && slot.sync.conflict" class="mt-2 rounded border border-amber-700 bg-amber-900/30 p-2 text-xs text-amber-200">
+          <p>Conflict detected for this slot.</p>
+          <div class="mt-2 flex flex-wrap gap-2">
+            <button type="button" class="rounded border border-amber-700 bg-amber-900/40 px-2 py-1 hover:bg-amber-900/70" @click="resolveConflict(slot.sync.conflict, 'use_local')">Use local</button>
+            <button type="button" class="rounded border border-amber-700 bg-amber-900/40 px-2 py-1 hover:bg-amber-900/70" @click="resolveConflict(slot.sync.conflict, 'use_cloud')">Use cloud</button>
+            <button type="button" class="rounded border border-amber-700 bg-amber-900/40 px-2 py-1 hover:bg-amber-900/70" @click="resolveConflict(slot.sync.conflict, 'keep_both')">Keep both</button>
+          </div>
         </div>
 
         <p v-if="slot.data" class="mt-3 text-sm text-slate-300">
