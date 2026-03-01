@@ -48,7 +48,7 @@ function submit() {
           v-model="email"
           type="email"
           autocomplete="email"
-          class="min-w-[200px] rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-400"
+          class="w-full rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-400 sm:w-auto sm:min-w-[200px]"
           placeholder="you@example.com"
           aria-label="Email"
         >
@@ -56,7 +56,7 @@ function submit() {
           v-model="password"
           type="password"
           :autocomplete="isSignUp ? 'new-password' : 'current-password'"
-          class="min-w-[140px] rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-400"
+          class="w-full rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-400 sm:w-auto sm:min-w-[140px]"
           placeholder="Password"
           aria-label="Password"
           @keydown.enter="submit"

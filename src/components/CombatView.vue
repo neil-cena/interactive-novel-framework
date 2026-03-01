@@ -170,7 +170,7 @@ watch(
 
 <template>
   <section
-    class="rounded-lg border border-red-700 bg-slate-900 p-6"
+    class="rounded-lg border border-red-700 bg-slate-900 p-4 sm:p-6"
     role="region"
     aria-labelledby="combat-heading"
   >
@@ -256,7 +256,7 @@ watch(
 
     <div class="mt-4 rounded border border-slate-700 bg-slate-950 p-3" role="log" aria-live="polite" aria-label="Combat log">
       <p class="mb-2 text-sm font-semibold text-slate-300">Combat Log</p>
-      <ul class="space-y-1 text-sm text-slate-200">
+      <ul class="max-h-48 space-y-1 overflow-y-auto text-sm text-slate-200">
         <li v-for="(entry, idx) in log" :key="idx">{{ entry }}</li>
       </ul>
     </div>

@@ -30,7 +30,7 @@ onMounted(() => {
       <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-300">Shared Outcomes</h3>
       <button
         type="button"
-        class="rounded border border-slate-600 bg-slate-800 px-2 py-1 text-xs text-slate-200 hover:bg-slate-700"
+        class="rounded border border-slate-600 bg-slate-800 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-700"
         @click="refresh"
       >
         Refresh

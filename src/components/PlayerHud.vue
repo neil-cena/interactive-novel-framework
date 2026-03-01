@@ -20,10 +20,10 @@ const totalAttackBonus = computed(() => {
 <template>
   <section class="rounded-lg border border-slate-700 bg-slate-900/80 p-4" aria-label="Player status">
     <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-300">Player</h2>
-    <div class="mt-2 grid grid-cols-2 gap-2 text-sm text-slate-100">
+    <div class="mt-2 grid grid-cols-1 gap-2 text-sm text-slate-100 sm:grid-cols-2">
       <p>HP: {{ playerStore.vitals.hpCurrent }} / {{ playerStore.vitals.hpMax }}</p>
       <p>Gold: {{ playerStore.inventory.currency }}</p>
-      <p>Weapon: {{ equippedWeapon?.name ?? 'Unarmed' }}</p>
+      <p class="min-w-0 truncate" :title="equippedWeapon?.name ?? 'Unarmed'">Weapon: {{ equippedWeapon?.name ?? 'Unarmed' }}</p>
       <p>Atk Bonus: +{{ totalAttackBonus }}</p>
     </div>
     <div class="mt-2 flex gap-3 text-sm text-slate-300">

@@ -137,7 +137,7 @@ function goToStart(): void {
 
 <template>
   <section
-    class="rounded-lg border border-slate-700 bg-slate-900 p-6"
+    class="rounded-lg border border-slate-700 bg-slate-900 p-4 sm:p-6"
     role="region"
     aria-label="Story narrative"
   >
@@ -160,7 +160,7 @@ function goToStart(): void {
           />
           <p
             v-if="lastRollSummary"
-            class="mt-4 rounded border border-slate-600 bg-slate-800 p-2 text-sm text-slate-200"
+            class="mt-4 break-words rounded border border-slate-600 bg-slate-800 p-2 text-sm text-slate-200"
             role="status"
             aria-live="polite"
           >
@@ -175,7 +175,7 @@ function goToStart(): void {
         </div>
       </Transition>
     </template>
-    <div v-else class="rounded border border-red-700 bg-slate-900/90 p-6">
+    <div v-else class="rounded border border-red-700 bg-slate-900/90 p-4 sm:p-6">
       <p class="text-base font-medium text-red-300">Missing node</p>
       <p class="mt-1 text-sm text-slate-400">Node ID: {{ playerStore.metadata.currentNodeId }}</p>
       <div class="mt-4 flex flex-wrap gap-2">

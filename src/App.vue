@@ -197,9 +197,9 @@ watch(
       @click="unlockAudio"
       @keydown="onGameKeydown"
     >
-      <header class="flex items-center justify-between" role="banner">
-        <h1 class="text-2xl font-bold text-slate-50">{{ GAME_CONFIG.ui.gameTitle }}</h1>
-        <div class="flex items-center gap-2">
+      <header class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between" role="banner">
+        <h1 class="text-xl font-bold text-slate-50 sm:text-2xl">{{ GAME_CONFIG.ui.gameTitle }}</h1>
+        <div class="flex flex-wrap items-center gap-2">
           <AudioControls />
           <button
             v-if="gameMode === 'narrative'"
@@ -217,7 +217,8 @@ watch(
             aria-label="Save and quit to menu"
             @click="handleSaveAndQuit"
           >
-            Save and Quit
+            <span class="sm:hidden">Save</span>
+            <span class="hidden sm:inline">Save and Quit</span>
           </button>
           <button
             type="button"
@@ -225,7 +226,8 @@ watch(
             :aria-label="accessibilityStore.highContrast ? 'Disable high contrast' : 'Enable high contrast'"
             @click="accessibilityStore.toggleHighContrast"
           >
-            {{ accessibilityStore.highContrast ? 'High contrast on' : 'High contrast' }}
+            <span class="sm:hidden">{{ accessibilityStore.highContrast ? 'Contrast on' : 'Contrast' }}</span>
+            <span class="hidden sm:inline">{{ accessibilityStore.highContrast ? 'High contrast on' : 'High contrast' }}</span>
           </button>
         </div>
       </header>

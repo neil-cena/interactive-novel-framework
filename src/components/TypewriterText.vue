@@ -120,7 +120,7 @@ onBeforeUnmount(() => {
 
 <template>
   <p
-    class="whitespace-pre-line text-base text-slate-100"
+    class="break-words whitespace-pre-line text-base text-slate-100"
     :class="{ 'cursor-pointer': skipOnClick && !isComplete }"
     role="paragraph"
     aria-live="polite"

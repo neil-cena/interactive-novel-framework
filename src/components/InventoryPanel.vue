@@ -87,12 +87,12 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
     aria-labelledby="inventory-title"
     @click.self="closeAndReturnFocus"
   >
-    <div ref="panelRef" class="w-full max-w-md rounded-lg border border-slate-700 bg-slate-900 p-6 shadow-xl">
+    <div ref="panelRef" class="flex max-h-[85vh] w-full max-w-md flex-col overflow-y-auto rounded-lg border border-slate-700 bg-slate-900 p-4 shadow-xl sm:p-6">
       <div class="flex items-center justify-between">
         <h2 id="inventory-title" class="text-lg font-bold text-slate-50">Inventory</h2>
         <button
           type="button"
-          class="rounded border border-slate-600 bg-slate-800 px-2 py-1 text-sm text-slate-300 hover:bg-slate-700"
+          class="rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700"
           aria-label="Close inventory"
           @click="closeAndReturnFocus"
         >
@@ -103,11 +103,11 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
       <section class="mt-4">
         <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Equipped Weapon</h3>
         <div v-if="equippedWeapon" class="mt-2 rounded border border-slate-600 bg-slate-800/60 p-3">
-          <div class="flex items-center justify-between">
+          <div class="flex flex-wrap items-center justify-between gap-2">
             <span class="font-medium text-slate-100">{{ equippedWeapon.name }}</span>
             <button
               type="button"
-              class="rounded border border-slate-500 bg-slate-700 px-2 py-1 text-xs text-slate-200 hover:bg-slate-600"
+              class="rounded border border-slate-500 bg-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-600"
               aria-label="Unequip weapon"
               @click="handleUnequip"
             >
@@ -130,9 +130,9 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
           <li
             v-for="item in inventoryItems"
             :key="item.id"
-            class="flex items-center justify-between rounded border border-slate-700 bg-slate-800/40 p-3"
+            class="flex flex-wrap items-center justify-between gap-2 rounded border border-slate-700 bg-slate-800/40 p-3"
           >
-            <div>
+            <div class="min-w-0">
               <span class="font-medium text-slate-100">{{ item.name }}</span>
               <span class="ml-2 text-xs text-slate-500">&times;{{ item.qty }}</span>
               <span
@@ -146,11 +146,11 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
                 {{ item.type }}
               </span>
             </div>
-            <div class="flex gap-2">
+            <div class="flex flex-wrap gap-2">
               <button
                 v-if="item.isWeapon && !item.isEquipped"
                 type="button"
-                class="rounded border border-amber-700 bg-amber-900/40 px-2 py-1 text-xs text-amber-200 hover:bg-amber-900/70"
+                class="rounded border border-amber-700 bg-amber-900/40 px-3 py-2 text-sm text-amber-200 hover:bg-amber-900/70"
                 :aria-label="`Equip ${item.name}`"
                 @click="handleEquip(item.id)"
               >
@@ -165,7 +165,7 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
               <button
                 v-if="item.isConsumable"
                 type="button"
-                class="rounded border border-emerald-700 bg-emerald-900/40 px-2 py-1 text-xs text-emerald-200 hover:bg-emerald-900/70"
+                class="rounded border border-emerald-700 bg-emerald-900/40 px-3 py-2 text-sm text-emerald-200 hover:bg-emerald-900/70"
                 :aria-label="`Use ${item.name}`"
                 @click="handleUseConsumable(item.id)"
               >
@@ -179,7 +179,7 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
         <h3 class="text-sm font-semibold uppercase tracking-wide text-amber-400">
           Attribute Points ({{ playerStore.progression.unspentAttributePoints }})
         </h3>
-        <div class="mt-2 flex gap-2">
+        <div class="mt-2 flex flex-wrap gap-2">
           <button
             type="button"
             class="rounded border border-amber-700 bg-amber-900/40 px-3 py-2 text-sm text-amber-200 hover:bg-amber-900/70"

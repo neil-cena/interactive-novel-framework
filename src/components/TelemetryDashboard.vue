@@ -36,7 +36,7 @@ onMounted(() => {
       <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-300">Telemetry (Author)</h3>
       <button
         type="button"
-        class="rounded border border-slate-600 bg-slate-800 px-2 py-1 text-xs text-slate-200 hover:bg-slate-700"
+        class="rounded border border-slate-600 bg-slate-800 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-700"
         @click="refresh"
       >
         Refresh
@@ -61,7 +61,7 @@ onMounted(() => {
     <button
       v-if="consentStore.consent !== null"
       type="button"
-      class="mt-2 rounded border border-slate-600 bg-slate-800 px-2 py-1 text-xs text-slate-300 hover:bg-slate-700"
+      class="mt-2 rounded border border-slate-600 bg-slate-800 px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-700"
       @click="withdrawConsent"
     >
       Withdraw consent (reset choice)

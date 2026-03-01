@@ -31,14 +31,14 @@ function close(doRefresh: boolean) {
       <button
         v-if="needRefresh"
         type="button"
-        class="rounded border border-slate-500 bg-slate-700 px-3 py-1.5 text-sm text-slate-100 hover:bg-slate-600"
+        class="rounded border border-slate-500 bg-slate-700 px-3 py-2 text-sm text-slate-100 hover:bg-slate-600"
         @click="close(true)"
       >
         Reload
       </button>
       <button
         type="button"
-        class="rounded border border-slate-600 bg-slate-700 px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-600"
+        class="rounded border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-slate-300 hover:bg-slate-600"
         @click="close(false)"
       >
         {{ needRefresh ? 'Later' : 'OK' }}

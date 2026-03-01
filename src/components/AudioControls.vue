@@ -21,55 +21,55 @@ function handleInteraction(): void {
 
 <template>
   <div
-    class="flex items-center gap-3 rounded border border-slate-600 bg-slate-800/80 px-3 py-2"
+    class="flex items-center gap-2 rounded border border-slate-600 bg-slate-800/80 px-2 py-1.5 sm:gap-3 sm:px-3 sm:py-2"
     role="group"
     aria-label="Audio controls"
   >
     <button
       type="button"
-      class="rounded p-1.5 text-slate-200 transition hover:bg-slate-700 hover:text-slate-50"
+      class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded p-2.5 text-slate-200 transition hover:bg-slate-700 hover:text-slate-50"
       :aria-label="muted ? 'Unmute' : 'Mute'"
       @click="handleInteraction(); setMuted(!muted)"
     >
       <span v-if="muted" aria-hidden="true">🔇</span>
       <span v-else aria-hidden="true">🔊</span>
     </button>
-    <div class="flex flex-col gap-1 text-xs text-slate-300">
-      <label class="flex items-center gap-2">
-        <span class="w-10">Master</span>
+    <div class="hidden flex-col gap-1 text-xs text-slate-300 sm:flex sm:min-w-0 sm:flex-1">
+      <label class="flex min-w-0 items-center gap-2">
+        <span class="w-10 shrink-0">Master</span>
         <input
           :value="masterVolume"
           type="range"
           min="0"
           max="1"
           step="0.05"
-          class="h-2 w-20 accent-slate-400"
+          class="h-2 min-w-0 flex-1 accent-slate-400 sm:w-20"
           aria-label="Master volume"
           @input="handleInteraction(); setMasterVolume(+(($event.target as HTMLInputElement).value))"
         />
       </label>
-      <label class="flex items-center gap-2">
-        <span class="w-10">Music</span>
+      <label class="flex min-w-0 items-center gap-2">
+        <span class="w-10 shrink-0">Music</span>
         <input
           :value="musicVolume"
           type="range"
           min="0"
           max="1"
           step="0.05"
-          class="h-2 w-20 accent-slate-400"
+          class="h-2 min-w-0 flex-1 accent-slate-400 sm:w-20"
           aria-label="Music volume"
           @input="handleInteraction(); setMusicVolume(+(($event.target as HTMLInputElement).value))"
         />
       </label>
-      <label class="flex items-center gap-2">
-        <span class="w-10">SFX</span>
+      <label class="flex min-w-0 items-center gap-2">
+        <span class="w-10 shrink-0">SFX</span>
         <input
           :value="sfxVolume"
           type="range"
           min="0"
           max="1"
           step="0.05"
-          class="h-2 w-20 accent-slate-400"
+          class="h-2 min-w-0 flex-1 accent-slate-400 sm:w-20"
           aria-label="Sound effects volume"
           @input="handleInteraction(); setSfxVolume(+(($event.target as HTMLInputElement).value))"
         />

@@ -87,7 +87,7 @@ onMounted(() => {
         <span>{{ authStore.isAuthenticated ? 'Enabled' : 'Anonymous mode' }}</span>
         <button
           type="button"
-          class="rounded border border-slate-600 bg-slate-800 px-2 py-1 text-xs text-slate-200 hover:bg-slate-700"
+          class="rounded border border-slate-600 bg-slate-800 px-3 py-1.5 text-sm text-slate-200 hover:bg-slate-700"
           @click="syncNow"
         >
           Sync now
@@ -119,9 +119,9 @@ onMounted(() => {
         <div v-if="slot.sync.status === 'conflict' && slot.sync.conflict" class="mt-2 rounded border border-amber-700 bg-amber-900/30 p-2 text-xs text-amber-200">
           <p>Conflict detected for this slot.</p>
           <div class="mt-2 flex flex-wrap gap-2">
-            <button type="button" class="rounded border border-amber-700 bg-amber-900/40 px-2 py-1 hover:bg-amber-900/70" @click="resolveConflict(slot.sync.conflict, 'use_local')">Use local</button>
-            <button type="button" class="rounded border border-amber-700 bg-amber-900/40 px-2 py-1 hover:bg-amber-900/70" @click="resolveConflict(slot.sync.conflict, 'use_cloud')">Use cloud</button>
-            <button type="button" class="rounded border border-amber-700 bg-amber-900/40 px-2 py-1 hover:bg-amber-900/70" @click="resolveConflict(slot.sync.conflict, 'keep_both')">Keep both</button>
+            <button type="button" class="rounded border border-amber-700 bg-amber-900/40 px-3 py-1.5 text-sm hover:bg-amber-900/70" @click="resolveConflict(slot.sync.conflict, 'use_local')">Use local</button>
+            <button type="button" class="rounded border border-amber-700 bg-amber-900/40 px-3 py-1.5 text-sm hover:bg-amber-900/70" @click="resolveConflict(slot.sync.conflict, 'use_cloud')">Use cloud</button>
+            <button type="button" class="rounded border border-amber-700 bg-amber-900/40 px-3 py-1.5 text-sm hover:bg-amber-900/70" @click="resolveConflict(slot.sync.conflict, 'keep_both')">Keep both</button>
           </div>
         </div>
 
