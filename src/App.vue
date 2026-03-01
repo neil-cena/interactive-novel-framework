@@ -19,6 +19,7 @@ import { emitGameEvent } from './services/events/gameEventBus'
 import { COMBAT_ENCOUNTERS } from './data/encounters'
 import { ENEMY_DICTIONARY } from './data/enemies'
 import { usePlayerStore } from './stores/playerStore'
+import type { CharacterSheetPayload } from './types/characterSheet'
 import type { PlayerState } from './types/player'
 import { GAME_CONFIG } from './config'
 import { isSaveSlotId, saveGame, saveGameNow, syncCloudSavesNow, type SaveSlotId } from './utils/storage'
@@ -35,11 +36,11 @@ const activeEncounterId = ref<string>('combat_1')
 const showInventory = ref(false)
 const levelUpMessage = ref<string | null>(null)
 
-function handleStartGame(slotId: SaveSlotId, savedState: PlayerState | null): void {
+function handleStartGame(slotId: SaveSlotId, savedState: PlayerState | null, sheetPayload?: CharacterSheetPayload): void {
   if (savedState) {
     playerStore.loadGame(slotId, savedState)
   } else {
-    playerStore.startNewGame(slotId)
+    playerStore.startNewGame(slotId, sheetPayload)
   }
 
   gameMode.value = 'narrative'

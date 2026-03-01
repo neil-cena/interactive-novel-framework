@@ -1,5 +1,9 @@
 export interface PlayerMetadata {
   currentNodeId: string
+  /** Id of selected preset, or undefined if legacy save / default. */
+  characterSheetId?: string
+  /** True when the run was started with a custom point-buy sheet. */
+  isCustomSheet?: boolean
 }
 
 export interface PlayerVitals {

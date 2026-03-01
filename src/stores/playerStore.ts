@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { GAME_CONFIG } from '../config'
+import { getPresetById } from '../data/characterSheets'
+import type { CharacterSheetPayload } from '../types/characterSheet'
 import type { PlayerAttributes, PlayerState } from '../types/player'
 import type { SaveSlotId } from '../utils/storage'
 
@@ -35,6 +37,53 @@ export const defaultPlayerState = (): PlayerState => ({
   },
 })
 
+/** Build initial state from a selected character sheet (preset or custom). */
+export function playerStateFromSheet(payload: CharacterSheetPayload): PlayerState {
+  const base = defaultPlayerState()
+  if (payload.type === 'preset') {
+    const preset = getPresetById(payload.presetId)
+    if (!preset) return base
+    return {
+      ...base,
+      metadata: {
+        ...base.metadata,
+        characterSheetId: preset.id,
+        isCustomSheet: false,
+      },
+      vitals: {
+        hpCurrent: preset.startingHp,
+        hpMax: preset.startingHp,
+      },
+      inventory: {
+        ...base.inventory,
+        items: { ...preset.startingItems },
+      },
+      equipment: { mainHand: preset.startingWeaponId },
+      attributes: { ...preset.startingAttributes },
+      flags: { ...preset.startingFlags },
+    }
+  }
+  return {
+    ...base,
+    metadata: {
+      ...base.metadata,
+      characterSheetId: undefined,
+      isCustomSheet: true,
+    },
+    vitals: {
+      hpCurrent: payload.startingHp,
+      hpMax: payload.startingHp,
+    },
+    inventory: {
+      ...base.inventory,
+      items: { ...payload.startingItems },
+    },
+    equipment: { mainHand: payload.startingWeaponId },
+    attributes: { ...payload.startingAttributes },
+    flags: { ...payload.startingFlags },
+  }
+}
+
 export const usePlayerStore = defineStore('player', {
   state: (): PlayerState => defaultPlayerState(),
   actions: {
@@ -54,8 +103,12 @@ export const usePlayerStore = defineStore('player', {
       this.$patch(merged)
       this.activeSaveSlot = slotId
     },
-    startNewGame(slotId: SaveSlotId) {
-      this.$reset()
+    startNewGame(slotId: SaveSlotId, payload?: CharacterSheetPayload) {
+      if (payload) {
+        this.$patch(playerStateFromSheet(payload))
+      } else {
+        this.$patch(defaultPlayerState())
+      }
       this.metadata.currentNodeId = playerConfig.startingNodeId
       this.activeSaveSlot = slotId
     },

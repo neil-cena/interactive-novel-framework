@@ -116,7 +116,7 @@ describe('playerStore', () => {
     expect(store.equipment.mainHand).toBe(null)
   })
 
-  it('startNewGame resets and sets slot', () => {
+  it('startNewGame resets and sets slot when no payload', () => {
     const store = usePlayerStore()
     store.navigateTo('n_market')
     store.adjustHp(-5)
@@ -125,6 +125,63 @@ describe('playerStore', () => {
     expect(store.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp)
     expect(store.vitals.hpMax).toBe(GAME_CONFIG.player.startingHp)
     expect(store.activeSaveSlot).toBe('save_slot_1')
+  })
+
+  it('startNewGame with preset payload initializes from preset', () => {
+    const store = usePlayerStore()
+    store.startNewGame('save_slot_2', { type: 'preset', presetId: 'sturdy' })
+    expect(store.metadata.characterSheetId).toBe('sturdy')
+    expect(store.metadata.isCustomSheet).toBe(false)
+    expect(store.vitals.hpCurrent).toBe(42)
+    expect(store.vitals.hpMax).toBe(42)
+    expect(store.attributes.strength).toBe(3)
+    expect(store.attributes.dexterity).toBe(0)
+    expect(store.attributes.intelligence).toBe(0)
+    expect(store.activeSaveSlot).toBe('save_slot_2')
+  })
+
+  it('startNewGame with custom payload initializes from custom build', () => {
+    const store = usePlayerStore()
+    store.startNewGame('save_slot_3', {
+      type: 'custom',
+      startingHp: 35,
+      startingWeaponId: null,
+      startingItems: {},
+      startingFlags: {},
+      startingAttributes: { strength: 1, dexterity: 2, intelligence: 1 },
+    })
+    expect(store.metadata.isCustomSheet).toBe(true)
+    expect(store.vitals.hpCurrent).toBe(35)
+    expect(store.vitals.hpMax).toBe(35)
+    expect(store.attributes.strength).toBe(1)
+    expect(store.attributes.dexterity).toBe(2)
+    expect(store.attributes.intelligence).toBe(1)
+    expect(store.activeSaveSlot).toBe('save_slot_3')
+  })
+
+  it('startNewGame with unknown preset id falls back to defaults', () => {
+    const store = usePlayerStore()
+    store.startNewGame('save_slot_1', { type: 'preset', presetId: 'nonexistent' })
+    expect(store.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp)
+    expect(store.vitals.hpMax).toBe(GAME_CONFIG.player.startingHp)
+    expect(store.activeSaveSlot).toBe('save_slot_1')
+  })
+
+  it('loadGame with legacy save without sheet metadata merges defaults', () => {
+    const store = usePlayerStore()
+    const legacySave = {
+      metadata: { currentNodeId: 'n_tavern' },
+      vitals: { hpCurrent: 8, hpMax: 20 },
+      inventory: { currency: 5, items: {} },
+      equipment: { mainHand: 'dagger_iron' },
+      attributes: { strength: 0, dexterity: 2, intelligence: 1 },
+      progression: { xp: 0, level: 1, xpToNextLevel: 100, unspentAttributePoints: 0 },
+      flags: {},
+    } as Partial<import('../../types/player').PlayerState>
+    store.loadGame('save_slot_1', legacySave)
+    expect(store.metadata.currentNodeId).toBe('n_tavern')
+    expect(store.vitals.hpCurrent).toBe(8)
+    expect(store.metadata.characterSheetId).toBeUndefined()
   })
 
   it('loadGame patches state and sets slot', () => {
