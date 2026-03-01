@@ -22,6 +22,8 @@ const { playSfx } = useAudio()
 const { turn, enemies, roundCount, log, turnOrder, isResolved, initCombat, playerAttack, playerAoeAttack, enemyTurn, useItem } = useCombat()
 const isResolving = ref(false)
 const encounterNotFound = ref(false)
+const showAllLogs = ref(false)
+const COMBAT_LOG_VISIBLE_COUNT = 6
 
 const playerAc = computed(() => {
   const weaponId = playerStore.equipment.mainHand
@@ -54,6 +56,12 @@ const usableConsumables = computed(() => {
     .filter(Boolean) as { id: string; name: string; qty: number }[]
 })
 
+const reversedLogs = computed(() => [...log.value].reverse())
+const hasHiddenLogs = computed(() => reversedLogs.value.length > COMBAT_LOG_VISIBLE_COUNT)
+const visibleLogs = computed(() =>
+  showAllLogs.value ? reversedLogs.value : reversedLogs.value.slice(0, COMBAT_LOG_VISIBLE_COUNT),
+)
+
 function initializeCombat(): void {
   encounterNotFound.value = false
   const encounter = COMBAT_ENCOUNTERS[props.encounterId]
@@ -69,6 +77,7 @@ function initializeCombat(): void {
     playerStore.flags.has_surprise ?? false,
   )
   isResolving.value = false
+  showAllLogs.value = false
 
   if (turn.value === 'enemy') {
     window.setTimeout(() => {
@@ -258,9 +267,24 @@ watch(
 
     <div class="mt-4 rounded border border-slate-700 bg-slate-950 p-3" role="log" aria-live="polite" aria-label="Combat log">
       <p class="mb-2 text-sm font-semibold text-slate-300">Combat Log</p>
-      <ul class="max-h-48 space-y-1 overflow-y-auto text-sm text-slate-200">
-        <li v-for="(entry, idx) in log" :key="idx">{{ entry }}</li>
+      <ul class="max-h-48 space-y-1 overflow-y-auto text-sm">
+        <li
+          v-for="(entry, idx) in visibleLogs"
+          :key="idx"
+          :class="idx === 0 ? 'text-slate-100 font-medium' : 'text-slate-400'"
+        >
+          {{ entry }}
+        </li>
       </ul>
+      <button
+        v-if="hasHiddenLogs"
+        type="button"
+        class="mt-2 text-xs text-sky-300 underline underline-offset-2 hover:text-sky-200"
+        :aria-label="showAllLogs ? 'Hide older combat log entries' : 'Show older combat log entries'"
+        @click="showAllLogs = !showAllLogs"
+      >
+        {{ showAllLogs ? 'Show fewer logs' : `Show older logs (${reversedLogs.length - COMBAT_LOG_VISIBLE_COUNT} more)` }}
+      </button>
     </div>
     </template>
   </section>

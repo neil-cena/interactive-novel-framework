@@ -1,0 +1,10 @@
+id,name,hp,maxHp,ac,attackBonus,damage,xpReward
+attic_spider,Attic Spider,14,14,12,4,1d6+2,35
+cultist_zombie,Cultist Zombie,20,20,8,4,1d6+1,35
+living_shadow,Living Shadow,16,16,12,4,1d6+2,55
+hell_hound_minor,Hell Hound,32,32,15,5,1d8+3,180
+durst_ghast_gustav,Gustav Durst (Ghast),42,42,13,6,1d8+3,250
+durst_ghast_elisabeth,Elisabeth Durst (Ghast),44,44,13,6,1d8+3,260
+cultist_ghoul,Durst Cult Ghoul,24,24,12,4,1d6+2,90
+animated_armor_escape,Animated Armor,28,28,18,4,1d6+2,120
+animated_rug_escape,Animated Rug of Smothering,30,30,12,5,2d6,150

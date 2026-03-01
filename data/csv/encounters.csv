@@ -1,3 +1,8 @@
 id,name,enemies,onVictory,onDefeat
-enc_bathroom,enc_bathroom,owlbear:1,n_bathroom_victory,n_game_over
-enc_boss,enc_boss,mik_tystone:1,n_victory,n_game_over
+enc_attic_spider,enc_attic_spider,attic_spider:1,n_spare_bedroom_clear,n_game_over
+enc_cultist_massacre,enc_cultist_massacre,cultist_zombie:2,n_massacre_clear,n_game_over
+enc_shadows,enc_shadows,living_shadow:3,n_shadow_crossroads_clear,n_game_over
+enc_hell_hound,enc_hell_hound,hell_hound_minor:1,n_hound_clear,n_game_over
+enc_dark_heart_boss,enc_dark_heart_boss,durst_ghast_gustav:1 | durst_ghast_elisabeth:1 | cultist_ghoul:1,n_dark_heart_victory,n_doomed
+enc_escape_armor,enc_escape_armor,animated_armor_escape:2,n_escape_armor_clear,n_doomed
+enc_escape_rug,enc_escape_rug,animated_rug_escape:1,n_escape_rug_clear,n_doomed

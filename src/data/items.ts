@@ -2,21 +2,6 @@
 import type { ItemTemplate } from '../types/items'
 
 export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
-  "receipt": {
-    "id": "receipt",
-    "name": "Crumpled Receipt",
-    "type": "tool"
-  },
-  "drow_baby": {
-    "id": "drow_baby",
-    "name": "Drow Baby",
-    "type": "tool"
-  },
-  "macguffin_collar": {
-    "id": "macguffin_collar",
-    "name": "Leather Collar",
-    "type": "tool"
-  },
   "dagger_iron": {
     "id": "dagger_iron",
     "name": "Iron Dagger",
@@ -46,9 +31,69 @@ export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
     "damage": "1d6",
     "scalingAttribute": "strength"
   },
+  "durst_longsword_p1": {
+    "id": "durst_longsword_p1",
+    "name": "Durst Longsword (+1)",
+    "type": "weapon",
+    "damage": "1d8",
+    "attackBonus": 1,
+    "scalingAttribute": "strength"
+  },
+  "silvered_shortsword": {
+    "id": "silvered_shortsword",
+    "name": "Silvered Shortsword",
+    "type": "weapon",
+    "damage": "1d6",
+    "attackBonus": 1,
+    "scalingAttribute": "dexterity"
+  },
+  "dagger_plus1": {
+    "id": "dagger_plus1",
+    "name": "Dagger (+1)",
+    "type": "weapon",
+    "damage": "1d4",
+    "attackBonus": 1,
+    "scalingAttribute": "dexterity"
+  },
+  "longbow_plus1": {
+    "id": "longbow_plus1",
+    "name": "Longbow (+1)",
+    "type": "weapon",
+    "damage": "1d8",
+    "attackBonus": 1,
+    "scalingAttribute": "dexterity"
+  },
+  "simple_spear": {
+    "id": "simple_spear",
+    "name": "Spear",
+    "type": "weapon",
+    "damage": "1d6",
+    "scalingAttribute": "strength"
+  },
+  "walking_stick": {
+    "id": "walking_stick",
+    "name": "Walking Stick",
+    "type": "weapon",
+    "damage": "1d4",
+    "scalingAttribute": "strength"
+  },
+  "butcher_knife": {
+    "id": "butcher_knife",
+    "name": "Butcher Knife",
+    "type": "weapon",
+    "damage": "1d4",
+    "scalingAttribute": "dexterity"
+  },
+  "tenderizer_mallet": {
+    "id": "tenderizer_mallet",
+    "name": "Tenderizer Mallet",
+    "type": "weapon",
+    "damage": "1d4",
+    "scalingAttribute": "strength"
+  },
   "robe_scholar": {
     "id": "robe_scholar",
-    "name": "Scholar's Robes",
+    "name": "Scholar Robes",
     "type": "armor",
     "acBonus": 0
   },
@@ -80,9 +125,55 @@ export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
     "name": "Holy Symbol",
     "type": "tool"
   },
+  "holy_symbol_dawn": {
+    "id": "holy_symbol_dawn",
+    "name": "Holy Symbol of Dawn",
+    "type": "tool"
+  },
+  "iron_attic_key": {
+    "id": "iron_attic_key",
+    "name": "Iron Key",
+    "type": "tool"
+  },
+  "thieves_tools": {
+    "id": "thieves_tools",
+    "name": "Thieves' Tools",
+    "type": "tool"
+  },
   "lockpick_set": {
     "id": "lockpick_set",
-    "name": "Thieves' Tools",
+    "name": "Lockpick Set",
+    "type": "tool"
+  },
+  "torch_bundle": {
+    "id": "torch_bundle",
+    "name": "Torch Bundle",
+    "type": "tool"
+  },
+  "ring_fire_resistance": {
+    "id": "ring_fire_resistance",
+    "name": "Ring of Fire Resistance",
+    "type": "tool"
+  },
+  "cloak_of_protection_proxy": {
+    "id": "cloak_of_protection_proxy",
+    "name": "Cloak of Protection",
+    "type": "armor",
+    "acBonus": 1
+  },
+  "gold_ring": {
+    "id": "gold_ring",
+    "name": "Gold Ring",
+    "type": "tool"
+  },
+  "remove_curse_scroll": {
+    "id": "remove_curse_scroll",
+    "name": "Scroll: Remove Curse",
+    "type": "tool"
+  },
+  "lesser_restoration_scroll": {
+    "id": "lesser_restoration_scroll",
+    "name": "Scroll: Lesser Restoration",
     "type": "tool"
   },
   "health_potion": {
@@ -92,6 +183,15 @@ export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
     "effect": {
       "action": "heal",
       "amount": "2d4+2"
+    }
+  },
+  "holy_water_dawn": {
+    "id": "holy_water_dawn",
+    "name": "Holy Water of Dawn",
+    "type": "consumable",
+    "effect": {
+      "action": "heal",
+      "amount": "3d6"
     }
   },
   "smoke_bomb": {

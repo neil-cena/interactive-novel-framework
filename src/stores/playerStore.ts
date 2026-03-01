@@ -7,6 +7,27 @@ import type { SaveSlotId } from '../utils/storage'
 
 const { player: playerConfig, leveling: levelConfig } = GAME_CONFIG
 
+function clampStartingLevel(level: number | undefined): number {
+  const maxLevel = levelConfig.xpThresholds.length - 1
+  const safe = Number.isFinite(level) ? Math.floor(level as number) : levelConfig.startingLevel
+  return Math.max(levelConfig.startingLevel, Math.min(maxLevel, safe))
+}
+
+function buildProgressionForLevel(level: number) {
+  const currentLevel = clampStartingLevel(level)
+  const xpIndex = Math.max(0, currentLevel - 1)
+  const xp = levelConfig.xpThresholds[xpIndex] ?? levelConfig.startingXp
+  const xpToNextLevel = levelConfig.xpThresholds[currentLevel] ?? Infinity
+  const unspentAttributePoints =
+    Math.max(0, currentLevel - levelConfig.startingLevel) * levelConfig.attributePointsPerLevel
+  return {
+    xp,
+    level: currentLevel,
+    xpToNextLevel,
+    unspentAttributePoints,
+  }
+}
+
 export const defaultPlayerState = (): PlayerState => ({
   activeSaveSlot: null,
   metadata: {
@@ -44,6 +65,8 @@ export function playerStateFromSheet(payload: CharacterSheetPayload): PlayerStat
   if (payload.type === 'preset') {
     const preset = getPresetById(payload.presetId)
     if (!preset) return base
+    const startingLevel = clampStartingLevel(preset.startingLevel)
+    const hpScaled = preset.startingHp + (startingLevel - 1) * levelConfig.hpPerLevel
     return {
       ...base,
       metadata: {
@@ -52,8 +75,8 @@ export function playerStateFromSheet(payload: CharacterSheetPayload): PlayerStat
         isCustomSheet: false,
       },
       vitals: {
-        hpCurrent: preset.startingHp,
-        hpMax: preset.startingHp,
+        hpCurrent: hpScaled,
+        hpMax: hpScaled,
       },
       inventory: {
         ...base.inventory,
@@ -64,6 +87,7 @@ export function playerStateFromSheet(payload: CharacterSheetPayload): PlayerStat
         armor: preset.startingArmorId ?? null,
       },
       attributes: { ...preset.startingAttributes },
+      progression: buildProgressionForLevel(startingLevel),
       flags: { ...preset.startingFlags },
     }
   }

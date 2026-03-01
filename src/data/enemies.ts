@@ -2,22 +2,85 @@
 import type { EnemyTemplate } from '../types/combat'
 
 export const ENEMY_DICTIONARY: Record<string, EnemyTemplate> = {
-  "owlbear": {
-    "id": "owlbear",
-    "name": "MacGuffin the Owlbear",
-    "hp": 34,
-    "ac": 13,
+  "attic_spider": {
+    "id": "attic_spider",
+    "name": "Attic Spider",
+    "hp": 14,
+    "ac": 12,
     "attackBonus": 4,
-    "damage": "1d8+2",
-    "xpReward": 140
+    "damage": "1d6+2",
+    "xpReward": 35
   },
-  "mik_tystone": {
-    "id": "mik_tystone",
-    "name": "Mik Tystone",
-    "hp": 48,
-    "ac": 14,
+  "cultist_zombie": {
+    "id": "cultist_zombie",
+    "name": "Cultist Zombie",
+    "hp": 20,
+    "ac": 8,
+    "attackBonus": 4,
+    "damage": "1d6+1",
+    "xpReward": 35
+  },
+  "living_shadow": {
+    "id": "living_shadow",
+    "name": "Living Shadow",
+    "hp": 16,
+    "ac": 12,
+    "attackBonus": 4,
+    "damage": "1d6+2",
+    "xpReward": 55
+  },
+  "hell_hound_minor": {
+    "id": "hell_hound_minor",
+    "name": "Hell Hound",
+    "hp": 32,
+    "ac": 15,
     "attackBonus": 5,
     "damage": "1d8+3",
-    "xpReward": 280
+    "xpReward": 180
+  },
+  "durst_ghast_gustav": {
+    "id": "durst_ghast_gustav",
+    "name": "Gustav Durst (Ghast)",
+    "hp": 42,
+    "ac": 13,
+    "attackBonus": 6,
+    "damage": "1d8+3",
+    "xpReward": 250
+  },
+  "durst_ghast_elisabeth": {
+    "id": "durst_ghast_elisabeth",
+    "name": "Elisabeth Durst (Ghast)",
+    "hp": 44,
+    "ac": 13,
+    "attackBonus": 6,
+    "damage": "1d8+3",
+    "xpReward": 260
+  },
+  "cultist_ghoul": {
+    "id": "cultist_ghoul",
+    "name": "Durst Cult Ghoul",
+    "hp": 24,
+    "ac": 12,
+    "attackBonus": 4,
+    "damage": "1d6+2",
+    "xpReward": 90
+  },
+  "animated_armor_escape": {
+    "id": "animated_armor_escape",
+    "name": "Animated Armor",
+    "hp": 28,
+    "ac": 18,
+    "attackBonus": 4,
+    "damage": "1d6+2",
+    "xpReward": 120
+  },
+  "animated_rug_escape": {
+    "id": "animated_rug_escape",
+    "name": "Animated Rug of Smothering",
+    "hp": 30,
+    "ac": 12,
+    "attackBonus": 5,
+    "damage": "2d6",
+    "xpReward": 150
   }
 }

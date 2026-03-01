@@ -2,41 +2,144 @@
 import type { CombatEncounter } from '../types/combat'
 
 export const COMBAT_ENCOUNTERS: Record<string, CombatEncounter> = {
-  "enc_bathroom": {
-    "id": "enc_bathroom",
-    "name": "enc_bathroom",
+  "enc_attic_spider": {
+    "id": "enc_attic_spider",
+    "name": "enc_attic_spider",
     "type": "combat",
     "enemies": [
       {
-        "enemyId": "owlbear",
+        "enemyId": "attic_spider",
         "count": 1
       }
     ],
     "resolution": {
       "onVictory": {
-        "nextNodeId": "n_bathroom_victory"
+        "nextNodeId": "n_spare_bedroom_clear"
       },
       "onDefeat": {
         "nextNodeId": "n_game_over"
       }
     }
   },
-  "enc_boss": {
-    "id": "enc_boss",
-    "name": "enc_boss",
+  "enc_cultist_massacre": {
+    "id": "enc_cultist_massacre",
+    "name": "enc_cultist_massacre",
     "type": "combat",
     "enemies": [
       {
-        "enemyId": "mik_tystone",
+        "enemyId": "cultist_zombie",
+        "count": 2
+      }
+    ],
+    "resolution": {
+      "onVictory": {
+        "nextNodeId": "n_massacre_clear"
+      },
+      "onDefeat": {
+        "nextNodeId": "n_game_over"
+      }
+    }
+  },
+  "enc_shadows": {
+    "id": "enc_shadows",
+    "name": "enc_shadows",
+    "type": "combat",
+    "enemies": [
+      {
+        "enemyId": "living_shadow",
+        "count": 3
+      }
+    ],
+    "resolution": {
+      "onVictory": {
+        "nextNodeId": "n_shadow_crossroads_clear"
+      },
+      "onDefeat": {
+        "nextNodeId": "n_game_over"
+      }
+    }
+  },
+  "enc_hell_hound": {
+    "id": "enc_hell_hound",
+    "name": "enc_hell_hound",
+    "type": "combat",
+    "enemies": [
+      {
+        "enemyId": "hell_hound_minor",
         "count": 1
       }
     ],
     "resolution": {
       "onVictory": {
-        "nextNodeId": "n_victory"
+        "nextNodeId": "n_hound_clear"
       },
       "onDefeat": {
         "nextNodeId": "n_game_over"
+      }
+    }
+  },
+  "enc_dark_heart_boss": {
+    "id": "enc_dark_heart_boss",
+    "name": "enc_dark_heart_boss",
+    "type": "combat",
+    "enemies": [
+      {
+        "enemyId": "durst_ghast_gustav",
+        "count": 1
+      },
+      {
+        "enemyId": "durst_ghast_elisabeth",
+        "count": 1
+      },
+      {
+        "enemyId": "cultist_ghoul",
+        "count": 1
+      }
+    ],
+    "resolution": {
+      "onVictory": {
+        "nextNodeId": "n_dark_heart_victory"
+      },
+      "onDefeat": {
+        "nextNodeId": "n_doomed"
+      }
+    }
+  },
+  "enc_escape_armor": {
+    "id": "enc_escape_armor",
+    "name": "enc_escape_armor",
+    "type": "combat",
+    "enemies": [
+      {
+        "enemyId": "animated_armor_escape",
+        "count": 2
+      }
+    ],
+    "resolution": {
+      "onVictory": {
+        "nextNodeId": "n_escape_armor_clear"
+      },
+      "onDefeat": {
+        "nextNodeId": "n_doomed"
+      }
+    }
+  },
+  "enc_escape_rug": {
+    "id": "enc_escape_rug",
+    "name": "enc_escape_rug",
+    "type": "combat",
+    "enemies": [
+      {
+        "enemyId": "animated_rug_escape",
+        "count": 1
+      }
+    ],
+    "resolution": {
+      "onVictory": {
+        "nextNodeId": "n_escape_rug_clear"
+      },
+      "onDefeat": {
+        "nextNodeId": "n_doomed"
       }
     }
   }

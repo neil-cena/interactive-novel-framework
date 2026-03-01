@@ -7,6 +7,8 @@ export interface CharacterSheetPreset {
   description: string
   /** Optional class label for display (e.g. Wizard, Paladin). */
   class?: string
+  /** Optional starting level for this preset. Defaults to config starting level. */
+  startingLevel?: number
   startingHp: number
   startingWeaponId: string | null
   /** Optional starting armor item id (e.g. robe_scholar, chainmail). */
