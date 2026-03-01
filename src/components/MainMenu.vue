@@ -305,7 +305,7 @@ onMounted(() => {
                 @click="selectedPresetId = preset.id"
               >
                 <div class="p-3">
-                  <p class="font-medium text-slate-100">{{ preset.name }}</p>
+                  <p class="font-medium text-slate-100">{{ preset.name }}{{ preset.class ? ` (${preset.class})` : '' }}</p>
                   <p class="mt-1 text-xs text-slate-400">{{ preset.description }}</p>
                   <p class="mt-2 text-xs text-slate-500">
                     {{ preset.startingHp }} HP · STR {{ preset.startingAttributes.strength }} DEX {{ preset.startingAttributes.dexterity }} INT {{ preset.startingAttributes.intelligence }}

@@ -129,14 +129,14 @@ describe('playerStore', () => {
 
   it('startNewGame with preset payload initializes from preset', () => {
     const store = usePlayerStore()
-    store.startNewGame('save_slot_2', { type: 'preset', presetId: 'sturdy' })
-    expect(store.metadata.characterSheetId).toBe('sturdy')
+    store.startNewGame('save_slot_2', { type: 'preset', presetId: 'char_paladin' })
+    expect(store.metadata.characterSheetId).toBe('char_paladin')
     expect(store.metadata.isCustomSheet).toBe(false)
-    expect(store.vitals.hpCurrent).toBe(42)
-    expect(store.vitals.hpMax).toBe(42)
+    expect(store.vitals.hpCurrent).toBe(24)
+    expect(store.vitals.hpMax).toBe(24)
     expect(store.attributes.strength).toBe(3)
     expect(store.attributes.dexterity).toBe(0)
-    expect(store.attributes.intelligence).toBe(0)
+    expect(store.attributes.intelligence).toBe(-1)
     expect(store.activeSaveSlot).toBe('save_slot_2')
   })
 

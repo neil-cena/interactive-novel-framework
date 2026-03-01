@@ -5,6 +5,8 @@ export interface CharacterSheetPreset {
   id: string
   name: string
   description: string
+  /** Optional class label for display (e.g. Wizard, Paladin). */
+  class?: string
   startingHp: number
   startingWeaponId: string | null
   startingItems: Record<string, number>

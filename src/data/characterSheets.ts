@@ -1,50 +1,58 @@
 import { GAME_CONFIG } from '../config'
 import type { CharacterSheetPreset, PointBuyConfig } from '../types/characterSheet'
 
-const defaultItems = { ...GAME_CONFIG.player.startingItems }
 const defaultFlags = { ...GAME_CONFIG.player.startingFlags }
 
-/** Preset character sheets. Balanced for 3rd–4th level equivalent survivability. */
+/** D&D ability score to framework modifier: floor((score - 10) / 2). */
+function mod(score: number): number {
+  return Math.floor((score - 10) / 2)
+}
+
+/** Preset character sheets (Balor Party / Sigil-style). */
 export const CHARACTER_SHEET_PRESETS: CharacterSheetPreset[] = [
   {
-    id: 'sturdy',
-    name: 'Sturdy',
-    description: 'High HP and strength. Can take a beating and hit hard.',
-    startingHp: 42,
-    startingWeaponId: GAME_CONFIG.player.startingWeaponId,
-    startingItems: { ...defaultItems },
+    id: 'char_wizard',
+    name: 'Arannis Moonwhisper',
+    description: 'A scholarly High Elf wizard seeking the arcane secrets of Sigil.',
+    class: 'Wizard',
+    startingHp: 18,
+    startingWeaponId: 'dagger_iron',
+    startingItems: { health_potion: 1 },
     startingFlags: { ...defaultFlags },
-    startingAttributes: { strength: 3, dexterity: 0, intelligence: 0 },
+    startingAttributes: { strength: mod(8), dexterity: mod(12), intelligence: mod(16) },
   },
   {
-    id: 'agile',
-    name: 'Agile',
-    description: 'Dexterous and quick. Strikes first and dodges blows.',
-    startingHp: 36,
-    startingWeaponId: GAME_CONFIG.player.startingWeaponId,
-    startingItems: { ...defaultItems },
+    id: 'char_paladin',
+    name: 'Thonk the Pious',
+    description: 'A Half-Orc Paladin who smites evil first and asks questions later.',
+    class: 'Paladin',
+    startingHp: 24,
+    startingWeaponId: 'greatsword_iron',
+    startingItems: { holy_symbol: 1 },
     startingFlags: { ...defaultFlags },
-    startingAttributes: { strength: 0, dexterity: 4, intelligence: 0 },
+    startingAttributes: { strength: mod(16), dexterity: mod(10), intelligence: mod(8) },
   },
   {
-    id: 'balanced',
-    name: 'Balanced',
-    description: 'Even spread of HP and attributes. Reliable all-rounder.',
-    startingHp: 38,
-    startingWeaponId: GAME_CONFIG.player.startingWeaponId,
-    startingItems: { ...defaultItems },
+    id: 'char_rogue',
+    name: 'Lila Tealeaf',
+    description: 'A Halfling Rogue with sticky fingers and a sharp wit.',
+    class: 'Rogue',
+    startingHp: 20,
+    startingWeaponId: 'blade_of_shadows',
+    startingItems: { lockpick_set: 1, smoke_bomb: 2 },
     startingFlags: { ...defaultFlags },
-    startingAttributes: { strength: 1, dexterity: 2, intelligence: 1 },
+    startingAttributes: { strength: mod(10), dexterity: mod(16), intelligence: mod(12) },
   },
   {
-    id: 'clever',
-    name: 'Clever',
-    description: 'Intelligence-focused. Better at skill checks and tactics.',
-    startingHp: 34,
-    startingWeaponId: GAME_CONFIG.player.startingWeaponId,
-    startingItems: { ...defaultItems },
+    id: 'char_cleric',
+    name: 'Bofur Stonefist',
+    description: 'A Dwarf Cleric who believes healing is just delayed punching.',
+    class: 'Cleric',
+    startingHp: 22,
+    startingWeaponId: 'mace_iron',
+    startingItems: { health_potion: 2, holy_symbol: 1 },
     startingFlags: { ...defaultFlags },
-    startingAttributes: { strength: 0, dexterity: 1, intelligence: 4 },
+    startingAttributes: { strength: mod(14), dexterity: mod(8), intelligence: mod(14) },
   },
 ]
 
