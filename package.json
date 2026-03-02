@@ -30,7 +30,6 @@
     "@capacitor/ios": "^8.1.0",
     "@capawesome/capacitor-google-sign-in": "^0.1.1",
     "@tailwindcss/vite": "^4.2.1",
-    "capacitor-play-games-services": "^2.0.1",
     "firebase": "^11.0.0",
     "howler": "^2.2.4",
     "pinia": "^3.0.4",

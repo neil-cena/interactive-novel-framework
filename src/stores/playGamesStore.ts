@@ -7,6 +7,18 @@ export interface PlayGamesPlayer {
   isLogin: boolean
 }
 
+interface PlayGamesPluginApi {
+  login: () => Promise<{ isLogin?: boolean; id?: string; display_name?: string; message?: string }>
+  status: () => Promise<{ isLogin?: boolean }>
+}
+
+async function loadPlayGamesPlugin(): Promise<PlayGamesPluginApi> {
+  // Keep the module id non-literal so TypeScript/Vite don't require the package at build time.
+  const moduleId = 'capacitor-play-games-services'
+  const mod = await import(/* @vite-ignore */ moduleId)
+  return (mod as { PlayGames?: PlayGamesPluginApi }).PlayGames as PlayGamesPluginApi
+}
+
 export const usePlayGamesStore = defineStore('playGames', {
   state: () => ({
     signedIn: false,
@@ -46,7 +58,7 @@ export const usePlayGamesStore = defineStore('playGames', {
       }
       this.clearError()
       try {
-        const { PlayGames } = await import('capacitor-play-games-services')
+        const PlayGames = await loadPlayGamesPlugin()
         const result = await PlayGames.login()
         if (result?.isLogin && result?.id) {
           this.setSignedIn({
@@ -69,7 +81,7 @@ export const usePlayGamesStore = defineStore('playGames', {
     async checkStatus(): Promise<{ isLogin: boolean }> {
       if (!isAndroid()) return { isLogin: false }
       try {
-        const { PlayGames } = await import('capacitor-play-games-services')
+        const PlayGames = await loadPlayGamesPlugin()
         const status = await PlayGames.status()
         if (status?.isLogin) {
           this.setSignedIn({
