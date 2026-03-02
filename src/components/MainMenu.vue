@@ -349,16 +349,16 @@ onMounted(() => {
                   <button
                     type="button"
                     class="rounded border border-slate-600 bg-slate-700 px-2.5 py-1 text-sm text-slate-200 hover:bg-slate-600 disabled:opacity-50"
-                    :disabled="customAttributes[attr] <= POINT_BUY_CONFIG.attributeMin"
+                    :disabled="customAttributes[attr as keyof PlayerAttributes] <= POINT_BUY_CONFIG.attributeMin"
                     @click="adjustCustomAttr(attr as keyof PlayerAttributes, -1)"
                   >
                     −
                   </button>
-                  <span class="min-w-[1.5rem] text-center text-slate-100">{{ customAttributes[attr] }}</span>
+                  <span class="min-w-[1.5rem] text-center text-slate-100">{{ customAttributes[attr as keyof PlayerAttributes] }}</span>
                   <button
                     type="button"
                     class="rounded border border-slate-600 bg-slate-700 px-2.5 py-1 text-sm text-slate-200 hover:bg-slate-600 disabled:opacity-50"
-                    :disabled="customAttributes[attr] >= POINT_BUY_CONFIG.attributeMax"
+                    :disabled="customAttributes[attr as keyof PlayerAttributes] >= POINT_BUY_CONFIG.attributeMax"
                     @click="adjustCustomAttr(attr as keyof PlayerAttributes, 1)"
                   >
                     +

@@ -20,6 +20,7 @@
     "authoring:preview": "vite preview --config vite.authoring.config.ts --port 5174",
     "mobile:sync": "npm run build && npx cap sync",
     "mobile:android:release": "npm run mobile:sync && cd android && ./gradlew bundleRelease",
+    "mobile:android:apk": "npm run mobile:sync && cd android && ./gradlew.bat assembleDebug",
     "mobile:ios:archive": "npm run mobile:sync && npx cap open ios"
   },
   "dependencies": {

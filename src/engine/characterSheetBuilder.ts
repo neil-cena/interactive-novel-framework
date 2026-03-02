@@ -56,7 +56,7 @@ export function validatePointBuy(
   if (hp < config.hpMin) errors.push(`HP cannot be below ${config.hpMin}`)
   if (hp > config.hpMax) errors.push(`HP cannot exceed ${config.hpMax}`)
 
-  const { totalSpend, remaining } = computePointBuySpend(attributes, hp, config)
+  const { totalSpend } = computePointBuySpend(attributes, hp, config)
   if (totalSpend > config.budget) errors.push(`Over budget by ${totalSpend - config.budget} points`)
 
   return {

@@ -55,12 +55,14 @@ A data-driven interactive fiction engine with D&D-style combat, built with Vue 3
 
 ## Prerequisites
 
-| Tool        | Version  | Notes                                       |
-| ----------- | -------- | ------------------------------------------- |
-| **Node.js** | >= 18    | LTS recommended                             |
-| **npm**     | >= 9     | Comes with Node.js                          |
-| **Java**    | JDK 17+  | Only needed for Android builds via Capacitor |
-| **Xcode**   | 15+      | Only needed for iOS builds (macOS only)      |
+
+| Tool        | Version | Notes                                        |
+| ----------- | ------- | -------------------------------------------- |
+| **Node.js** | >= 18   | LTS recommended                              |
+| **npm**     | >= 9    | Comes with Node.js                           |
+| **Java**    | JDK 17+ | Only needed for Android builds via Capacitor |
+| **Xcode**   | 15+     | Only needed for iOS builds (macOS only)      |
+
 
 ## Installation
 
@@ -71,7 +73,7 @@ git clone <repository-url>
 cd interactive-novel-framework
 ```
 
-2. **Install dependencies**
+1. **Install dependencies**
 
 ```bash
 npm install
@@ -91,14 +93,16 @@ Vite will start a local server (typically at `http://localhost:5173`). The page 
 
 ### Data tooling
 
-| Command | Description |
-| ------- | ----------- |
-| `npm run build:data` | Compile CSV → TypeScript (same as below). |
-| `npm run validate:data` | Validate CSVs only (no write). |
-| `npm run lint:data` | Lint all CSVs with diagnostic codes; exit 1 if errors. |
-| `npm run lint:data:json` | Same as `lint:data` with `--format=json` for CI. |
-| `npm run dev:data` | Watch `data/csv/` and rebuild `src/data/*.ts` on change. |
-| `npm run dev:full` | Run `vite` and `dev:data` in parallel. |
+
+| Command                  | Description                                              |
+| ------------------------ | -------------------------------------------------------- |
+| `npm run build:data`     | Compile CSV → TypeScript (same as below).                |
+| `npm run validate:data`  | Validate CSVs only (no write).                           |
+| `npm run lint:data`      | Lint all CSVs with diagnostic codes; exit 1 if errors.   |
+| `npm run lint:data:json` | Same as `lint:data` with `--format=json` for CI.         |
+| `npm run dev:data`       | Watch `data/csv/` and rebuild `src/data/*.ts` on change. |
+| `npm run dev:full`       | Run `vite` and `dev:data` in parallel.                   |
+
 
 Lint options: `--format=json`, `--max-warnings=N`, `--strict` (warnings as errors).
 
@@ -127,28 +131,23 @@ Cloud save, shared outcomes, and story package listing can use **Firebase** (Aut
 
 1. Create a [Firebase project](https://console.firebase.google.com/) and enable **Authentication** (Email/Password) and **Firestore** (native mode).
 2. Register a web app and copy the config. Create `.env.local` from the template:
-
-   ```bash
+  ```bash
    cp .env.example .env.local
-   ```
-
+  ```
 3. Fill in `.env.local` with your project values:
 
-   | Variable | Description |
-   | -------- | ----------- |
-   | `VITE_FIREBASE_API_KEY` | Web API key |
-   | `VITE_FIREBASE_AUTH_DOMAIN` | Project auth domain |
-   | `VITE_FIREBASE_PROJECT_ID` | Project ID |
-   | `VITE_FIREBASE_APP_ID` | Web app ID |
+  | Variable                    | Description         |
+  | --------------------------- | ------------------- |
+  | `VITE_FIREBASE_API_KEY`     | Web API key         |
+  | `VITE_FIREBASE_AUTH_DOMAIN` | Project auth domain |
+  | `VITE_FIREBASE_PROJECT_ID`  | Project ID          |
+  | `VITE_FIREBASE_APP_ID`      | Web app ID          |
 
 4. Deploy Firestore rules (from project root):
-
-   ```bash
+  ```bash
    firebase deploy --only firestore:rules
-   ```
-
+  ```
    Rules are in `firestore.rules`: per-user saves under `users/{uid}/saves`, analytics write-only, story packages read-only.
-
 5. In `src/config.ts`, set `features.cloudSave: true` to use Firebase when env is present. Optional: set `VITE_PROVIDER_MODE=local` or `VITE_PROVIDER_MODE=firebase` to force a provider for testing.
 
 **Feature flag progression**: Enable flags in `src/config.ts` for dev first; after QA, promote to staging, then enable in production gradually (e.g. internal users, then sampled, then full). See `docs/phase5-rollout-checklist.md`.
@@ -201,12 +200,14 @@ Serves the `dist/` folder on a local port so you can verify the production build
 
 All game content lives in four CSV files under `data/csv/`:
 
-| CSV File          | Generates            | Contains                                      |
-| ----------------- | -------------------- | --------------------------------------------- |
-| `nodes.csv`       | `src/data/nodes.ts`  | Story nodes, narrative text, choices, actions  |
-| `items.csv`       | `src/data/items.ts`  | Weapons, consumables, tools with stats         |
-| `enemies.csv`     | `src/data/enemies.ts`| Enemy templates with HP, AC, attack, damage    |
-| `encounters.csv`  | `src/data/encounters.ts` | Combat encounter definitions and outcomes  |
+
+| CSV File         | Generates                | Contains                                      |
+| ---------------- | ------------------------ | --------------------------------------------- |
+| `nodes.csv`      | `src/data/nodes.ts`      | Story nodes, narrative text, choices, actions |
+| `items.csv`      | `src/data/items.ts`      | Weapons, consumables, tools with stats        |
+| `enemies.csv`    | `src/data/enemies.ts`    | Enemy templates with HP, AC, attack, damage   |
+| `encounters.csv` | `src/data/encounters.ts` | Combat encounter definitions and outcomes     |
+
 
 Running `npm run build:data` invokes `scripts/build-data.js`, which:
 
@@ -377,13 +378,17 @@ interactive-novel-framework/
 
 ## Technology Stack
 
-| Layer          | Technology                      | Purpose                                  |
-| -------------- | ------------------------------- | ---------------------------------------- |
-| Framework      | Vue 3 (Composition API)         | Reactive UI components                   |
-| Language       | TypeScript (strict mode)        | Type safety across the entire codebase   |
-| State          | Pinia                           | Centralized player state management      |
-| Styling        | Tailwind CSS v4                 | Utility-first dark-themed UI             |
-| Bundler        | Vite 7                          | Fast HMR in dev, optimized production    |
-| Data Pipeline  | PapaParse + Node.js script      | CSV-to-TypeScript code generation        |
-| Mobile         | Capacitor (Android + iOS)       | Native mobile wrappers for the web app   |
-| Persistence    | localStorage (+ Firebase when Phase 5 enabled) | Client-side save/load; cloud sync via Firestore when configured |
+
+| Layer         | Technology                                     | Purpose                                                         |
+| ------------- | ---------------------------------------------- | --------------------------------------------------------------- |
+| Framework     | Vue 3 (Composition API)                        | Reactive UI components                                          |
+| Language      | TypeScript (strict mode)                       | Type safety across the entire codebase                          |
+| State         | Pinia                                          | Centralized player state management                             |
+| Styling       | Tailwind CSS v4                                | Utility-first dark-themed UI                                    |
+| Bundler       | Vite 7                                         | Fast HMR in dev, optimized production                           |
+| Data Pipeline | PapaParse + Node.js script                     | CSV-to-TypeScript code generation                               |
+| Mobile        | Capacitor (Android + iOS)                      | Native mobile wrappers for the web app                          |
+| Persistence   | localStorage (+ Firebase when Phase 5 enabled) | Client-side save/load; cloud sync via Firestore when configured |
+
+
+aok
