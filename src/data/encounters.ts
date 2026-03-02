@@ -2,6 +2,25 @@
 import type { CombatEncounter } from '../types/combat'
 
 export const COMBAT_ENCOUNTERS: Record<string, CombatEncounter> = {
+  "enc_animated_knife": {
+    "id": "enc_animated_knife",
+    "name": "enc_animated_knife",
+    "type": "combat",
+    "enemies": [
+      {
+        "enemyId": "animated_knife",
+        "count": 1
+      }
+    ],
+    "resolution": {
+      "onVictory": {
+        "nextNodeId": "n_knife_victory"
+      },
+      "onDefeat": {
+        "nextNodeId": "n_game_over"
+      }
+    }
+  },
   "enc_attic_spider": {
     "id": "enc_attic_spider",
     "name": "enc_attic_spider",
@@ -14,7 +33,7 @@ export const COMBAT_ENCOUNTERS: Record<string, CombatEncounter> = {
     ],
     "resolution": {
       "onVictory": {
-        "nextNodeId": "n_spare_bedroom_clear"
+        "nextNodeId": "n_attic_spider_clear"
       },
       "onDefeat": {
         "nextNodeId": "n_game_over"
@@ -33,7 +52,7 @@ export const COMBAT_ENCOUNTERS: Record<string, CombatEncounter> = {
     ],
     "resolution": {
       "onVictory": {
-        "nextNodeId": "n_massacre_clear"
+        "nextNodeId": "n_cells_clear"
       },
       "onDefeat": {
         "nextNodeId": "n_game_over"
@@ -53,25 +72,6 @@ export const COMBAT_ENCOUNTERS: Record<string, CombatEncounter> = {
     "resolution": {
       "onVictory": {
         "nextNodeId": "n_shadow_crossroads_clear"
-      },
-      "onDefeat": {
-        "nextNodeId": "n_game_over"
-      }
-    }
-  },
-  "enc_hell_hound": {
-    "id": "enc_hell_hound",
-    "name": "enc_hell_hound",
-    "type": "combat",
-    "enemies": [
-      {
-        "enemyId": "hell_hound_minor",
-        "count": 1
-      }
-    ],
-    "resolution": {
-      "onVictory": {
-        "nextNodeId": "n_hound_clear"
       },
       "onDefeat": {
         "nextNodeId": "n_game_over"

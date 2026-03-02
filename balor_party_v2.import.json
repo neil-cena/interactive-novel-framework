@@ -1,426 +1,495 @@
 {
   "manifest": {
-    "storyId": "balor_party_v2",
-    "title": "The Hangover: A Real Balor Party",
-    "author": "Greg Bilsland (Adapted)",
-    "version": "1.1.0",
-    "description": "Class setup + wake-up mystery + branching comedy investigation for the interactive novel framework."
+    "storyId": "balor_party_v4_mechanics",
+    "title": "The Hangover: A Real Balor Party (Mechanics Complete)",
+    "author": "Greg Bilsland (Adapted + Systems Rewrite)",
+    "version": "4.0.0",
+    "description": "Trial story rewritten to exercise all supported mechanics: actions, visibility logic, skill proficiency checks, combat branches, consumables, and armor-driven loot."
   },
   "model": {
     "nodes": {
-      "n_character_select": {
-        "id": "n_character_select",
-        "type": "narrative",
-        "text": "Before the headache sets in... who are you?",
-        "choices": [
-          {
-            "id": "c_pick_wizard",
-            "label": "[High Elf Wizard]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_setup_wizard" }
-          },
-          {
-            "id": "c_pick_paladin",
-            "label": "[Half-Orc Paladin]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_setup_paladin" }
-          },
-          {
-            "id": "c_more_classes",
-            "label": "[More classes]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_character_select_2" }
-          }
-        ]
-      },
-      "n_character_select_2": {
-        "id": "n_character_select_2",
-        "type": "narrative",
-        "text": "Pick your role in this catastrophe.",
-        "choices": [
-          {
-            "id": "c_pick_rogue",
-            "label": "[Halfling Rogue]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_setup_rogue" }
-          },
-          {
-            "id": "c_pick_cleric",
-            "label": "[Dwarf Cleric]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_setup_cleric" }
-          },
-          {
-            "id": "c_back_classes",
-            "label": "[Back]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_character_select" }
-          }
-        ]
-      },
-      "n_setup_wizard": {
-        "id": "n_setup_wizard",
-        "type": "narrative",
-        "text": "Arannis Moonwhisper. Scholar, spellcaster, and probably hungover.",
-        "onEnter": [
-          { "action": "set_flag", "key": "class_wizard", "value": true },
-          { "action": "adjust_hp", "amount": -2 },
-          { "action": "add_item", "itemId": "dagger_iron", "qty": 1 },
-          { "action": "add_item", "itemId": "robe_scholar", "qty": 1 },
-          { "action": "add_item", "itemId": "spellbook", "qty": 1 },
-          { "action": "add_item", "itemId": "health_potion", "qty": 1 }
-        ],
-        "choices": [
-          {
-            "id": "c_start_wizard",
-            "label": "[Begin the nightmare]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_start" }
-          }
-        ]
-      },
-      "n_setup_paladin": {
-        "id": "n_setup_paladin",
-        "type": "narrative",
-        "text": "Thonk the Pious. Smite first, questions never.",
-        "onEnter": [
-          { "action": "set_flag", "key": "class_paladin", "value": true },
-          { "action": "adjust_hp", "amount": 4 },
-          { "action": "add_item", "itemId": "greatsword_iron", "qty": 1 },
-          { "action": "add_item", "itemId": "chainmail", "qty": 1 },
-          { "action": "add_item", "itemId": "holy_symbol", "qty": 1 }
-        ],
-        "choices": [
-          {
-            "id": "c_start_paladin",
-            "label": "[Begin the nightmare]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_start" }
-          }
-        ]
-      },
-      "n_setup_rogue": {
-        "id": "n_setup_rogue",
-        "type": "narrative",
-        "text": "Lila Tealeaf. Sneaky, sharp, and one bad decision from disaster.",
-        "onEnter": [
-          { "action": "set_flag", "key": "class_rogue", "value": true },
-          { "action": "add_item", "itemId": "blade_of_shadows", "qty": 1 },
-          { "action": "add_item", "itemId": "leather_armor", "qty": 1 },
-          { "action": "add_item", "itemId": "lockpick_set", "qty": 1 },
-          { "action": "add_item", "itemId": "smoke_bomb", "qty": 2 }
-        ],
-        "choices": [
-          {
-            "id": "c_start_rogue",
-            "label": "[Begin the nightmare]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_start" }
-          }
-        ]
-      },
-      "n_setup_cleric": {
-        "id": "n_setup_cleric",
-        "type": "narrative",
-        "text": "Bofur Stonefist. Healing, faith, and occasional blunt force theology.",
-        "onEnter": [
-          { "action": "set_flag", "key": "class_cleric", "value": true },
-          { "action": "adjust_hp", "amount": 2 },
-          { "action": "add_item", "itemId": "mace_iron", "qty": 1 },
-          { "action": "add_item", "itemId": "scale_mail", "qty": 1 },
-          { "action": "add_item", "itemId": "holy_symbol", "qty": 1 },
-          { "action": "add_item", "itemId": "health_potion", "qty": 2 }
-        ],
-        "choices": [
-          {
-            "id": "c_start_cleric",
-            "label": "[Begin the nightmare]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_start" }
-          }
-        ]
-      },
       "n_start": {
         "id": "n_start",
         "type": "narrative",
-        "text": "You awaken to rude morning light. Your head is pounding. The room is destroyed. A white chicken pecks aimlessly at a spilled potion on the rug. You have no memory of last night.",
+        "text": "Morning light, shattered furniture, one white chicken, one drow baby, and one catastrophic hangover. Whoever you are, your sheet was chosen before this mess began.",
         "onEnter": [
-          { "action": "adjust_currency", "amount": 50 }
+          { "action": "set_flag", "key": "run_started", "value": true },
+          { "action": "adjust_currency", "amount": 20 }
         ],
         "choices": [
-          {
-            "id": "c_check_pockets",
-            "label": "[Check your pockets]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_inventory_check" }
-          },
-          {
-            "id": "c_check_bathroom",
-            "label": "[Check the bathroom]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_bathroom_door" }
-          }
+          { "id": "c_to_suite_hub", "label": "[Take stock of the suite]", "mechanic": { "type": "navigate", "nextNodeId": "n_suite_hub" } }
         ]
       },
-      "n_inventory_check": {
-        "id": "n_inventory_check",
+      "n_suite_hub": {
+        "id": "n_suite_hub",
         "type": "narrative",
-        "text": "You rummage through your ruined clothes and find a crumpled receipt.",
+        "text": "The suite is ruined: blood on the minibar, claw marks near the bathroom, and a locked dresser with scorch marks.",
+        "choices": [
+          { "id": "c_pockets", "label": "[Search your pockets]", "visibilityRequirements": [{ "type": "not_has_flag", "key": "searched_pockets" }], "mechanic": { "type": "navigate", "nextNodeId": "n_search_pockets" } },
+          { "id": "c_dresser", "label": "[Inspect locked dresser]", "visibilityRequirements": [{ "type": "not_has_flag", "key": "opened_dresser" }], "mechanic": { "type": "navigate", "nextNodeId": "n_dresser" } },
+          { "id": "c_bathroom", "label": "[Open bathroom door]", "mechanic": { "type": "navigate", "nextNodeId": "n_bathroom_door" } }
+        ]
+      },
+      "n_search_pockets": {
+        "id": "n_search_pockets",
+        "type": "narrative",
+        "text": "You find a receipt marked OBLIVION and a brass token for Mik Tystone's private estate.",
         "onEnter": [
-          { "action": "add_item", "itemId": "receipt", "qty": 1 },
-          { "action": "set_flag", "key": "has_clue", "value": true }
+          { "action": "set_flag", "key": "searched_pockets", "value": true },
+          { "action": "add_item", "itemId": "receipt_oblivion", "qty": 1 },
+          { "action": "add_item", "itemId": "club_token", "qty": 1 }
         ],
         "choices": [
-          {
-            "id": "c_read_receipt",
-            "label": "[Read the receipt]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_read_receipt" }
-          }
+          { "id": "c_back_suite_1", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_suite_hub" } }
         ]
       },
-      "n_read_receipt": {
-        "id": "n_read_receipt",
+      "n_dresser": {
+        "id": "n_dresser",
         "type": "narrative",
-        "text": "It's from Dude Fiero's Kitchen. A scribble on the back reads: OBLIVION.",
+        "text": "The lock is delicate but old. You can finesse it, force it, or study the hidden seams.",
         "choices": [
           {
-            "id": "c_to_room_hub",
-            "label": "[Look around the room]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_room_hub" }
+            "id": "c_pick_lock",
+            "label": "[Pick lock (Sleight of Hand DC 13)]",
+            "mechanic": {
+              "type": "skill_check",
+              "dice": "1d20",
+              "dc": 13,
+              "attribute": "dexterity",
+              "skillId": "sleight_of_hand",
+              "onSuccess": { "nextNodeId": "n_dresser_success" },
+              "onFailure": { "nextNodeId": "n_dresser_fail" }
+            }
+          },
+          {
+            "id": "c_force_dresser",
+            "label": "[Force with leverage (Athletics DC 12)]",
+            "mechanic": {
+              "type": "skill_check",
+              "dice": "1d20",
+              "dc": 12,
+              "attribute": "strength",
+              "skillId": "athletics",
+              "onSuccess": { "nextNodeId": "n_dresser_success" },
+              "onFailure": { "nextNodeId": "n_dresser_fail" }
+            }
+          },
+          {
+            "id": "c_study_mechanism",
+            "label": "[Study mechanism (Investigation DC 12)]",
+            "mechanic": {
+              "type": "skill_check",
+              "dice": "1d20",
+              "dc": 12,
+              "attribute": "intelligence",
+              "skillId": "investigation",
+              "onSuccess": { "nextNodeId": "n_dresser_success" },
+              "onFailure": { "nextNodeId": "n_dresser_fail" }
+            }
           }
         ]
       },
-      "n_room_hub": {
-        "id": "n_room_hub",
+      "n_dresser_success": {
+        "id": "n_dresser_success",
         "type": "narrative",
-        "text": "The suite is chaos: broken furniture, spilled drinks, and poor life choices.",
-        "choices": [
-          {
-            "id": "c_open_bathroom",
-            "label": "[Open bathroom door]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_bathroom_door" }
-          },
-          {
-            "id": "c_check_closet",
-            "label": "[Check the closet]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_closet" }
-          },
-          {
-            "id": "c_leave_hotel",
-            "label": "[Leave hotel]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_streets" }
-          }
-        ]
-      },
-      "n_closet": {
-        "id": "n_closet",
-        "type": "narrative",
-        "text": "Inside the closet: a drow baby with a spider-shaped pacifier. Long story.",
+        "text": "Inside: a reinforced jacket, a potion, and a note saying: \"Mik took the baby before dawn.\"",
         "onEnter": [
-          { "action": "add_item", "itemId": "drow_baby", "qty": 1 }
+          { "action": "set_flag", "key": "opened_dresser", "value": true },
+          { "action": "set_flag", "key": "learned_mik_has_baby", "value": true },
+          { "action": "add_item", "itemId": "gambler_jacket", "qty": 1 },
+          { "action": "add_item", "itemId": "health_potion", "qty": 1 }
         ],
         "choices": [
-          {
-            "id": "c_take_baby",
-            "label": "[Take the baby, carefully]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_room_hub" }
-          }
+          { "id": "c_back_suite_2", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_suite_hub" } }
+        ]
+      },
+      "n_dresser_fail": {
+        "id": "n_dresser_fail",
+        "type": "narrative",
+        "text": "You spring a tiny trap needle and feel your pulse spike.",
+        "onEnter": [
+          { "action": "set_flag", "key": "opened_dresser", "value": true },
+          { "action": "adjust_hp", "amount": -3 }
+        ],
+        "choices": [
+          { "id": "c_back_suite_3", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_suite_hub" } }
         ]
       },
       "n_bathroom_door": {
         "id": "n_bathroom_door",
         "type": "encounter",
-        "text": "You crack the bathroom door. A massive owlbear stares back and roars.",
+        "text": "A makeup-smeared owlbear stands in the bathtub and huffs angrily.",
         "choices": [
           {
-            "id": "c_fight_owlbear",
-            "label": "[Attack!]",
-            "mechanic": { "type": "combat_init", "encounterId": "enc_bathroom" }
+            "id": "c_read_owlbear",
+            "label": "[Read its mood (Insight DC 11)]",
+            "mechanic": {
+              "type": "skill_check",
+              "dice": "1d20",
+              "dc": 11,
+              "attribute": "intelligence",
+              "skillId": "insight",
+              "onSuccess": { "nextNodeId": "n_owlbear_handle" },
+              "onFailure": { "nextNodeId": "n_owlbear_handle" }
+            }
           },
+          { "id": "c_attack_owlbear", "label": "[Attack first]", "mechanic": { "type": "combat_init", "encounterId": "enc_owlbear_suite" } }
+        ]
+      },
+      "n_owlbear_handle": {
+        "id": "n_owlbear_handle",
+        "type": "narrative",
+        "text": "You can try to calm it with confident posture and tone, or escalate.",
+        "choices": [
           {
             "id": "c_calm_owlbear",
-            "label": "[Calm it down (DC 14)]",
+            "label": "[Animal Handling DC 14]",
             "mechanic": {
               "type": "skill_check",
               "dice": "1d20",
               "dc": 14,
               "attribute": "intelligence",
-              "onSuccess": { "nextNodeId": "n_calm_success" },
-              "onFailure": { "nextNodeId": "n_calm_fail" },
-              "onFailureEncounterId": "enc_bathroom"
+              "skillId": "animal_handling",
+              "onSuccess": { "nextNodeId": "n_owlbear_calm" },
+              "onFailure": { "nextNodeId": "n_owlbear_angered" },
+              "onFailureEncounterId": "enc_owlbear_suite"
             }
-          }
+          },
+          { "id": "c_force_fight_owlbear", "label": "[Fight now]", "mechanic": { "type": "combat_init", "encounterId": "enc_owlbear_suite" } }
         ]
       },
-      "n_calm_success": {
-        "id": "n_calm_success",
+      "n_owlbear_angered": {
+        "id": "n_owlbear_angered",
         "type": "narrative",
-        "text": "The owlbear sniffs your hand and settles. Its collar reads: MacGuffin.",
+        "text": "The owlbear screeches and lunges.",
+        "choices": [
+          { "id": "c_defend_owlbear", "label": "[Defend yourself]", "mechanic": { "type": "combat_init", "encounterId": "enc_owlbear_suite" } }
+        ]
+      },
+      "n_owlbear_calm": {
+        "id": "n_owlbear_calm",
+        "type": "narrative",
+        "text": "It settles and lets you read its collar: \"MacGuffin - property of Mik Tystone.\"",
         "onEnter": [
-          { "action": "add_item", "itemId": "macguffin_collar", "qty": 1 }
+          { "action": "set_flag", "key": "owlbear_resolved", "value": true },
+          { "action": "set_flag", "key": "owlbear_friendly", "value": true },
+          { "action": "add_item", "itemId": "macguffin_collar", "qty": 1 },
+          { "action": "add_item", "itemId": "owlbear_hide_vest", "qty": 1 }
         ],
         "choices": [
-          {
-            "id": "c_back_room",
-            "label": "[Back to room]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_room_hub" }
-          }
+          { "id": "c_leave_suite", "label": "[Head to Drowtown]", "mechanic": { "type": "navigate", "nextNodeId": "n_street_entry" } }
         ]
       },
-      "n_calm_fail": {
-        "id": "n_calm_fail",
+      "n_owlbear_victory": {
+        "id": "n_owlbear_victory",
         "type": "narrative",
-        "text": "The owlbear rejects your soothing tone and swings a heavy claw.",
-        "choices": [
-          {
-            "id": "c_defend_self",
-            "label": "[Defend yourself]",
-            "mechanic": { "type": "combat_init", "encounterId": "enc_bathroom" }
-          }
-        ]
-      },
-      "n_bathroom_victory": {
-        "id": "n_bathroom_victory",
-        "type": "narrative",
-        "text": "The beast is down. You recover a collar tagged MacGuffin.",
+        "text": "The beast drops. You recover its collar and tough hide armor.",
         "onEnter": [
-          { "action": "add_item", "itemId": "macguffin_collar", "qty": 1 }
+          { "action": "set_flag", "key": "owlbear_resolved", "value": true },
+          { "action": "add_item", "itemId": "macguffin_collar", "qty": 1 },
+          { "action": "add_item", "itemId": "owlbear_hide_vest", "qty": 1 }
         ],
         "choices": [
-          {
-            "id": "c_leave_bathroom_victory",
-            "label": "[Back to room]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_room_hub" }
-          }
+          { "id": "c_to_street", "label": "[Leave the suite]", "mechanic": { "type": "navigate", "nextNodeId": "n_street_entry" } }
         ]
       },
-      "n_streets": {
-        "id": "n_streets",
+      "n_street_entry": {
+        "id": "n_street_entry",
         "type": "narrative",
-        "text": "Sunlight stabs your eyes as Sigil buzzes outside. Drowtown calls.",
+        "text": "Sigil's Drowtown is awake: flashing glyph signs, knife-sellers, and too many witnesses.",
         "choices": [
-          {
-            "id": "c_go_drowtown",
-            "label": "[Go to Drowtown gate]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_drowtown_gate" }
-          }
+          { "id": "c_street_observe", "label": "[Scan the crowd (Perception DC 12)]", "mechanic": { "type": "skill_check", "dice": "1d20", "dc": 12, "attribute": "intelligence", "skillId": "perception", "onSuccess": { "nextNodeId": "n_street_observe_success" }, "onFailure": { "nextNodeId": "n_street_observe_fail" } } },
+          { "id": "c_to_gate", "label": "[Approach Mik's gate]", "mechanic": { "type": "navigate", "nextNodeId": "n_drowtown_gate" } },
+          { "id": "c_clinic", "label": "[Pay for field treatment]", "visibilityRequirements": [{ "type": "not_has_flag", "key": "clinic_used" }, { "type": "stat_check", "stat": "currency", "operator": ">=", "value": 10 }], "mechanic": { "type": "navigate", "nextNodeId": "n_street_clinic" } }
+        ]
+      },
+      "n_street_observe_success": {
+        "id": "n_street_observe_success",
+        "type": "narrative",
+        "text": "You spot a side wall climb route and overhear that the gate captain hates bad liars.",
+        "onEnter": [
+          { "action": "set_flag", "key": "know_side_route", "value": true }
+        ],
+        "choices": [
+          { "id": "c_to_gate_after_observe", "label": "[Go to the gate]", "mechanic": { "type": "navigate", "nextNodeId": "n_drowtown_gate" } }
+        ]
+      },
+      "n_street_observe_fail": {
+        "id": "n_street_observe_fail",
+        "type": "narrative",
+        "text": "You get distracted by a cart explosion and lose time.",
+        "onEnter": [
+          { "action": "adjust_hp", "amount": -1 }
+        ],
+        "choices": [
+          { "id": "c_to_gate_after_fail", "label": "[Go to the gate]", "mechanic": { "type": "navigate", "nextNodeId": "n_drowtown_gate" } }
+        ]
+      },
+      "n_street_clinic": {
+        "id": "n_street_clinic",
+        "type": "narrative",
+        "text": "A street cleric patches you up and mutters that Mik's mansion is already on edge.",
+        "onEnter": [
+          { "action": "set_flag", "key": "clinic_used", "value": true },
+          { "action": "adjust_currency", "amount": -10 },
+          { "action": "heal", "amount": "1d8+2" }
+        ],
+        "choices": [
+          { "id": "c_to_gate_from_clinic", "label": "[Head to the gate]", "mechanic": { "type": "navigate", "nextNodeId": "n_drowtown_gate" } }
         ]
       },
       "n_drowtown_gate": {
         "id": "n_drowtown_gate",
         "type": "narrative",
-        "text": "A bouncer blocks the way. \"Private. Password?\"",
+        "text": "A bouncer folds his arms. \"Password, paperwork, or pain.\"",
         "choices": [
-          {
-            "id": "c_say_password",
-            "label": "[Say: OBLIVION]",
-            "visibilityRequirements": [{ "type": "has_item", "itemId": "receipt" }],
-            "mechanic": { "type": "navigate", "nextNodeId": "n_mansion" }
-          },
-          {
-            "id": "c_show_baby",
-            "label": "[Show the drow baby]",
-            "visibilityRequirements": [{ "type": "has_item", "itemId": "drow_baby" }],
-            "mechanic": { "type": "navigate", "nextNodeId": "n_mansion_baby" }
-          },
-          {
-            "id": "c_leave_gate",
-            "label": "[Leave]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_streets" }
-          }
+          { "id": "c_show_receipt", "label": "[Show receipt: OBLIVION]", "visibilityRequirements": [{ "type": "has_item", "itemId": "receipt_oblivion" }], "mechanic": { "type": "navigate", "nextNodeId": "n_gate_pass" } },
+          { "id": "c_show_token", "label": "[Flash brass token]", "visibilityRequirements": [{ "type": "has_item", "itemId": "club_token" }], "mechanic": { "type": "navigate", "nextNodeId": "n_gate_pass" } },
+          { "id": "c_talk_in", "label": "\"We're expected. Open the gate.\"", "mechanic": { "type": "skill_check", "dice": "1d20", "dc": 13, "attribute": "intelligence", "skillId": "persuasion", "onSuccess": { "nextNodeId": "n_gate_pass" }, "onFailure": { "nextNodeId": "n_gate_refused" } } }
         ]
       },
-      "n_mansion": {
-        "id": "n_mansion",
-        "type": "encounter",
-        "text": "At Mik Tystone's mansion, the host is furious and ready to throw fists.",
-        "choices": [
-          {
-            "id": "c_fight_mik",
-            "label": "[Fight Mik Tystone]",
-            "mechanic": { "type": "combat_init", "encounterId": "enc_boss" }
-          }
-        ]
-      },
-      "n_mansion_baby": {
-        "id": "n_mansion_baby",
+      "n_gate_refused": {
+        "id": "n_gate_refused",
         "type": "narrative",
-        "text": "The bouncer goes pale. \"That's Mik's kid! VIP access, now.\"",
+        "text": "\"No.\" The captain points to a coin tray and taps twice.",
         "choices": [
-          {
-            "id": "c_finish_soft",
-            "label": "[Finish the adventure]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_victory" }
-          }
+          { "id": "c_bribe_exact", "label": "[Pay exactly 20g fee]", "visibilityRequirements": [{ "type": "stat_check", "stat": "currency", "operator": "==", "value": 20 }], "mechanic": { "type": "navigate", "nextNodeId": "n_gate_fee_exact" } },
+          { "id": "c_bribe_high", "label": "[Pay 25g bribe]", "visibilityRequirements": [{ "type": "stat_check", "stat": "currency", "operator": ">=", "value": 25 }], "mechanic": { "type": "navigate", "nextNodeId": "n_gate_bribe" } },
+          { "id": "c_force_gate", "label": "[Force entry]", "mechanic": { "type": "combat_init", "encounterId": "enc_gate_thugs" } }
         ]
       },
-      "n_victory": {
-        "id": "n_victory",
+      "n_gate_fee_exact": {
+        "id": "n_gate_fee_exact",
+        "type": "narrative",
+        "text": "Exact payment. The captain grunts approval and waves you through.",
+        "onEnter": [
+          { "action": "adjust_currency", "amount": -20 },
+          { "action": "set_flag", "key": "paid_exact_gate_fee", "value": true }
+        ],
+        "choices": [
+          { "id": "c_to_mansion_1", "label": "[Enter courtyard]", "mechanic": { "type": "navigate", "nextNodeId": "n_gate_pass" } }
+        ]
+      },
+      "n_gate_bribe": {
+        "id": "n_gate_bribe",
+        "type": "narrative",
+        "text": "The captain palms the money and pretends not to know you.",
+        "onEnter": [
+          { "action": "adjust_currency", "amount": -25 },
+          { "action": "set_flag", "key": "bribed_gate", "value": true }
+        ],
+        "choices": [
+          { "id": "c_to_mansion_2", "label": "[Enter courtyard]", "mechanic": { "type": "navigate", "nextNodeId": "n_gate_pass" } }
+        ]
+      },
+      "n_gate_thugs_victory": {
+        "id": "n_gate_thugs_victory",
+        "type": "narrative",
+        "text": "The thugs collapse. You strip ringmail from one and pocket a mansion pass.",
+        "onEnter": [
+          { "action": "add_item", "itemId": "ringmail_reinforced", "qty": 1 },
+          { "action": "add_item", "itemId": "mansion_invite", "qty": 1 }
+        ],
+        "choices": [
+          { "id": "c_to_mansion_3", "label": "[Push onward]", "mechanic": { "type": "navigate", "nextNodeId": "n_gate_pass" } }
+        ]
+      },
+      "n_gate_pass": {
+        "id": "n_gate_pass",
+        "type": "narrative",
+        "text": "In the courtyard, you can climb to a side balcony, sneak through staff halls, or confront Mik directly.",
+        "choices": [
+          { "id": "c_chandelier_run", "label": "[Vault broken fountain (Acrobatics DC 14)]", "mechanic": { "type": "skill_check", "dice": "1d20", "dc": 14, "attribute": "dexterity", "skillId": "acrobatics", "onSuccess": { "nextNodeId": "n_balcony_route" }, "onFailure": { "nextNodeId": "n_balcony_fail" } } },
+          { "id": "c_stealth_route", "label": "[Stealth through side hall (DC 13)]", "mechanic": { "type": "skill_check", "dice": "1d20", "dc": 13, "attribute": "dexterity", "skillId": "stealth", "onSuccess": { "nextNodeId": "n_private_wing" }, "onFailure": { "nextNodeId": "n_private_wing_alert" } } },
+          { "id": "c_front_door", "label": "[Enter by front door]", "mechanic": { "type": "navigate", "nextNodeId": "n_mik_dialogue" } }
+        ]
+      },
+      "n_balcony_route": {
+        "id": "n_balcony_route",
+        "type": "narrative",
+        "text": "You land cleanly on a balcony. Inside, you find private letters and a locked bassinet room.",
+        "onEnter": [
+          { "action": "set_flag", "key": "saw_balcony_route", "value": true },
+          { "action": "add_item", "itemId": "mik_ledger", "qty": 1 }
+        ],
+        "choices": [
+          { "id": "c_to_mik_from_balcony", "label": "[Confront Mik]", "mechanic": { "type": "navigate", "nextNodeId": "n_mik_dialogue" } }
+        ]
+      },
+      "n_balcony_fail": {
+        "id": "n_balcony_fail",
+        "type": "narrative",
+        "text": "You clip the railing, fall hard, and draw every guard eye.",
+        "onEnter": [
+          { "action": "adjust_hp", "amount": -6 }
+        ],
+        "choices": [
+          { "id": "c_to_mik_after_fall", "label": "[Stumble into atrium]", "mechanic": { "type": "navigate", "nextNodeId": "n_mik_dialogue" } }
+        ]
+      },
+      "n_private_wing": {
+        "id": "n_private_wing",
+        "type": "narrative",
+        "text": "You slip through private halls, finding medical supplies and proof of Mik's debts.",
+        "onEnter": [
+          { "action": "set_flag", "key": "found_ledger", "value": true },
+          { "action": "add_item", "itemId": "mik_ledger", "qty": 1 },
+          { "action": "add_item", "itemId": "adrenaline_shot", "qty": 1 }
+        ],
+        "choices": [
+          { "id": "c_to_mik_after_stealth", "label": "[Confront Mik]", "mechanic": { "type": "navigate", "nextNodeId": "n_mik_dialogue" } }
+        ]
+      },
+      "n_private_wing_alert": {
+        "id": "n_private_wing_alert",
+        "type": "narrative",
+        "text": "A tray crashes. Guards rush you and a crossbow bolt grazes your shoulder.",
+        "onEnter": [
+          { "action": "adjust_hp", "amount": -4 }
+        ],
+        "choices": [
+          { "id": "c_to_mik_after_alert", "label": "[Push to atrium]", "mechanic": { "type": "navigate", "nextNodeId": "n_mik_dialogue" } }
+        ]
+      },
+      "n_mik_dialogue": {
+        "id": "n_mik_dialogue",
+        "type": "narrative",
+        "text": "Mik Tystone waits at the atrium fountain. \"You and I are ending this now.\"",
+        "choices": [
+          { "id": "c_read_mik", "label": "\"He's bluffing... I can use that.\"", "mechanic": { "type": "skill_check", "dice": "1d20", "dc": 12, "attribute": "intelligence", "skillId": "insight", "onSuccess": { "nextNodeId": "n_mik_leverage" }, "onFailure": { "nextNodeId": "n_mik_leverage" } } },
+          { "id": "c_return_baby", "label": "\"Take the child. Let's end this.\"", "visibilityRequirements": [{ "type": "has_item", "itemId": "drow_baby" }], "mechanic": { "type": "navigate", "nextNodeId": "n_return_baby" } },
+          { "id": "c_start_boss", "label": "[Fight Mik]", "mechanic": { "type": "combat_init", "encounterId": "enc_mik_boss" } }
+        ]
+      },
+      "n_mik_leverage": {
+        "id": "n_mik_leverage",
+        "type": "narrative",
+        "text": "You can push leverage from evidence, threaten force, or fold under pressure.",
+        "choices": [
+          { "id": "c_negotiate_ledger", "label": "\"We both know what this ledger would do to you.\"", "visibilityRequirements": [{ "type": "has_item", "itemId": "mik_ledger" }], "mechanic": { "type": "skill_check", "dice": "1d20", "dc": 15, "attribute": "intelligence", "skillId": "persuasion", "onSuccess": { "nextNodeId": "n_victory_peace" }, "onFailure": { "nextNodeId": "n_talk_failed" } } },
+          { "id": "c_bully_mik", "label": "\"Last warning, Mik. Stand down.\"", "mechanic": { "type": "skill_check", "dice": "1d20", "dc": 14, "attribute": "strength", "skillId": "athletics", "onSuccess": { "nextNodeId": "n_victory_truce" }, "onFailure": { "nextNodeId": "n_talk_failed" } } },
+          { "id": "c_yield_low_hp", "label": "\"Not today. I'm done fighting.\"", "visibilityRequirements": [{ "type": "stat_check", "stat": "hpCurrent", "operator": "<", "value": 12 }], "mechanic": { "type": "navigate", "nextNodeId": "n_victory_truce" } }
+        ]
+      },
+      "n_return_baby": {
+        "id": "n_return_baby",
+        "type": "narrative",
+        "text": "Mik takes the baby quietly. \"This changes things. Maybe.\"",
+        "onEnter": [
+          { "action": "remove_item", "itemId": "drow_baby", "qty": 1 },
+          { "action": "set_flag", "key": "returned_baby", "value": true }
+        ],
+        "choices": [
+          { "id": "c_close_talk", "label": "\"No more blood. We walk away now.\"", "mechanic": { "type": "skill_check", "dice": "1d20", "dc": 12, "attribute": "intelligence", "skillId": "persuasion", "onSuccess": { "nextNodeId": "n_victory_peace" }, "onFailure": { "nextNodeId": "n_victory_truce" } } },
+          { "id": "c_betrayal_fight", "label": "[Break truce, draw steel]", "mechanic": { "type": "combat_init", "encounterId": "enc_mik_boss" } }
+        ]
+      },
+      "n_talk_failed": {
+        "id": "n_talk_failed",
+        "type": "narrative",
+        "text": "Words fail. Mik snaps his fingers and the atrium becomes an arena.",
+        "choices": [
+          { "id": "c_to_boss", "label": "[Fight]", "mechanic": { "type": "combat_init", "encounterId": "enc_mik_boss" } }
+        ]
+      },
+      "n_mik_victory": {
+        "id": "n_mik_victory",
         "type": "ending",
-        "text": "Baby returned. Chicken accounted for. Pride destroyed. Someone offers a drink and the cycle threatens to restart.",
-        "choices": []
+        "text": "Mik drops. You leave with bruises, reputation, and coin enough to regret this again tomorrow.",
+        "onEnter": [
+          { "action": "adjust_currency", "amount": 90 }
+        ],
+        "choices": [
+          { "id": "c_restart_boss_win", "label": "[Play again]", "mechanic": { "type": "navigate", "nextNodeId": "n_start" } }
+        ]
+      },
+      "n_victory_peace": {
+        "id": "n_victory_peace",
+        "type": "ending",
+        "text": "You broker peace with leverage and nerve. No one dies, everyone lies, and you get paid to disappear.",
+        "onEnter": [
+          { "action": "adjust_currency", "amount": 120 }
+        ],
+        "choices": [
+          { "id": "c_restart_peace", "label": "[Play again]", "mechanic": { "type": "navigate", "nextNodeId": "n_start" } }
+        ]
+      },
+      "n_victory_truce": {
+        "id": "n_victory_truce",
+        "type": "ending",
+        "text": "You survive by compromise. It is not glorious, but it is alive.",
+        "choices": [
+          { "id": "c_restart_truce", "label": "[Play again]", "mechanic": { "type": "navigate", "nextNodeId": "n_start" } }
+        ]
       },
       "n_game_over": {
         "id": "n_game_over",
         "type": "ending",
-        "text": "The hangover claims another victim.",
+        "text": "The hangover takes another hero.",
         "choices": [
-          {
-            "id": "c_restart",
-            "label": "[Restart]",
-            "mechanic": { "type": "navigate", "nextNodeId": "n_character_select" }
-          }
+          { "id": "c_restart_loss", "label": "[Try again]", "mechanic": { "type": "navigate", "nextNodeId": "n_start" } }
         ]
       }
     },
     "items": {
-      "receipt": { "id": "receipt", "name": "Crumpled Receipt", "type": "tool" },
+      "receipt_oblivion": { "id": "receipt_oblivion", "name": "Crumpled Receipt", "type": "tool" },
+      "club_token": { "id": "club_token", "name": "Brass Club Token", "type": "tool" },
       "drow_baby": { "id": "drow_baby", "name": "Drow Baby", "type": "tool" },
-      "macguffin_collar": { "id": "macguffin_collar", "name": "Leather Collar", "type": "tool" },
+      "macguffin_collar": { "id": "macguffin_collar", "name": "Owlbear Collar", "type": "tool" },
+      "mansion_invite": { "id": "mansion_invite", "name": "Mansion Invitation Stub", "type": "tool" },
+      "mik_ledger": { "id": "mik_ledger", "name": "Mik Ledger", "type": "tool" },
 
       "dagger_iron": { "id": "dagger_iron", "name": "Iron Dagger", "type": "weapon", "damage": "1d4", "scalingAttribute": "dexterity" },
       "greatsword_iron": { "id": "greatsword_iron", "name": "Iron Greatsword", "type": "weapon", "damage": "2d6", "scalingAttribute": "strength" },
       "blade_of_shadows": { "id": "blade_of_shadows", "name": "Blade of Shadows", "type": "weapon", "damage": "1d6", "attackBonus": 1, "scalingAttribute": "dexterity" },
       "mace_iron": { "id": "mace_iron", "name": "Iron Mace", "type": "weapon", "damage": "1d6", "scalingAttribute": "strength" },
 
-      "robe_scholar": { "id": "robe_scholar", "name": "Scholar's Robes", "type": "armor", "acBonus": 0 },
+      "robe_scholar": { "id": "robe_scholar", "name": "Scholar Robes", "type": "armor", "acBonus": 0 },
       "chainmail": { "id": "chainmail", "name": "Chainmail", "type": "armor", "acBonus": 6 },
       "leather_armor": { "id": "leather_armor", "name": "Leather Armor", "type": "armor", "acBonus": 2 },
       "scale_mail": { "id": "scale_mail", "name": "Scale Mail", "type": "armor", "acBonus": 4 },
+      "gambler_jacket": { "id": "gambler_jacket", "name": "Reinforced Gambler Jacket", "type": "armor", "acBonus": 2 },
+      "owlbear_hide_vest": { "id": "owlbear_hide_vest", "name": "Owlbear Hide Vest", "type": "armor", "acBonus": 3 },
+      "ringmail_reinforced": { "id": "ringmail_reinforced", "name": "Reinforced Ringmail", "type": "armor", "acBonus": 4 },
 
       "spellbook": { "id": "spellbook", "name": "Spellbook", "type": "tool" },
       "holy_symbol": { "id": "holy_symbol", "name": "Holy Symbol", "type": "tool" },
-      "lockpick_set": { "id": "lockpick_set", "name": "Thieves' Tools", "type": "tool" },
+      "lockpick_set": { "id": "lockpick_set", "name": "Lockpick Set", "type": "tool" },
+      "thieves_tools": { "id": "thieves_tools", "name": "Thieves' Tools", "type": "tool" },
+      "torch_bundle": { "id": "torch_bundle", "name": "Torch Bundle", "type": "tool" },
+      "holy_water_dawn": { "id": "holy_water_dawn", "name": "Holy Water", "type": "consumable", "effect": { "action": "heal", "amount": "3d6" } },
 
       "health_potion": { "id": "health_potion", "name": "Health Potion", "type": "consumable", "effect": { "action": "heal", "amount": "2d4+2" } },
+      "adrenaline_shot": { "id": "adrenaline_shot", "name": "Adrenaline Shot", "type": "consumable", "effect": { "action": "heal", "amount": "1d8+2" } },
       "smoke_bomb": { "id": "smoke_bomb", "name": "Smoke Bomb", "type": "consumable", "effect": { "action": "set_flag", "key": "has_surprise", "value": true } }
     },
     "enemies": {
-      "owlbear": {
-        "id": "owlbear",
-        "name": "MacGuffin the Owlbear",
-        "hp": 34,
-        "ac": 13,
-        "attackBonus": 4,
-        "damage": "1d8+2",
-        "xpReward": 140
-      },
-      "mik_tystone": {
-        "id": "mik_tystone",
-        "name": "Mik Tystone",
-        "hp": 48,
-        "ac": 14,
-        "attackBonus": 5,
-        "damage": "1d8+3",
-        "xpReward": 280
-      }
+      "owlbear_suite": { "id": "owlbear_suite", "name": "MacGuffin the Owlbear", "hp": 30, "ac": 13, "attackBonus": 4, "damage": "1d8+2", "xpReward": 140 },
+      "gate_thug": { "id": "gate_thug", "name": "Gate Thug", "hp": 22, "ac": 12, "attackBonus": 4, "damage": "1d6+2", "xpReward": 70 },
+      "mik_tystone": { "id": "mik_tystone", "name": "Mik Tystone", "hp": 44, "ac": 14, "attackBonus": 5, "damage": "1d8+3", "xpReward": 260 },
+      "mik_guard_captain": { "id": "mik_guard_captain", "name": "Mik Guard Captain", "hp": 34, "ac": 14, "attackBonus": 5, "damage": "1d8+2", "xpReward": 160 }
     },
     "encounters": {
-      "enc_bathroom": {
-        "id": "enc_bathroom",
+      "enc_owlbear_suite": {
+        "id": "enc_owlbear_suite",
         "type": "combat",
-        "enemies": [{ "enemyId": "owlbear", "count": 1 }],
-        "resolution": {
-          "onVictory": { "nextNodeId": "n_bathroom_victory" },
-          "onDefeat": { "nextNodeId": "n_game_over" }
-        }
+        "enemies": [{ "enemyId": "owlbear_suite", "count": 1 }],
+        "resolution": { "onVictory": { "nextNodeId": "n_owlbear_victory" }, "onDefeat": { "nextNodeId": "n_game_over" } }
       },
-      "enc_boss": {
-        "id": "enc_boss",
+      "enc_gate_thugs": {
+        "id": "enc_gate_thugs",
         "type": "combat",
-        "enemies": [{ "enemyId": "mik_tystone", "count": 1 }],
-        "resolution": {
-          "onVictory": { "nextNodeId": "n_victory" },
-          "onDefeat": { "nextNodeId": "n_game_over" }
-        }
+        "enemies": [{ "enemyId": "gate_thug", "count": 2 }],
+        "resolution": { "onVictory": { "nextNodeId": "n_gate_thugs_victory" }, "onDefeat": { "nextNodeId": "n_game_over" } }
+      },
+      "enc_mik_boss": {
+        "id": "enc_mik_boss",
+        "type": "combat",
+        "enemies": [
+          { "enemyId": "mik_tystone", "count": 1 },
+          { "enemyId": "mik_guard_captain", "count": 1 }
+        ],
+        "resolution": { "onVictory": { "nextNodeId": "n_mik_victory" }, "onDefeat": { "nextNodeId": "n_game_over" } }
       }
     }
   }

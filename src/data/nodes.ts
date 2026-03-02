@@ -5,244 +5,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_start": {
     "id": "n_start",
     "type": "narrative",
-    "text": "The Mists close around you. Before entering the doomed house, choose who you are.",
-    "choices": [
-      {
-        "id": "c_pick_wizard",
-        "label": "[Arannis Moonwhisper - Wizard]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_setup_wizard"
-        }
-      },
-      {
-        "id": "c_pick_paladin",
-        "label": "[Thonk the Pious - Paladin]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_setup_paladin"
-        }
-      },
-      {
-        "id": "c_more_classes",
-        "label": "[More classes]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_class_page_2"
-        }
-      }
-    ]
-  },
-  "n_class_page_2": {
-    "id": "n_class_page_2",
-    "type": "narrative",
-    "text": "The fog swirls while you decide your role in this nightmare.",
-    "choices": [
-      {
-        "id": "c_pick_rogue",
-        "label": "[Lila Tealeaf - Rogue]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_setup_rogue"
-        }
-      },
-      {
-        "id": "c_pick_cleric",
-        "label": "[Bofur Stonefist - Cleric]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_setup_cleric"
-        }
-      },
-      {
-        "id": "c_back_classes",
-        "label": "[Back]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_start"
-        }
-      }
-    ]
-  },
-  "n_setup_wizard": {
-    "id": "n_setup_wizard",
-    "type": "narrative",
-    "text": "Arannis, scholar of forbidden lore, steadies their breath and adjusts ink-stained sleeves.",
-    "onEnter": [
-      {
-        "action": "set_flag",
-        "key": "class_wizard",
-        "value": true
-      },
-      {
-        "action": "adjust_hp",
-        "amount": -2
-      },
-      {
-        "action": "add_item",
-        "itemId": "dagger_iron",
-        "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "robe_scholar",
-        "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "spellbook",
-        "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "health_potion",
-        "qty": 1
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_begin_wizard",
-        "label": "[Enter the Mists]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_into_the_mists"
-        }
-      }
-    ]
-  },
-  "n_setup_paladin": {
-    "id": "n_setup_paladin",
-    "type": "narrative",
-    "text": "Thonk grips steel and prayer in equal measure.",
-    "onEnter": [
-      {
-        "action": "set_flag",
-        "key": "class_paladin",
-        "value": true
-      },
-      {
-        "action": "adjust_hp",
-        "amount": 4
-      },
-      {
-        "action": "add_item",
-        "itemId": "greatsword_iron",
-        "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "chainmail",
-        "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "holy_symbol",
-        "qty": 1
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_begin_paladin",
-        "label": "[Enter the Mists]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_into_the_mists"
-        }
-      }
-    ]
-  },
-  "n_setup_rogue": {
-    "id": "n_setup_rogue",
-    "type": "narrative",
-    "text": "Lila checks hidden pockets, counting exits and lies.",
-    "onEnter": [
-      {
-        "action": "set_flag",
-        "key": "class_rogue",
-        "value": true
-      },
-      {
-        "action": "add_item",
-        "itemId": "blade_of_shadows",
-        "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "leather_armor",
-        "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "lockpick_set",
-        "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "smoke_bomb",
-        "qty": 2
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_begin_rogue",
-        "label": "[Enter the Mists]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_into_the_mists"
-        }
-      }
-    ]
-  },
-  "n_setup_cleric": {
-    "id": "n_setup_cleric",
-    "type": "narrative",
-    "text": "Bofur offers a grim blessing and steps toward the dark house.",
-    "onEnter": [
-      {
-        "action": "set_flag",
-        "key": "class_cleric",
-        "value": true
-      },
-      {
-        "action": "adjust_hp",
-        "amount": 2
-      },
-      {
-        "action": "add_item",
-        "itemId": "mace_iron",
-        "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "scale_mail",
-        "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "holy_symbol",
-        "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "health_potion",
-        "qty": 2
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_begin_cleric",
-        "label": "[Enter the Mists]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_into_the_mists"
-        }
-      }
-    ]
-  },
-  "n_into_the_mists": {
-    "id": "n_into_the_mists",
-    "type": "narrative",
-    "text": "A scream cuts through the fog: Rose begs you to rescue Ireena from the monster below.",
+    "text": "The Mists close around your party. Rose appears at the road and begs you to save Ireena from the house before midnight.",
     "onEnter": [
       {
         "action": "set_flag",
@@ -252,19 +15,27 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_approach_house",
-        "label": "[Approach Death House]",
+        "id": "c_enter_house",
+        "label": "[Enter Death House]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_portico"
+          "nextNodeId": "n_foyer"
         }
       },
       {
-        "id": "c_try_to_leave",
-        "label": "[Try to flee the Mists]",
+        "id": "c_test_mists",
+        "label": "[Test the Mists]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_mists_reject"
+        }
+      },
+      {
+        "id": "c_talk_rose",
+        "label": "\"What is this place, Rose?\"",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_rose_dialogue"
         }
       }
     ]
@@ -272,7 +43,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_mists_reject": {
     "id": "n_mists_reject",
     "type": "narrative",
-    "text": "The fog twists reality and returns you to the portico, exhausted and out of options.",
+    "text": "The fog twists your sense of direction and shoves you back to the front steps, breathless.",
     "onEnter": [
       {
         "action": "adjust_hp",
@@ -281,23 +52,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_back_portico",
-        "label": "[Enter the House]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_portico"
-        }
-      }
-    ]
-  },
-  "n_portico": {
-    "id": "n_portico",
-    "type": "narrative",
-    "text": "Rotting double doors sag under dead ivy. Behind you, the Mists thicken into a wall.",
-    "choices": [
-      {
-        "id": "c_enter_foyer",
-        "label": "[Open the doors]",
+        "id": "c_back_foyer_1",
+        "label": "[Enter the house]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_foyer"
@@ -305,25 +61,216 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
+  "n_rose_dialogue": {
+    "id": "n_rose_dialogue",
+    "type": "narrative",
+    "text": "Rose speaks quickly. \"Ireena was dragged below. The house lies. The house bargains. Don't trust what it shows you.\"",
+    "choices": [
+      {
+        "id": "c_ask_ireena",
+        "label": "\"Who is Ireena, and where is she now?\"",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_rose_ireena"
+        }
+      },
+      {
+        "id": "c_ask_midnight",
+        "label": "\"What happens if we're too late?\"",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_rose_midnight"
+        }
+      },
+      {
+        "id": "c_enter_after_talk",
+        "label": "[Enter Death House]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_foyer"
+        }
+      }
+    ]
+  },
+  "n_rose_ireena": {
+    "id": "n_rose_ireena",
+    "type": "narrative",
+    "text": "\"She is alive for now. The altar below needs fear to wake what it guards.\"",
+    "onEnter": [
+      {
+        "action": "set_flag",
+        "key": "learned_ireena_urgent",
+        "value": true
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_back_rose_1",
+        "label": "[Back]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_rose_dialogue"
+        }
+      }
+    ]
+  },
+  "n_rose_midnight": {
+    "id": "n_rose_midnight",
+    "type": "narrative",
+    "text": "\"By midnight, exits close and the halls grow teeth.\"",
+    "onEnter": [
+      {
+        "action": "set_flag",
+        "key": "learned_midnight_deadline",
+        "value": true
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_back_rose_2",
+        "label": "[Back]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_rose_dialogue"
+        }
+      }
+    ]
+  },
   "n_foyer": {
     "id": "n_foyer",
     "type": "narrative",
-    "text": "Dusty portraits, a grand stair, and the feeling of being watched from inside the walls.",
+    "text": "Dusty portraits watch from every wall. Upstairs waits silence; downstairs waits a locked service corridor.",
     "choices": [
       {
-        "id": "c_first_floor_hub",
-        "label": "[Investigate the first floor]",
+        "id": "c_first_floor",
+        "label": "[Search first floor]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_first_floor_hub"
         }
       },
       {
-        "id": "c_stairs_second",
-        "label": "[Go upstairs immediately]",
+        "id": "c_upstairs",
+        "label": "[Go upstairs]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_upper_hall"
+        }
+      },
+      {
+        "id": "c_service_door",
+        "label": "[Inspect service lock]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_service_lock"
+        }
+      }
+    ]
+  },
+  "n_service_lock": {
+    "id": "n_service_lock",
+    "type": "narrative",
+    "text": "The service door lock is rusted but delicate.",
+    "choices": [
+      {
+        "id": "c_pick_service",
+        "label": "[Pick lock (Sleight of Hand DC 13)]",
+        "mechanic": {
+          "type": "skill_check",
+          "dice": "1d20",
+          "dc": 13,
+          "onSuccess": {
+            "nextNodeId": "n_service_open"
+          },
+          "onFailure": {
+            "nextNodeId": "n_service_fail"
+          },
+          "onFailureEncounterId": "enc_animated_knife",
+          "attribute": "dexterity",
+          "skillId": "sleight_of_hand"
+        }
+      },
+      {
+        "id": "c_leave_service",
+        "label": "[Leave it for now]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_foyer"
+        }
+      }
+    ]
+  },
+  "n_service_open": {
+    "id": "n_service_open",
+    "type": "narrative",
+    "text": "You open the service door and recover hidden holy water and old keys.",
+    "onEnter": [
+      {
+        "action": "set_flag",
+        "key": "service_opened",
+        "value": true
+      },
+      {
+        "action": "add_item",
+        "itemId": "holy_water_dawn",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "iron_attic_key",
+        "qty": 1
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_back_foyer_2",
+        "label": "[Back to foyer]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_foyer"
+        }
+      }
+    ]
+  },
+  "n_service_fail": {
+    "id": "n_service_fail",
+    "type": "narrative",
+    "text": "The mechanism snaps and a spring blade cuts your hand.",
+    "onEnter": [
+      {
+        "action": "adjust_hp",
+        "amount": -3
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_back_foyer_3",
+        "label": "[Back to foyer]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_foyer"
+        }
+      }
+    ]
+  },
+  "n_knife_victory": {
+    "id": "n_knife_victory",
+    "type": "narrative",
+    "text": "The cursed blade drops. Behind it lies a ring-lined cloak chest.",
+    "onEnter": [
+      {
+        "action": "add_item",
+        "itemId": "cloak_of_protection_proxy",
+        "qty": 1
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_to_service_after_knife",
+        "label": "[Continue]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_service_open"
         }
       }
     ]
@@ -331,27 +278,27 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_first_floor_hub": {
     "id": "n_first_floor_hub",
     "type": "narrative",
-    "text": "Main Hall, Tea Room, Kitchen, and Dining Room branch from this level.",
+    "text": "Main hall, kitchen, and tea room branch from here.",
     "choices": [
       {
         "id": "c_main_hall",
-        "label": "[Main Hall and Cloakroom]",
+        "label": "[Main hall illusion]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_main_hall_illusion"
         }
       },
       {
-        "id": "c_tea_kitchen",
-        "label": "[Tea Room and Kitchen]",
+        "id": "c_kitchen",
+        "label": "[Kitchen and pantry]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_tea_room"
+          "nextNodeId": "n_kitchen"
         }
       },
       {
-        "id": "c_stairs_to_second",
-        "label": "[Take the stairs to second floor]",
+        "id": "c_upstairs_from_first",
+        "label": "[Take stairs up]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_upper_hall"
@@ -362,7 +309,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_main_hall_illusion": {
     "id": "n_main_hall_illusion",
     "type": "narrative",
-    "text": "A ghostly butler appears in a vanished age of aristocratic luxury. The illusion shatters in darkness and panic.",
+    "text": "A butler phantom serves a long-dead feast. The illusion shatters and leaves a polished blade.",
     "onEnter": [
       {
         "action": "add_item",
@@ -372,69 +319,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_check_cloakroom",
-        "label": "[Check cloakroom]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_cloakroom"
-        }
-      },
-      {
-        "id": "c_go_dining",
-        "label": "[Inspect dining room]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dining_room"
-        }
-      },
-      {
-        "id": "c_return_hub_1",
-        "label": "[Return to first-floor hall]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_first_floor_hub"
-        }
-      }
-    ]
-  },
-  "n_cloakroom": {
-    "id": "n_cloakroom",
-    "type": "narrative",
-    "text": "The door behaves wrong in your hands, opening to emptiness and old fear.",
-    "choices": [
-      {
-        "id": "c_back_mainhall",
-        "label": "[Back to Main Hall]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_main_hall_illusion"
-        }
-      }
-    ]
-  },
-  "n_tea_room": {
-    "id": "n_tea_room",
-    "type": "narrative",
-    "text": "Taxidermy wolves lunge in a shared hallucination. A hidden trapdoor remains sealed from this side.",
-    "onEnter": [
-      {
-        "action": "add_item",
-        "itemId": "walking_stick",
-        "qty": 1
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_to_kitchen",
-        "label": "[Continue to kitchen]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_kitchen"
-        }
-      },
-      {
-        "id": "c_back_hub_2",
-        "label": "[Return to first-floor hall]",
+        "id": "c_back_first_1",
+        "label": "[Back]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_first_floor_hub"
@@ -445,36 +331,26 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_kitchen": {
     "id": "n_kitchen",
     "type": "narrative",
-    "text": "The kitchen is wrecked. A rusted blade and old mallet lie among dried blood and broken tiles.",
+    "text": "Rot and old blood stain the counters. A pantry door clicks shut behind you.",
     "onEnter": [
       {
         "action": "add_item",
         "itemId": "butcher_knife",
         "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "tenderizer_mallet",
-        "qty": 1
-      },
-      {
-        "action": "set_flag",
-        "key": "heard_attic_bell",
-        "value": true
       }
     ],
     "choices": [
       {
-        "id": "c_chilled_pantry",
-        "label": "[Open chilled pantry]",
+        "id": "c_open_pantry",
+        "label": "[Open pantry]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_pantry"
         }
       },
       {
-        "id": "c_back_hub_3",
-        "label": "[Return to first-floor hall]",
+        "id": "c_back_first_2",
+        "label": "[Back]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_first_floor_hub"
@@ -485,7 +361,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_pantry": {
     "id": "n_pantry",
     "type": "narrative",
-    "text": "The pantry door slams shut. Freezing air and rot-sickness press in until it opens on its own.",
+    "text": "Freezing air bites your lungs. You stagger out with frost-numb fingers.",
     "onEnter": [
       {
         "action": "adjust_hp",
@@ -494,8 +370,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_leave_pantry",
-        "label": "[Stumble back to kitchen]",
+        "id": "c_back_kitchen",
+        "label": "[Back to kitchen]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_kitchen"
@@ -503,39 +379,10 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
-  "n_dining_room": {
-    "id": "n_dining_room",
-    "type": "narrative",
-    "text": "A perfect formal table setting survives in impossible cleanliness. A collapsing tapestry rod almost takes your head off.",
-    "onEnter": [
-      {
-        "action": "adjust_currency",
-        "amount": 50
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_back_hub_4",
-        "label": "[Return to first-floor hall]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_first_floor_hub"
-        }
-      },
-      {
-        "id": "c_stairs_after_first",
-        "label": "[Take the stairs up]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_upper_hall"
-        }
-      }
-    ]
-  },
   "n_upper_hall": {
     "id": "n_upper_hall",
     "type": "narrative",
-    "text": "The clock chimes. Four decorative spears and old legal corridors branch from this landing.",
+    "text": "The clock strikes seven. Corridors lead to the law office, steward suite, and attic stairs.",
     "onEnter": [
       {
         "action": "set_flag",
@@ -545,155 +392,11 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_servants_quarters",
-        "label": "[Servants' quarters]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_servants_quarters"
-        }
-      },
-      {
         "id": "c_law_office",
         "label": "[Law office]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_law_office"
-        }
-      },
-      {
-        "id": "c_ballroom",
-        "label": "[Ballroom]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_ballroom"
-        }
-      }
-    ]
-  },
-  "n_servants_quarters": {
-    "id": "n_servants_quarters",
-    "type": "narrative",
-    "text": "An unfinished letter confirms the staff feared this house long before it died.",
-    "choices": [
-      {
-        "id": "c_back_upper_1",
-        "label": "[Back to upper hall]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_upper_hall"
-        }
-      },
-      {
-        "id": "c_to_third_floor",
-        "label": "[Continue upstairs]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_balcony_hall"
-        }
-      }
-    ]
-  },
-  "n_law_office": {
-    "id": "n_law_office",
-    "type": "narrative",
-    "text": "A permanent silence hangs in this legal chamber. One red-spined book opens a hidden room.",
-    "choices": [
-      {
-        "id": "c_open_secret_room",
-        "label": "[Open secret room]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_secret_room"
-        }
-      },
-      {
-        "id": "c_back_upper_2",
-        "label": "[Back to upper hall]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_upper_hall"
-        }
-      }
-    ]
-  },
-  "n_secret_room": {
-    "id": "n_secret_room",
-    "type": "narrative",
-    "text": "A dead adventurer clutches Strahd's cruel letter over an emptied coffin and trapped chest.",
-    "onEnter": [
-      {
-        "action": "add_item",
-        "itemId": "remove_curse_scroll",
-        "qty": 1
-      },
-      {
-        "action": "add_item",
-        "itemId": "lesser_restoration_scroll",
-        "qty": 1
-      },
-      {
-        "action": "adjust_currency",
-        "amount": 75
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_back_law_office",
-        "label": "[Back to law office]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_law_office"
-        }
-      }
-    ]
-  },
-  "n_ballroom": {
-    "id": "n_ballroom",
-    "type": "narrative",
-    "text": "Crystalline angels fracture into a spinning splinter storm when touched.",
-    "onEnter": [
-      {
-        "action": "adjust_hp",
-        "amount": -3
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_back_upper_3",
-        "label": "[Retreat to upper hall]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_upper_hall"
-        }
-      },
-      {
-        "id": "c_go_third_from_ballroom",
-        "label": "[Push to the third floor]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_balcony_hall"
-        }
-      }
-    ]
-  },
-  "n_balcony_hall": {
-    "id": "n_balcony_hall",
-    "type": "narrative",
-    "text": "A marble angel of Rose watches over this floor. Hidden doors breathe cold drafts.",
-    "onEnter": [
-      {
-        "action": "set_flag",
-        "key": "time_8pm",
-        "value": true
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_master_suite",
-        "label": "[Master suite]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_master_suite"
         }
       },
       {
@@ -705,8 +408,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
         }
       },
       {
-        "id": "c_attic_stairs",
-        "label": "[Take attic stairs]",
+        "id": "c_attic_entry",
+        "label": "[Attic stairs]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_attic_entry"
@@ -714,45 +417,42 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
-  "n_master_suite": {
-    "id": "n_master_suite",
+  "n_law_office": {
+    "id": "n_law_office",
     "type": "narrative",
-    "text": "A legal transfer letter and iron key tie the manor to Strahd and the locked children's room.",
-    "onEnter": [
-      {
-        "action": "add_item",
-        "itemId": "iron_attic_key",
-        "qty": 1
-      },
-      {
-        "action": "set_flag",
-        "key": "has_attic_key",
-        "value": true
-      }
-    ],
+    "text": "A hidden compartment in a law shelf can be found by logic or luck.",
     "choices": [
       {
-        "id": "c_bath_chamber",
-        "label": "[Check bath chamber]",
+        "id": "c_find_secret",
+        "label": "[Investigation DC 13]",
         "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_bath_chamber"
+          "type": "skill_check",
+          "dice": "1d20",
+          "dc": 13,
+          "onSuccess": {
+            "nextNodeId": "n_secret_room"
+          },
+          "onFailure": {
+            "nextNodeId": "n_law_fail"
+          },
+          "attribute": "intelligence",
+          "skillId": "investigation"
         }
       },
       {
-        "id": "c_back_balcony_hall_1",
-        "label": "[Back to hall]",
+        "id": "c_back_upper_1",
+        "label": "[Back]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_balcony_hall"
+          "nextNodeId": "n_upper_hall"
         }
       }
     ]
   },
-  "n_bath_chamber": {
-    "id": "n_bath_chamber",
+  "n_law_fail": {
+    "id": "n_law_fail",
     "type": "narrative",
-    "text": "A murder-scene haunting replays in blood and steam before collapsing into mold and rot.",
+    "text": "You trigger a dust trap and cough through a burning throat.",
     "onEnter": [
       {
         "action": "adjust_hp",
@@ -761,11 +461,42 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_back_master_suite",
-        "label": "[Back to master suite]",
+        "id": "c_back_upper_2",
+        "label": "[Back]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_master_suite"
+          "nextNodeId": "n_upper_hall"
+        }
+      }
+    ]
+  },
+  "n_secret_room": {
+    "id": "n_secret_room",
+    "type": "narrative",
+    "text": "You find letters, ritual notes, and a locked case of restorative vials.",
+    "onEnter": [
+      {
+        "action": "adjust_currency",
+        "amount": 60
+      },
+      {
+        "action": "add_item",
+        "itemId": "lesser_restoration_scroll",
+        "qty": 1
+      },
+      {
+        "action": "add_item",
+        "itemId": "health_potion",
+        "qty": 1
+      }
+    ],
+    "choices": [
+      {
+        "id": "c_back_upper_3",
+        "label": "[Back]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_upper_hall"
         }
       }
     ]
@@ -773,112 +504,74 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_steward_suite": {
     "id": "n_steward_suite",
     "type": "narrative",
-    "text": "An ornate mirror lashes out with faceless malice. A hidden door leads toward the attic path.",
+    "text": "Brigetta's ghost appears in the mirror and asks if you truly mean to save Ireena.",
+    "choices": [
+      {
+        "id": "c_assure_brigetta",
+        "label": "\"I give you my word: we'll protect her.\"",
+        "mechanic": {
+          "type": "skill_check",
+          "dice": "1d20",
+          "dc": 12,
+          "onSuccess": {
+            "nextNodeId": "n_brigetta_trust"
+          },
+          "onFailure": {
+            "nextNodeId": "n_brigetta_cold"
+          },
+          "attribute": "intelligence",
+          "skillId": "persuasion"
+        }
+      },
+      {
+        "id": "c_back_upper_4",
+        "label": "[Back]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_upper_hall"
+        }
+      }
+    ]
+  },
+  "n_brigetta_trust": {
+    "id": "n_brigetta_trust",
+    "type": "narrative",
+    "text": "Brigetta points to hidden attic rafters and warns of a spider nest.",
     "onEnter": [
       {
         "action": "set_flag",
-        "key": "found_mirror_door",
+        "key": "brigetta_trust",
         "value": true
       }
     ],
     "choices": [
       {
-        "id": "c_talk_brigetta",
-        "label": "[Call out to the nursemaid spirit]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dialogue_brigetta"
-        }
-      },
-      {
-        "id": "c_attic_from_steward",
-        "label": "[Climb to attic]",
+        "id": "c_to_attic_from_brigetta",
+        "label": "[Go to attic]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_attic_entry"
         }
-      },
-      {
-        "id": "c_back_balcony_hall_2",
-        "label": "[Back to hall]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_balcony_hall"
-        }
       }
     ]
   },
-  "n_dialogue_brigetta": {
-    "id": "n_dialogue_brigetta",
+  "n_brigetta_cold": {
+    "id": "n_brigetta_cold",
     "type": "narrative",
-    "text": "A translucent woman in servant dress appears, trembling. \"Please... protect the children,\" she whispers.",
-    "choices": [
-      {
-        "id": "c_brigetta_children",
-        "label": "[Ask about Rose and Thorn]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dialogue_brigetta_children"
-        }
-      },
-      {
-        "id": "c_brigetta_house",
-        "label": "[Ask what happened in this house]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dialogue_brigetta_house"
-        }
-      },
-      {
-        "id": "c_brigetta_leave",
-        "label": "[Thank her and move on]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_steward_suite"
-        }
-      }
-    ]
-  },
-  "n_dialogue_brigetta_children": {
-    "id": "n_dialogue_brigetta_children",
-    "type": "narrative",
-    "text": "\"Rose is brave. Thorn is gentle. They were locked away to keep them from the monster below.\" Her voice cracks.",
+    "text": "\"Then prove it.\" She vanishes, leaving the mirror cracked and your nerves shaken.",
     "onEnter": [
       {
-        "action": "set_flag",
-        "key": "learned_children_fate",
-        "value": true
+        "action": "adjust_hp",
+        "amount": -1
       }
     ],
     "choices": [
       {
-        "id": "c_back_brigetta_1",
-        "label": "[Continue talking]",
+        "id": "c_to_attic_anyway",
+        "label": "[Go to attic]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_dialogue_brigetta"
-        }
-      }
-    ]
-  },
-  "n_dialogue_brigetta_house": {
-    "id": "n_dialogue_brigetta_house",
-    "type": "narrative",
-    "text": "\"The house remembers every cruelty. It lies. It tempts. It never lets go willingly.\"",
-    "onEnter": [
-      {
-        "action": "set_flag",
-        "key": "learned_house_lies",
-        "value": true
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_back_brigetta_2",
-        "label": "[Nod and continue]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dialogue_brigetta"
+          "nextNodeId": "n_attic_entry"
         }
       }
     ]
@@ -886,7 +579,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_attic_entry": {
     "id": "n_attic_entry",
     "type": "narrative",
-    "text": "The attic reeks of dust, old smoke, and unfinished screams. Somewhere nearby, a child sobs.",
+    "text": "You hear a child crying from behind a warped door and movement in the rafters.",
     "onEnter": [
       {
         "action": "set_flag",
@@ -896,62 +589,71 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_storage",
-        "label": "[Search attic storage]",
+        "id": "c_search_rafters",
+        "label": "[Search rafters (Perception DC 13)]",
         "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_attic_storage"
+          "type": "skill_check",
+          "dice": "1d20",
+          "dc": 13,
+          "onSuccess": {
+            "nextNodeId": "n_attic_cache"
+          },
+          "onFailure": {
+            "nextNodeId": "n_attic_spider"
+          },
+          "attribute": "intelligence",
+          "skillId": "perception"
         }
       },
       {
-        "id": "c_spare_room",
-        "label": "[Open spare bedroom]",
+        "id": "c_open_children_room",
+        "label": "[Open children's room]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_spare_bedroom"
+          "nextNodeId": "n_children_room"
         }
       },
       {
-        "id": "c_children_room",
-        "label": "[Unlock children's room]",
+        "id": "c_attic_spider",
+        "label": "[Investigate noises]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_children_bedroom"
+          "nextNodeId": "n_attic_spider"
         }
       }
     ]
   },
-  "n_attic_storage": {
-    "id": "n_attic_storage",
+  "n_attic_cache": {
+    "id": "n_attic_cache",
     "type": "narrative",
-    "text": "Broken trunks and furniture conceal useful gear and whispers from below.",
+    "text": "You find a stashed shortbow, lockpicks, and old prayer seals.",
     "onEnter": [
       {
         "action": "add_item",
-        "itemId": "simple_spear",
+        "itemId": "longbow_plus1",
         "qty": 1
       },
       {
         "action": "add_item",
-        "itemId": "torch_bundle",
+        "itemId": "lockpick_set",
         "qty": 1
       }
     ],
     "choices": [
       {
-        "id": "c_back_attic_hub_1",
-        "label": "[Back to attic hall]",
+        "id": "c_to_children_after_cache",
+        "label": "[Open children's room]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_attic_entry"
+          "nextNodeId": "n_children_room"
         }
       }
     ]
   },
-  "n_spare_bedroom": {
-    "id": "n_spare_bedroom",
+  "n_attic_spider": {
+    "id": "n_attic_spider",
     "type": "encounter",
-    "text": "A wardrobe bursts open as an oversized hunting spider drops from cobwebs.",
+    "text": "A giant spider drops from the rafters.",
     "choices": [
       {
         "id": "c_fight_spider",
@@ -960,155 +662,39 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "type": "combat_init",
           "encounterId": "enc_attic_spider"
         }
-      },
-      {
-        "id": "c_flee_spider",
-        "label": "[Retreat]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_attic_entry"
-        }
       }
     ]
   },
-  "n_spare_bedroom_clear": {
-    "id": "n_spare_bedroom_clear",
+  "n_attic_spider_clear": {
+    "id": "n_attic_spider_clear",
     "type": "narrative",
-    "text": "The room falls still. Dust settles over torn webbing.",
-    "choices": [
-      {
-        "id": "c_back_attic_hub_2",
-        "label": "[Back to attic hall]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_attic_entry"
-        }
-      }
-    ]
-  },
-  "n_children_bedroom": {
-    "id": "n_children_bedroom",
-    "type": "narrative",
-    "text": "Rose appears. She explains Ireena is trapped below and you must escape with her before midnight.",
+    "text": "The webs settle. A hidden beam compartment holds a cure scroll.",
     "onEnter": [
       {
-        "action": "set_flag",
-        "key": "met_rose",
-        "value": true
-      },
-      {
-        "action": "set_flag",
-        "key": "save_ireena_objective",
-        "value": true
+        "action": "add_item",
+        "itemId": "remove_curse_scroll",
+        "qty": 1
       }
     ],
     "choices": [
       {
-        "id": "c_hear_rose_plan",
-        "label": "[Listen to Rose's plan]",
+        "id": "c_to_children_after_spider",
+        "label": "[Open children's room]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_roleplay_rose"
-        }
-      },
-      {
-        "id": "c_open_secret_stairs",
-        "label": "[Follow Rose to secret stairs]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_secret_stairs"
+          "nextNodeId": "n_children_room"
         }
       }
     ]
   },
-  "n_roleplay_rose": {
-    "id": "n_roleplay_rose",
+  "n_children_room": {
+    "id": "n_children_room",
     "type": "narrative",
-    "text": "Rose steadies herself. \"Ask quickly. Every minute we lose, the house gains.\"",
-    "choices": [
-      {
-        "id": "c_rose_ask_ireena",
-        "label": "[Ask about Ireena]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dialogue_rose_ireena"
-        }
-      },
-      {
-        "id": "c_rose_ask_house",
-        "label": "[Ask about the house and midnight]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dialogue_rose_midnight"
-        }
-      },
-      {
-        "id": "c_to_secret_stairs_after_rose",
-        "label": "[Descend to the basement]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_secret_stairs"
-        }
-      }
-    ]
-  },
-  "n_dialogue_rose_ireena": {
-    "id": "n_dialogue_rose_ireena",
-    "type": "narrative",
-    "text": "\"She came here terrified, hiding from wolves and worse. If we are late, the altar below will claim her.\"",
+    "text": "Rose reveals a hidden stair to the dungeon and presses a holy symbol into your hand.",
     "onEnter": [
       {
         "action": "set_flag",
-        "key": "learned_ireena_urgent",
-        "value": true
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_back_rose_dialogue_1",
-        "label": "[Ask something else]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_roleplay_rose"
-        }
-      }
-    ]
-  },
-  "n_dialogue_rose_midnight": {
-    "id": "n_dialogue_rose_midnight",
-    "type": "narrative",
-    "text": "\"By midnight, Death House locks every path. Save her, then run. Do not hesitate.\"",
-    "onEnter": [
-      {
-        "action": "set_flag",
-        "key": "learned_midnight_deadline",
-        "value": true
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_back_rose_dialogue_2",
-        "label": "[Return to the plan]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_roleplay_rose"
-        }
-      }
-    ]
-  },
-  "n_secret_stairs": {
-    "id": "n_secret_stairs",
-    "type": "narrative",
-    "text": "A hidden stair spirals down. At its base lies the Holy Symbol of Dawn and the first true door to the dungeon.",
-    "onEnter": [
-      {
-        "action": "set_flag",
-        "key": "opened_secret_stairs",
-        "value": true
-      },
-      {
-        "action": "set_flag",
-        "key": "time_10pm",
+        "key": "met_rose_inside",
         "value": true
       },
       {
@@ -1117,14 +703,14 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "qty": 1
       },
       {
-        "action": "adjust_hp",
-        "amount": 6
+        "action": "heal",
+        "amount": "1d6+1"
       }
     ],
     "choices": [
       {
-        "id": "c_enter_dungeon",
-        "label": "[Enter dungeon level]",
+        "id": "c_descend_secret",
+        "label": "[Descend to dungeon]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_dungeon_access"
@@ -1135,30 +721,30 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_dungeon_access": {
     "id": "n_dungeon_access",
     "type": "narrative",
-    "text": "Narrow tunnels branch toward crypts, cult quarters, and older horrors.",
+    "text": "Narrow tunnels split toward crypts, cult cells, and the ritual hall.",
     "choices": [
       {
         "id": "c_to_crypts",
-        "label": "[Explore family crypts]",
+        "label": "[Explore crypts]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_crypts"
         }
       },
       {
-        "id": "c_to_massacre",
-        "label": "[Follow signs of violence]",
+        "id": "c_to_cells",
+        "label": "[Inspect cult cells]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_cultist_massacre"
+          "nextNodeId": "n_cult_cells"
         }
       },
       {
-        "id": "c_to_angelic",
-        "label": "[Search for holy chamber]",
+        "id": "c_to_ritual",
+        "label": "[Head toward ritual hall]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_angelic_tears"
+          "nextNodeId": "n_dark_heart_threshold"
         }
       }
     ]
@@ -1166,31 +752,31 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_crypts": {
     "id": "n_crypts",
     "type": "narrative",
-    "text": "Most coffins are empty. Weapons remain where dead heirs could not use them.",
+    "text": "Most coffins are empty. One hides silvered steel and a trapdoor latch.",
     "onEnter": [
-      {
-        "action": "add_item",
-        "itemId": "longbow_plus1",
-        "qty": 1
-      },
       {
         "action": "add_item",
         "itemId": "silvered_shortsword",
         "qty": 1
+      },
+      {
+        "action": "set_flag",
+        "key": "found_trapdoor",
+        "value": true
       }
     ],
     "choices": [
       {
-        "id": "c_to_morgue",
-        "label": "[Proceed to morgue]",
+        "id": "c_to_pit",
+        "label": "[Follow trapped corridor]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_morgue"
+          "nextNodeId": "n_spiked_pit"
         }
       },
       {
-        "id": "c_back_dungeon_hub_1",
-        "label": "[Back to access tunnel]",
+        "id": "c_back_dungeon_1",
+        "label": "[Back]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_dungeon_access"
@@ -1198,37 +784,14 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
-  "n_morgue": {
-    "id": "n_morgue",
-    "type": "narrative",
-    "text": "Burned fiend remains suggest an older battle between cultists and summoned devils.",
-    "choices": [
-      {
-        "id": "c_to_massacre_from_morgue",
-        "label": "[Enter cultist quarters]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_cultist_massacre"
-        }
-      },
-      {
-        "id": "c_back_dungeon_hub_2",
-        "label": "[Back to access tunnel]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dungeon_access"
-        }
-      }
-    ]
-  },
-  "n_cultist_massacre": {
-    "id": "n_cultist_massacre",
+  "n_cult_cells": {
+    "id": "n_cult_cells",
     "type": "encounter",
-    "text": "Dead cultists rise as you search their cells and loot piles.",
+    "text": "Two cultist corpses rise from chained cells.",
     "choices": [
       {
-        "id": "c_fight_massacre",
-        "label": "[Stand and fight]",
+        "id": "c_fight_cells",
+        "label": "[Fight undead cultists]",
         "mechanic": {
           "type": "combat_init",
           "encounterId": "enc_cultist_massacre"
@@ -1236,14 +799,14 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
-  "n_massacre_clear": {
-    "id": "n_massacre_clear",
+  "n_cells_clear": {
+    "id": "n_cells_clear",
     "type": "narrative",
-    "text": "The dead collapse again. You recover coin, gems, and a stronger dagger.",
+    "text": "The bodies fall still again. You find coin and a +1 dagger.",
     "onEnter": [
       {
         "action": "adjust_currency",
-        "amount": 60
+        "amount": 55
       },
       {
         "action": "add_item",
@@ -1253,24 +816,16 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_to_pit",
-        "label": "[Continue to trapped hall]",
+        "id": "c_to_pit_from_cells",
+        "label": "[Continue to trapped corridor]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_spiked_pit"
         }
       },
       {
-        "id": "c_to_shadow_crossroads",
-        "label": "[Take crossroads route]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_shadow_crossroads"
-        }
-      },
-      {
-        "id": "c_back_dungeon_hub_3",
-        "label": "[Back to access tunnel]",
+        "id": "c_back_dungeon_2",
+        "label": "[Back]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_dungeon_access"
@@ -1281,11 +836,11 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_spiked_pit": {
     "id": "n_spiked_pit",
     "type": "narrative",
-    "text": "A disguised pit gives way beneath you unless carefully detected.",
+    "text": "A disguised pit blocks the hall.",
     "choices": [
       {
         "id": "c_jump_pit",
-        "label": "[Jump the pit (DC 15)]",
+        "label": "[Leap it (Acrobatics DC 15)]",
         "mechanic": {
           "type": "skill_check",
           "dice": "1d20",
@@ -1296,12 +851,30 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "onFailure": {
             "nextNodeId": "n_pit_fall"
           },
-          "attribute": "dexterity"
+          "attribute": "dexterity",
+          "skillId": "acrobatics"
+        }
+      },
+      {
+        "id": "c_find_planks",
+        "label": "[Find stable route (Investigation DC 13)]",
+        "mechanic": {
+          "type": "skill_check",
+          "dice": "1d20",
+          "dc": 13,
+          "onSuccess": {
+            "nextNodeId": "n_shadow_crossroads"
+          },
+          "onFailure": {
+            "nextNodeId": "n_pit_fall"
+          },
+          "attribute": "intelligence",
+          "skillId": "investigation"
         }
       },
       {
         "id": "c_detour_pit",
-        "label": "[Take a slower detour]",
+        "label": "[Detour slowly]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_shadow_crossroads"
@@ -1312,7 +885,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_pit_fall": {
     "id": "n_pit_fall",
     "type": "narrative",
-    "text": "You crash into spikes and mud, then drag yourself out bleeding.",
+    "text": "You fall into spikes and crawl out bleeding.",
     "onEnter": [
       {
         "action": "adjust_hp",
@@ -1321,8 +894,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_continue_after_pit",
-        "label": "[Press on]",
+        "id": "c_to_crossroads_after_fall",
+        "label": "[Keep moving]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_shadow_crossroads"
@@ -1333,11 +906,11 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_shadow_crossroads": {
     "id": "n_shadow_crossroads",
     "type": "encounter",
-    "text": "Four living shadows peel from the walls and strike from behind.",
+    "text": "Living shadows peel from the walls and strike.",
     "choices": [
       {
         "id": "c_fight_shadows",
-        "label": "[Fight the shadows]",
+        "label": "[Fight shadows]",
         "mechanic": {
           "type": "combat_init",
           "encounterId": "enc_shadows"
@@ -1348,22 +921,22 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_shadow_crossroads_clear": {
     "id": "n_shadow_crossroads_clear",
     "type": "narrative",
-    "text": "The crossroads falls silent. Ireena's footprints continue down a narrow stair.",
+    "text": "Ireena's footprints continue toward a flooded ritual chamber.",
     "choices": [
       {
-        "id": "c_follow_footprints",
-        "label": "[Follow footprints downstairs]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_stairs_down"
-        }
-      },
-      {
-        "id": "c_visit_angelic_room",
-        "label": "[Check the holy chamber first]",
+        "id": "c_to_angelic",
+        "label": "[Search hidden chapel]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_angelic_tears"
+        }
+      },
+      {
+        "id": "c_to_dark_heart",
+        "label": "[Follow prints to altar]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_dark_heart_threshold"
         }
       }
     ]
@@ -1371,48 +944,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_angelic_tears": {
     "id": "n_angelic_tears",
     "type": "narrative",
-    "text": "A hidden chapel of the Morninglord still holds blessed water and one ring in its basin.",
+    "text": "A hidden chapel holds blessed water and a hidden trapdoor route upstairs.",
     "onEnter": [
       {
         "action": "add_item",
         "itemId": "holy_water_dawn",
         "qty": 2
       },
-      {
-        "action": "add_item",
-        "itemId": "ring_fire_resistance",
-        "qty": 1
-      },
-      {
-        "action": "set_flag",
-        "key": "found_hidden_exit",
-        "value": true
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_open_hidden_trapdoor",
-        "label": "[Open hidden trapdoor shortcut]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_hidden_trapdoor"
-        }
-      },
-      {
-        "id": "c_to_crossroads_from_angelic",
-        "label": "[Return to crossroads]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_shadow_crossroads_clear"
-        }
-      }
-    ]
-  },
-  "n_hidden_trapdoor": {
-    "id": "n_hidden_trapdoor",
-    "type": "narrative",
-    "text": "A concealed trapdoor opens into the tea room above, creating a crucial escape route.",
-    "onEnter": [
       {
         "action": "set_flag",
         "key": "trapdoor_open",
@@ -1421,16 +959,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_back_to_angelic",
-        "label": "[Return to holy chamber]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_angelic_tears"
-        }
-      },
-      {
-        "id": "c_continue_chase",
-        "label": "[Continue chasing Ireena's trail]",
+        "id": "c_back_crossroads",
+        "label": "[Return to footprints]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_shadow_crossroads_clear"
@@ -1438,163 +968,16 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
-  "n_stairs_down": {
-    "id": "n_stairs_down",
+  "n_dark_heart_threshold": {
+    "id": "n_dark_heart_threshold",
     "type": "narrative",
-    "text": "The stair descends into sulfur stench and infernal heat.",
-    "choices": [
-      {
-        "id": "c_abyss_ante",
-        "label": "[Enter Abyssal antechamber]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_abyss_antechamber"
-        }
-      }
-    ]
-  },
-  "n_abyss_antechamber": {
-    "id": "n_abyss_antechamber",
-    "type": "narrative",
-    "text": "Burnt clayware and sulfur lead into a devil-occupied bedroom.",
-    "choices": [
-      {
-        "id": "c_enter_hound_room",
-        "label": "[Push into bedchamber]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_abyss_bedchamber"
-        }
-      },
-      {
-        "id": "c_detour_imprisoned",
-        "label": "[Detour through prison cells]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_chamber_imprisoned"
-        }
-      }
-    ]
-  },
-  "n_abyss_bedchamber": {
-    "id": "n_abyss_bedchamber",
-    "type": "encounter",
-    "text": "A hell hound rises from scorched bedding, jaws glowing with cinders.",
-    "choices": [
-      {
-        "id": "c_fight_hound",
-        "label": "[Fight hell hound]",
-        "mechanic": {
-          "type": "combat_init",
-          "encounterId": "enc_hell_hound"
-        }
-      }
-    ]
-  },
-  "n_hound_clear": {
-    "id": "n_hound_clear",
-    "type": "narrative",
-    "text": "You claim abandoned adventurer gear, including powerful utility supplies.",
+    "text": "Ireena is chained beside an altar over black water. The Dursts rise as you approach.",
     "onEnter": [
       {
-        "action": "add_item",
-        "itemId": "cloak_of_protection_proxy",
-        "qty": 1
+        "action": "set_flag",
+        "key": "found_ireena",
+        "value": true
       },
-      {
-        "action": "add_item",
-        "itemId": "health_potion",
-        "qty": 2
-      },
-      {
-        "action": "add_item",
-        "itemId": "thieves_tools",
-        "qty": 1
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_to_suffering_chamber",
-        "label": "[Proceed to chamber of suffering souls]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_chamber_suffering"
-        }
-      },
-      {
-        "id": "c_to_imprisoned_cells",
-        "label": "[Take prison-cell route]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_chamber_imprisoned"
-        }
-      }
-    ]
-  },
-  "n_chamber_imprisoned": {
-    "id": "n_chamber_imprisoned",
-    "type": "narrative",
-    "text": "Two half-dead cultists beg for freedom from chains; the room hides a secret southern door.",
-    "onEnter": [
-      {
-        "action": "add_item",
-        "itemId": "gold_ring",
-        "qty": 1
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_free_prisoners",
-        "label": "[Free them]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_prisoner_betrayal"
-        }
-      },
-      {
-        "id": "c_ignore_prisoners",
-        "label": "[Ignore and move on]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_chamber_suffering"
-        }
-      },
-      {
-        "id": "c_secret_door_only",
-        "label": "[Use secret door toward altar]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dark_heart_threshold"
-        }
-      }
-    ]
-  },
-  "n_prisoner_betrayal": {
-    "id": "n_prisoner_betrayal",
-    "type": "narrative",
-    "text": "The 'grateful' prisoners attack and force you to waste precious time.",
-    "onEnter": [
-      {
-        "action": "adjust_hp",
-        "amount": -6
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_after_betrayal",
-        "label": "[Push deeper]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_chamber_suffering"
-        }
-      }
-    ]
-  },
-  "n_chamber_suffering": {
-    "id": "n_chamber_suffering",
-    "type": "narrative",
-    "text": "You reach the lower waterlogged chamber. The clock now nears 11 p.m.",
-    "onEnter": [
       {
         "action": "set_flag",
         "key": "time_11pm",
@@ -1603,108 +986,64 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_to_portcullis",
-        "label": "[Approach raised portcullis]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_raised_portcullis"
-        }
-      },
-      {
-        "id": "c_to_dark_heart_direct",
-        "label": "[Head straight for the ritual chamber]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dark_heart_threshold"
-        }
-      }
-    ]
-  },
-  "n_raised_portcullis": {
-    "id": "n_raised_portcullis",
-    "type": "narrative",
-    "text": "A corroded portcullis and winch control the choke point to the final chamber.",
-    "choices": [
-      {
-        "id": "c_pass_portcullis",
-        "label": "[Slip through while raised]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dark_heart_threshold"
-        }
-      },
-      {
-        "id": "c_force_portcullis",
-        "label": "[Force it open if needed (DC 20)]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dark_heart_threshold"
-        }
-      }
-    ]
-  },
-  "n_dark_heart_threshold": {
-    "id": "n_dark_heart_threshold",
-    "type": "narrative",
-    "text": "Chains hang over black water. Ireena, terrified and starved, is trapped near an active sacrifice altar.",
-    "onEnter": [
-      {
-        "action": "set_flag",
-        "key": "found_ireena",
-        "value": true
-      }
-    ],
-    "choices": [
-      {
         "id": "c_talk_ireena",
-        "label": "[Talk to Ireena first]",
+        "label": "\"Ireena, can you hear me?\"",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_dialogue_ireena"
         }
       },
       {
-        "id": "c_rescue_and_fight",
-        "label": "[Rescue Ireena and fight the Dursts]",
+        "id": "c_start_boss",
+        "label": "[Start ritual battle]",
         "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dark_heart_fight"
+          "type": "combat_init",
+          "encounterId": "enc_dark_heart_boss"
         }
       },
       {
-        "id": "c_retreat_once",
-        "label": "[Retreat and regroup]",
+        "id": "c_retreat_low_hp",
+        "label": "[Retreat to recover]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_chamber_suffering"
-        }
+          "nextNodeId": "n_shadow_crossroads_clear"
+        },
+        "visibilityRequirements": [
+          {
+            "type": "stat_check",
+            "stat": "hpCurrent",
+            "operator": "<=",
+            "value": 12
+          }
+        ]
       }
     ]
   },
   "n_dialogue_ireena": {
     "id": "n_dialogue_ireena",
     "type": "narrative",
-    "text": "Ireena clutches your arm, shaking. \"Please don't leave me here. I heard chanting for hours.\"",
+    "text": "Ireena grips your arm. \"Please don't leave me here.\"",
     "choices": [
       {
-        "id": "c_ireena_past",
-        "label": "[Ask how she ended up here]",
+        "id": "c_reassure_ireena",
+        "label": "\"You're not dying here. Stay with me.\"",
         "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dialogue_ireena_past"
+          "type": "skill_check",
+          "dice": "1d20",
+          "dc": 12,
+          "onSuccess": {
+            "nextNodeId": "n_ireena_trust"
+          },
+          "onFailure": {
+            "nextNodeId": "n_ireena_fear"
+          },
+          "attribute": "intelligence",
+          "skillId": "insight"
         }
       },
       {
-        "id": "c_ireena_reassure",
-        "label": "[Promise to get her out]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dialogue_ireena_reassure"
-        }
-      },
-      {
-        "id": "c_ireena_ready_fight",
-        "label": "[Prepare for the fight]",
+        "id": "c_back_to_boss",
+        "label": "[Prepare for battle]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_dark_heart_threshold"
@@ -1712,32 +1051,10 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
-  "n_dialogue_ireena_past": {
-    "id": "n_dialogue_ireena_past",
+  "n_ireena_trust": {
+    "id": "n_ireena_trust",
     "type": "narrative",
-    "text": "\"I got lost in the woods and the fog pushed me into this house. I thought it was shelter.\"",
-    "onEnter": [
-      {
-        "action": "set_flag",
-        "key": "learned_ireena_backstory",
-        "value": true
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_back_ireena_1",
-        "label": "[Back to Ireena]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dialogue_ireena"
-        }
-      }
-    ]
-  },
-  "n_dialogue_ireena_reassure": {
-    "id": "n_dialogue_ireena_reassure",
-    "type": "narrative",
-    "text": "She nods through tears and steadies her breathing. \"Then let's move before this place changes again.\"",
+    "text": "She steadies. \"Then let's survive this.\"",
     "onEnter": [
       {
         "action": "set_flag",
@@ -1747,8 +1064,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_back_ireena_2",
-        "label": "[Face the altar]",
+        "id": "c_to_boss_after_trust",
+        "label": "[Fight the Dursts]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_dark_heart_threshold"
@@ -1756,17 +1073,23 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
-  "n_dark_heart_fight": {
-    "id": "n_dark_heart_fight",
-    "type": "encounter",
-    "text": "Gustav and Elisabeth Durst rise with a remaining cultist to stop your rescue.",
+  "n_ireena_fear": {
+    "id": "n_ireena_fear",
+    "type": "narrative",
+    "text": "She panics and pulls free, making the opening attack harder.",
+    "onEnter": [
+      {
+        "action": "adjust_hp",
+        "amount": -2
+      }
+    ],
     "choices": [
       {
-        "id": "c_boss_combat",
-        "label": "[Begin final ritual battle]",
+        "id": "c_to_boss_after_fear",
+        "label": "[Fight anyway]",
         "mechanic": {
-          "type": "combat_init",
-          "encounterId": "enc_dark_heart_boss"
+          "type": "navigate",
+          "nextNodeId": "n_dark_heart_threshold"
         }
       }
     ]
@@ -1774,7 +1097,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_dark_heart_victory": {
     "id": "n_dark_heart_victory",
     "type": "narrative",
-    "text": "Ireena is freed. The house convulses as Rose and Death House tear at each other. Run.",
+    "text": "The Dursts fall. The house convulses and starts collapsing. You must escape now.",
     "onEnter": [
       {
         "action": "set_flag",
@@ -1789,8 +1112,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_begin_escape",
-        "label": "[Start The Great Escape]",
+        "id": "c_escape_start",
+        "label": "[Run for the stairs]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_escape_upper_hall"
@@ -1801,19 +1124,19 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_escape_upper_hall": {
     "id": "n_escape_upper_hall",
     "type": "encounter",
-    "text": "Returning upstairs, animated armor blocks the grand route while the clock races toward midnight.",
+    "text": "Animated armor blocks the upper hall as fire spreads.",
     "choices": [
       {
         "id": "c_fight_escape_armor",
-        "label": "[Break through the armor line]",
+        "label": "[Break through]",
         "mechanic": {
           "type": "combat_init",
           "encounterId": "enc_escape_armor"
         }
       },
       {
-        "id": "c_use_trapdoor_shortcut",
-        "label": "[Use trapdoor shortcut (if found)]",
+        "id": "c_use_trapdoor",
+        "label": "[Use hidden trapdoor route]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_escape_foyer"
@@ -1830,11 +1153,11 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_escape_armor_clear": {
     "id": "n_escape_armor_clear",
     "type": "narrative",
-    "text": "The armor collapses in a heap of steel and dust. Smoke floods the halls.",
+    "text": "The armor collapses and the path opens.",
     "choices": [
       {
         "id": "c_to_escape_foyer",
-        "label": "[Run for the foyer]",
+        "label": "[Run for foyer]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_escape_foyer"
@@ -1845,22 +1168,22 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_escape_foyer": {
     "id": "n_escape_foyer",
     "type": "encounter",
-    "text": "A living red carpet lashes like a tongue, trying to drag you into the house's teeth.",
+    "text": "A living rug tries to drag you back into burning corridors.",
     "choices": [
       {
         "id": "c_fight_rug",
-        "label": "[Cut through it]",
+        "label": "[Cut through]",
         "mechanic": {
           "type": "combat_init",
           "encounterId": "enc_escape_rug"
         }
       },
       {
-        "id": "c_dash_past_rug",
-        "label": "[Dash through the smoke]",
+        "id": "c_dash_gate",
+        "label": "[Dash for the gate]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_escape_portico_gate"
+          "nextNodeId": "n_escape_gate"
         }
       }
     ]
@@ -1868,26 +1191,26 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_escape_rug_clear": {
     "id": "n_escape_rug_clear",
     "type": "narrative",
-    "text": "The rug unravels in strips as fire races across the walls.",
+    "text": "The rug unravels. The front gate twists into a jaw of teeth.",
     "choices": [
       {
-        "id": "c_to_gate_check",
-        "label": "[Reach the front gate]",
+        "id": "c_to_escape_gate_2",
+        "label": "[Face the gate]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_escape_portico_gate"
+          "nextNodeId": "n_escape_gate"
         }
       }
     ]
   },
-  "n_escape_portico_gate": {
-    "id": "n_escape_portico_gate",
+  "n_escape_gate": {
+    "id": "n_escape_gate",
     "type": "narrative",
-    "text": "The doorway becomes slashing teeth. You must cross in perfect timing.",
+    "text": "You need perfect timing to pass the snapping doorway.",
     "choices": [
       {
-        "id": "c_teeth_dex",
-        "label": "[Acrobatics route (DC 13)]",
+        "id": "c_escape_acrobatics",
+        "label": "[Acrobatics DC 13]",
         "mechanic": {
           "type": "skill_check",
           "dice": "1d20",
@@ -1898,12 +1221,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "onFailure": {
             "nextNodeId": "n_escape_wounded"
           },
-          "attribute": "dexterity"
+          "attribute": "dexterity",
+          "skillId": "acrobatics"
         }
       },
       {
-        "id": "c_teeth_int",
-        "label": "[Study timing (DC 13)]",
+        "id": "c_escape_read_pattern",
+        "label": "[Perception DC 13]",
         "mechanic": {
           "type": "skill_check",
           "dice": "1d20",
@@ -1914,7 +1238,16 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "onFailure": {
             "nextNodeId": "n_escape_wounded"
           },
-          "attribute": "intelligence"
+          "attribute": "intelligence",
+          "skillId": "perception"
+        }
+      },
+      {
+        "id": "c_escape_reckless",
+        "label": "[Force through]",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "n_escape_wounded"
         }
       }
     ]
@@ -1922,7 +1255,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_escape_wounded": {
     "id": "n_escape_wounded",
     "type": "narrative",
-    "text": "The teeth carve into you as you force through the threshold.",
+    "text": "The teeth rake your side as you force your way through.",
     "onEnter": [
       {
         "action": "adjust_hp",
@@ -1931,8 +1264,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
     ],
     "choices": [
       {
-        "id": "c_survive_check_hp",
-        "label": "[Stagger onward with Ireena]",
+        "id": "c_survive_gt0",
+        "label": "[Keep moving with Ireena]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_survivors"
@@ -1947,8 +1280,8 @@ export const STORY_NODES: Record<string, StoryNode> = {
         ]
       },
       {
-        "id": "c_fail_at_gate",
-        "label": "[Collapse before the gate]",
+        "id": "c_doomed_lte0",
+        "label": "[Collapse in the doorway]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_doomed"
@@ -1967,14 +1300,20 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_survivors": {
     "id": "n_survivors",
     "type": "ending",
-    "text": "Before midnight, you escape with Ireena as Death House collapses. Kolyan and Ismark find you in the woods and offer shelter.",
+    "text": "You escape with Ireena before midnight as Death House collapses into the fog.",
+    "onEnter": [
+      {
+        "action": "adjust_currency",
+        "amount": 100
+      }
+    ],
     "choices": [
       {
-        "id": "c_talk_camp",
-        "label": "[Talk at the hunting camp]",
+        "id": "c_survivor_talk",
+        "label": "\"Tell me where these mists lead.\"",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_dialogue_hunting_camp"
+          "nextNodeId": "n_camp_dialogue"
         }
       },
       {
@@ -1987,30 +1326,22 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
-  "n_dialogue_hunting_camp": {
-    "id": "n_dialogue_hunting_camp",
+  "n_camp_dialogue": {
+    "id": "n_camp_dialogue",
     "type": "ending",
-    "text": "Around a fire, Kolyan thanks you for saving Ireena. Ismark offers safe passage to Barovia village at dawn.",
+    "text": "Kolyan and Ismark thank you at a hunting camp. Dawn will bring a harder road.",
     "choices": [
       {
-        "id": "c_ask_about_barovia",
-        "label": "[Ask about Barovia]",
+        "id": "c_camp_lore",
+        "label": "\"What exactly is Barovia?\"",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_dialogue_barovia_lore"
+          "nextNodeId": "n_camp_lore"
         }
       },
       {
-        "id": "c_ask_about_ireena_future",
-        "label": "[Ask what comes next for Ireena]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dialogue_ireena_future"
-        }
-      },
-      {
-        "id": "c_restart_from_camp",
-        "label": "[End and restart]",
+        "id": "c_camp_restart",
+        "label": "[End run]",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "n_start"
@@ -2018,32 +1349,17 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
-  "n_dialogue_barovia_lore": {
-    "id": "n_dialogue_barovia_lore",
+  "n_camp_lore": {
+    "id": "n_camp_lore",
     "type": "ending",
-    "text": "Kolyan warns that mists, wolves, and old curses rule these lands—and that this was only your first night.",
+    "text": "They warn you this was only the first test the Mists had planned.",
     "choices": [
       {
-        "id": "c_back_camp_1",
-        "label": "[Back to camp conversation]",
+        "id": "c_back_camp",
+        "label": "[Back]",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "n_dialogue_hunting_camp"
-        }
-      }
-    ]
-  },
-  "n_dialogue_ireena_future": {
-    "id": "n_dialogue_ireena_future",
-    "type": "ending",
-    "text": "Ismark vows to protect Ireena as family. She thanks you quietly, still trembling from the house.",
-    "choices": [
-      {
-        "id": "c_back_camp_2",
-        "label": "[Back to camp conversation]",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "n_dialogue_hunting_camp"
+          "nextNodeId": "n_camp_dialogue"
         }
       }
     ]
@@ -2051,7 +1367,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "n_doomed": {
     "id": "n_doomed",
     "type": "ending",
-    "text": "Midnight claims the doomed. The house closes over you and keeps your name forever.",
+    "text": "Midnight claims the doomed. Death House keeps your name.",
     "choices": [
       {
         "id": "c_restart_doomed",

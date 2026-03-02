@@ -167,11 +167,8 @@ onMounted(() => {
     </header>
 
     <AuthPanel v-if="GAME_CONFIG.features.cloudSave" />
-    <OutcomeStatsPanel v-if="GAME_CONFIG.features.sharedOutcomes" />
-    <TelemetryDashboard v-if="GAME_CONFIG.features.sharedOutcomes" />
-    <StoryLibrary v-if="GAME_CONFIG.features.storyPackages" />
 
-    <section class="space-y-4">
+    <section class="space-y-4" aria-label="Save slots">
       <article
         v-for="(slot, index) in slots"
         :key="slot.slotId"
@@ -255,6 +252,10 @@ onMounted(() => {
         </div>
       </article>
     </section>
+
+    <OutcomeStatsPanel v-if="GAME_CONFIG.features.sharedOutcomes" />
+    <TelemetryDashboard v-if="GAME_CONFIG.features.sharedOutcomes" />
+    <StoryLibrary v-if="GAME_CONFIG.features.storyPackages" />
 
     <!-- Character sheet picker (new game) -->
     <div

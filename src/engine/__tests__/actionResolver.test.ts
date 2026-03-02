@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { resolveAction } from '../actionResolver'
 
+const mockNotificationAdd = vi.fn()
+vi.mock('../../stores/notificationStore', () => ({
+  useNotificationStore: () => ({ add: mockNotificationAdd }),
+}))
+
 describe('resolveAction', () => {
   const createMockStore = () => ({
     setFlag: vi.fn(),
@@ -12,6 +17,7 @@ describe('resolveAction', () => {
 
   beforeEach(() => {
     vi.spyOn(console, 'warn').mockImplementation(() => {})
+    mockNotificationAdd.mockClear()
   })
   afterEach(() => {
     vi.restoreAllMocks()
@@ -103,6 +109,16 @@ describe('resolveAction', () => {
     expect(result.type).toBe('heal')
     expect(result.value).toBeUndefined()
     expect(console.warn).toHaveBeenCalled()
+  })
+
+  it('heal action shows dice notification with roll result', () => {
+    const store = createMockStore()
+    resolveAction({ action: 'heal', amount: '2d4+2' }, store as any)
+    expect(mockNotificationAdd).toHaveBeenCalledWith('dice', expect.any(String), expect.any(String))
+    const [kind, message, detail] = mockNotificationAdd.mock.calls[0]
+    expect(kind).toBe('dice')
+    expect(message).toMatch(/Heal.*\+?\d+ HP/)
+    expect(detail).toMatch(/Rolls: \[\d+, \d+\].*= \d+/)
   })
 
   it('all actions return ProcessedAction with type', () => {

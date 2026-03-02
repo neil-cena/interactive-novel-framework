@@ -60,6 +60,18 @@ body {
 .high-contrast .text-emerald-400 {
   filter: contrast(1.2);
 }
+/* Combat screen shake - disabled when user prefers reduced motion */
+@keyframes combat-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+.combat-shake {
+  animation: combat-shake 0.4s ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

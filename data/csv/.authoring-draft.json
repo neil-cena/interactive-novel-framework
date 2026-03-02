@@ -1,11 +1,16 @@
 {
-  "savedAt": "2026-03-01T19:42:29.943Z",
+  "savedAt": "2026-03-02T15:56:27.571Z",
   "model": {
     "nodes": {},
     "items": {
-      "receipt": {
-        "id": "receipt",
+      "receipt_oblivion": {
+        "id": "receipt_oblivion",
         "name": "Crumpled Receipt",
+        "type": "tool"
+      },
+      "club_token": {
+        "id": "club_token",
+        "name": "Brass Club Token",
         "type": "tool"
       },
       "drow_baby": {
@@ -15,63 +20,247 @@
       },
       "macguffin_collar": {
         "id": "macguffin_collar",
-        "name": "Leather Collar",
+        "name": "Owlbear Collar",
         "type": "tool"
+      },
+      "mansion_invite": {
+        "id": "mansion_invite",
+        "name": "Mansion Invitation Stub",
+        "type": "tool"
+      },
+      "mik_ledger": {
+        "id": "mik_ledger",
+        "name": "Mik Ledger",
+        "type": "tool"
+      },
+      "dagger_iron": {
+        "id": "dagger_iron",
+        "name": "Iron Dagger",
+        "type": "weapon",
+        "damage": "1d4",
+        "scalingAttribute": "dexterity"
+      },
+      "greatsword_iron": {
+        "id": "greatsword_iron",
+        "name": "Iron Greatsword",
+        "type": "weapon",
+        "damage": "2d6",
+        "scalingAttribute": "strength"
+      },
+      "blade_of_shadows": {
+        "id": "blade_of_shadows",
+        "name": "Blade of Shadows",
+        "type": "weapon",
+        "damage": "1d6",
+        "attackBonus": 1,
+        "scalingAttribute": "dexterity"
+      },
+      "mace_iron": {
+        "id": "mace_iron",
+        "name": "Iron Mace",
+        "type": "weapon",
+        "damage": "1d6",
+        "scalingAttribute": "strength"
+      },
+      "robe_scholar": {
+        "id": "robe_scholar",
+        "name": "Scholar Robes",
+        "type": "armor",
+        "acBonus": 0
+      },
+      "chainmail": {
+        "id": "chainmail",
+        "name": "Chainmail",
+        "type": "armor",
+        "acBonus": 6
+      },
+      "leather_armor": {
+        "id": "leather_armor",
+        "name": "Leather Armor",
+        "type": "armor",
+        "acBonus": 2
+      },
+      "scale_mail": {
+        "id": "scale_mail",
+        "name": "Scale Mail",
+        "type": "armor",
+        "acBonus": 4
+      },
+      "gambler_jacket": {
+        "id": "gambler_jacket",
+        "name": "Reinforced Gambler Jacket",
+        "type": "armor",
+        "acBonus": 2
+      },
+      "owlbear_hide_vest": {
+        "id": "owlbear_hide_vest",
+        "name": "Owlbear Hide Vest",
+        "type": "armor",
+        "acBonus": 3
+      },
+      "ringmail_reinforced": {
+        "id": "ringmail_reinforced",
+        "name": "Reinforced Ringmail",
+        "type": "armor",
+        "acBonus": 4
+      },
+      "spellbook": {
+        "id": "spellbook",
+        "name": "Spellbook",
+        "type": "tool"
+      },
+      "holy_symbol": {
+        "id": "holy_symbol",
+        "name": "Holy Symbol",
+        "type": "tool"
+      },
+      "lockpick_set": {
+        "id": "lockpick_set",
+        "name": "Lockpick Set",
+        "type": "tool"
+      },
+      "thieves_tools": {
+        "id": "thieves_tools",
+        "name": "Thieves' Tools",
+        "type": "tool"
+      },
+      "torch_bundle": {
+        "id": "torch_bundle",
+        "name": "Torch Bundle",
+        "type": "tool"
+      },
+      "holy_water_dawn": {
+        "id": "holy_water_dawn",
+        "name": "Holy Water",
+        "type": "consumable",
+        "effect": {
+          "action": "heal",
+          "amount": "3d6"
+        }
+      },
+      "health_potion": {
+        "id": "health_potion",
+        "name": "Health Potion",
+        "type": "consumable",
+        "effect": {
+          "action": "heal",
+          "amount": "2d4+2"
+        }
+      },
+      "adrenaline_shot": {
+        "id": "adrenaline_shot",
+        "name": "Adrenaline Shot",
+        "type": "consumable",
+        "effect": {
+          "action": "heal",
+          "amount": "1d8+2"
+        }
+      },
+      "smoke_bomb": {
+        "id": "smoke_bomb",
+        "name": "Smoke Bomb",
+        "type": "consumable",
+        "effect": {
+          "action": "set_flag",
+          "key": "has_surprise",
+          "value": true
+        }
       }
     },
     "enemies": {
-      "owlbear": {
-        "id": "owlbear",
+      "owlbear_suite": {
+        "id": "owlbear_suite",
         "name": "MacGuffin the Owlbear",
-        "hp": 59,
+        "hp": 30,
         "ac": 13,
-        "attackBonus": 7,
-        "damage": "1d10+5",
-        "xpReward": 200
+        "attackBonus": 4,
+        "damage": "1d8+2",
+        "xpReward": 140
+      },
+      "gate_thug": {
+        "id": "gate_thug",
+        "name": "Gate Thug",
+        "hp": 22,
+        "ac": 12,
+        "attackBonus": 4,
+        "damage": "1d6+2",
+        "xpReward": 70
       },
       "mik_tystone": {
         "id": "mik_tystone",
         "name": "Mik Tystone",
-        "hp": 80,
-        "ac": 15,
-        "attackBonus": 8,
-        "damage": "1d6+4",
-        "xpReward": 500
+        "hp": 44,
+        "ac": 14,
+        "attackBonus": 5,
+        "damage": "1d8+3",
+        "xpReward": 260
+      },
+      "mik_guard_captain": {
+        "id": "mik_guard_captain",
+        "name": "Mik Guard Captain",
+        "hp": 34,
+        "ac": 14,
+        "attackBonus": 5,
+        "damage": "1d8+2",
+        "xpReward": 160
       }
     },
     "encounters": {
-      "enc_bathroom": {
-        "id": "enc_bathroom",
-        "name": "enc_bathroom",
+      "enc_owlbear_suite": {
+        "id": "enc_owlbear_suite",
+        "name": "enc_owlbear_suite",
         "type": "combat",
         "enemies": [
           {
-            "enemyId": "owlbear",
+            "enemyId": "owlbear_suite",
             "count": 1
           }
         ],
         "resolution": {
           "onVictory": {
-            "nextNodeId": "n_bathroom_victory"
+            "nextNodeId": "n_owlbear_victory"
           },
           "onDefeat": {
             "nextNodeId": "n_game_over"
           }
         }
       },
-      "enc_boss": {
-        "id": "enc_boss",
-        "name": "enc_boss",
+      "enc_gate_thugs": {
+        "id": "enc_gate_thugs",
+        "name": "enc_gate_thugs",
+        "type": "combat",
+        "enemies": [
+          {
+            "enemyId": "gate_thug",
+            "count": 2
+          }
+        ],
+        "resolution": {
+          "onVictory": {
+            "nextNodeId": "n_gate_thugs_victory"
+          },
+          "onDefeat": {
+            "nextNodeId": "n_game_over"
+          }
+        }
+      },
+      "enc_mik_boss": {
+        "id": "enc_mik_boss",
+        "name": "enc_mik_boss",
         "type": "combat",
         "enemies": [
           {
             "enemyId": "mik_tystone",
             "count": 1
+          },
+          {
+            "enemyId": "mik_guard_captain",
+            "count": 1
           }
         ],
         "resolution": {
           "onVictory": {
-            "nextNodeId": "n_victory"
+            "nextNodeId": "n_mik_victory"
           },
           "onDefeat": {
             "nextNodeId": "n_game_over"

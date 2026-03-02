@@ -150,6 +150,16 @@ Cloud save, shared outcomes, and story package listing can use **Firebase** (Aut
    Rules are in `firestore.rules`: per-user saves under `users/{uid}/saves`, analytics write-only, story packages read-only.
 5. In `src/config.ts`, set `features.cloudSave: true` to use Firebase when env is present. Optional: set `VITE_PROVIDER_MODE=local` or `VITE_PROVIDER_MODE=firebase` to force a provider for testing.
 
+**Google Sign-In (web and mobile)**
+
+- In Firebase Console, enable **Google** as a sign-in provider under Authentication → Sign-in method.
+- On **web**, the main menu shows “Sign in with Google” when Firebase is configured; clicking it opens the Google sign-in popup.
+- On **native (iOS/Android)** (Capacitor), the app uses **@capawesome/capacitor-google-sign-in**. Set the env var **`VITE_GOOGLE_WEB_CLIENT_ID`** to your **Web client ID** from Google Cloud Console (same OAuth client used for Firebase). On native, “Sign in with Google” uses the plugin and then signs in to Firebase with the returned credential so cloud save works with the same account. On iOS you must also add the iOS client ID and URL scheme to `ios/App/App/Info.plist` per the plugin docs.
+
+**Google Play Games (Android only)**
+
+- “Sign in with Play Games” is shown on **Android** only. It uses **capacitor-play-games-services** and is independent of cloud save (cloud save remains Google Sign-In). Configure your game in [Google Play Console](https://play.google.com/console) → Play Games Services, then add the **game/app ID** to the plugin’s `res/values/strings.xml` per the [plugin README](https://github.com/gammafp/capacitor-play-games-services). The plugin is registered in `android/app/src/main/java/.../MainActivity.java`.
+
 **Feature flag progression**: Enable flags in `src/config.ts` for dev first; after QA, promote to staging, then enable in production gradually (e.g. internal users, then sampled, then full). See `docs/phase5-rollout-checklist.md`.
 
 **Phase 5 observability (QA)**: In development, run `window.__phase5_diagnostics()` in the console to read sync failure count, conflict count, and analytics ingest error count.

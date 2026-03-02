@@ -11,6 +11,7 @@ import { resolveAction } from '../engine/actionResolver'
 import { trackOutcomeEvent } from '../services/analyticsClient'
 import { emitGameEvent } from '../services/events/gameEventBus'
 import { usePlayerStore } from '../stores/playerStore'
+import { useNotifications } from '../composables/useNotifications'
 import type { Choice } from '../types/story'
 
 const emit = defineEmits<{
@@ -20,7 +21,7 @@ const emit = defineEmits<{
 
 const playerStore = usePlayerStore()
 const { playSfx } = useAudio()
-const lastRollSummary = ref('')
+const { notify } = useNotifications()
 const nodeImageError = ref(false)
 const processedNodes = ref<Set<string>>(new Set())
 const visibilityState = computed(() => ({
@@ -83,7 +84,6 @@ function handleChoice(choice: Choice): void {
         playerStore.resetToDefaults()
       }
       processedNodes.value = new Set()
-      lastRollSummary.value = ''
       return
     }
 
@@ -98,18 +98,22 @@ function handleChoice(choice: Choice): void {
 
   const check = choice.mechanic
   playSfx('dice_roll')
-  const attrMod = check.attribute ? playerStore.attributes[check.attribute] : 0
+  let attrMod = check.attribute ? playerStore.attributes[check.attribute] : 0
+  if (check.skillId && playerStore.skillsProficiency[check.skillId]) {
+    attrMod += GAME_CONFIG.skills.proficiencyBonus
+  }
   const roll = rollDice(check.dice)
   const adjustedTotal = roll.total + attrMod
 
-  if (check.attribute) {
-    const sign = attrMod >= 0 ? '+' : ''
-    lastRollSummary.value = `Roll ${check.dice}: [${roll.rolls.join(', ')}] ${roll.modifier >= 0 ? '+' : ''}${roll.modifier} ${sign}${attrMod} (${check.attribute.toUpperCase()}) = ${adjustedTotal} vs DC ${check.dc}`
-  } else {
-    lastRollSummary.value = `Roll ${check.dice}: [${roll.rolls.join(', ')}] ${roll.modifier >= 0 ? '+' : ''}${roll.modifier} = ${adjustedTotal} vs DC ${check.dc}`
-  }
+  const detail =
+    check.attribute ?
+      `[${roll.rolls.join(', ')}] ${roll.modifier >= 0 ? '+' : ''}${roll.modifier} + ${attrMod} (${check.attribute.toUpperCase()}) = ${adjustedTotal} vs DC ${check.dc}`
+    : `[${roll.rolls.join(', ')}] ${roll.modifier >= 0 ? '+' : ''}${roll.modifier} = ${adjustedTotal} vs DC ${check.dc}`
+  const success = adjustedTotal >= check.dc
+  playSfx(success ? 'skill_success' : 'skill_fail')
+  notify('skill_check', success ? 'Skill check passed' : 'Skill check failed', detail)
 
-  if (adjustedTotal >= check.dc) {
+  if (success) {
     trackOutcomeEvent({
       storyId: 'default',
       type: 'chapter_completed',
@@ -130,7 +134,6 @@ function handleChoice(choice: Choice): void {
 
 function goToStart(): void {
   processedNodes.value = new Set()
-  lastRollSummary.value = ''
   playerStore.navigateTo(GAME_CONFIG.player.startingNodeId)
 }
 </script>
@@ -154,18 +157,10 @@ function goToStart(): void {
           />
           <TypewriterText
             :text="currentNode.text"
-            :chars-per-second="30"
+            :chars-per-second="45"
             :skip-on-click="true"
             :restart-key="playerStore.metadata.currentNodeId"
           />
-          <p
-            v-if="lastRollSummary"
-            class="mt-4 break-words rounded border border-slate-600 bg-slate-800 p-2 text-sm text-slate-200"
-            role="status"
-            aria-live="polite"
-          >
-            {{ lastRollSummary }}
-          </p>
           <ChoiceList
             v-if="currentNode.choices && currentNode.choices.length > 0"
             :choices="currentNode.choices"

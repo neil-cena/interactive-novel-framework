@@ -2,6 +2,15 @@
 import type { EnemyTemplate } from '../types/combat'
 
 export const ENEMY_DICTIONARY: Record<string, EnemyTemplate> = {
+  "animated_knife": {
+    "id": "animated_knife",
+    "name": "Animated Kitchen Knife",
+    "hp": 10,
+    "ac": 13,
+    "attackBonus": 4,
+    "damage": "1d4+2",
+    "xpReward": 25
+  },
   "attic_spider": {
     "id": "attic_spider",
     "name": "Attic Spider",
@@ -28,15 +37,6 @@ export const ENEMY_DICTIONARY: Record<string, EnemyTemplate> = {
     "attackBonus": 4,
     "damage": "1d6+2",
     "xpReward": 55
-  },
-  "hell_hound_minor": {
-    "id": "hell_hound_minor",
-    "name": "Hell Hound",
-    "hp": 32,
-    "ac": 15,
-    "attackBonus": 5,
-    "damage": "1d8+3",
-    "xpReward": 180
   },
   "durst_ghast_gustav": {
     "id": "durst_ghast_gustav",
@@ -76,7 +76,7 @@ export const ENEMY_DICTIONARY: Record<string, EnemyTemplate> = {
   },
   "animated_rug_escape": {
     "id": "animated_rug_escape",
-    "name": "Animated Rug of Smothering",
+    "name": "Animated Rug",
     "hp": 30,
     "ac": 12,
     "attackBonus": 5,

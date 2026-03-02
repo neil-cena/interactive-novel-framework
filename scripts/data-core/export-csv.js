@@ -72,6 +72,7 @@ function serializeMechanic(m) {
     ]
     if (m.onFailureEncounterId) parts.push(m.onFailureEncounterId)
     if (m.attribute) parts.push(m.attribute)
+    if (m.skillId) parts.push(m.skillId)
     return `skill_check:${parts.join(':')}`
   }
   return ''

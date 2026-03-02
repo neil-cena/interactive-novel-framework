@@ -44,6 +44,8 @@ export type ChoiceMechanic =
       dice: string
       dc: number
       attribute?: 'strength' | 'dexterity' | 'intelligence'
+      /** Optional DnD skill id (e.g. acrobatics); adds proficiency bonus if player is proficient. */
+      skillId?: string
       onSuccess: ChoiceOutcome
       onFailure: ChoiceOutcome
       onFailureEncounterId?: string

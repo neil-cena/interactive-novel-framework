@@ -54,6 +54,7 @@ export const defaultPlayerState = (): PlayerState => ({
     xpToNextLevel: levelConfig.xpThresholds[1] ?? 100,
     unspentAttributePoints: 0,
   },
+  skillsProficiency: {},
   flags: {
     ...playerConfig.startingFlags,
   },
@@ -88,6 +89,7 @@ export function playerStateFromSheet(payload: CharacterSheetPayload): PlayerStat
       },
       attributes: { ...preset.startingAttributes },
       progression: buildProgressionForLevel(startingLevel),
+      skillsProficiency: { ...(preset.startingProficiencies ?? {}) },
       flags: { ...preset.startingFlags },
     }
   }
@@ -111,6 +113,7 @@ export function playerStateFromSheet(payload: CharacterSheetPayload): PlayerStat
       armor: payload.startingArmorId ?? null,
     },
     attributes: { ...payload.startingAttributes },
+    skillsProficiency: { ...(payload.startingProficiencies ?? {}) },
     flags: { ...payload.startingFlags },
   }
 }
@@ -129,6 +132,7 @@ export const usePlayerStore = defineStore('player', {
         equipment: { ...defaults.equipment, ...savedState.equipment },
         attributes: { ...defaults.attributes, ...savedState.attributes },
         progression: { ...defaults.progression, ...savedState.progression },
+        skillsProficiency: { ...defaults.skillsProficiency, ...savedState.skillsProficiency },
         flags: { ...defaults.flags, ...savedState.flags },
       }
       this.$patch(merged)
@@ -222,6 +226,13 @@ export const usePlayerStore = defineStore('player', {
       if (this.progression.unspentAttributePoints <= 0) return
       this.attributes[attr] += 1
       this.progression.unspentAttributePoints -= 1
+    },
+    setSkillProficiency(skillId: string, proficient: boolean) {
+      if (proficient) {
+        this.skillsProficiency[skillId] = true
+      } else {
+        delete this.skillsProficiency[skillId]
+      }
     },
     equipItem(slot: 'mainHand' | 'armor', itemId: string | null) {
       this.equipment[slot] = itemId

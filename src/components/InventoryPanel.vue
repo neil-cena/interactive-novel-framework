@@ -51,6 +51,7 @@ const inventoryItems = computed(() => {
       id,
       qty,
       name: template?.name ?? id,
+      description: template?.description,
       type: template?.type ?? 'unknown',
       damage: template?.damage,
       attackBonus: template?.attackBonus,
@@ -86,12 +87,6 @@ function handleUseConsumable(itemId: string) {
   if (!template?.effect) return
   resolveAction(template.effect, playerStore)
   playerStore.removeItem(itemId, 1)
-}
-
-const hasUnspentPoints = computed(() => playerStore.progression.unspentAttributePoints > 0)
-
-function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
-  playerStore.spendAttributePoint(attr)
 }
 </script>
 
@@ -160,29 +155,41 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
 
       <section class="mt-4">
         <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Items</h3>
+        <p class="mt-1 text-xs text-slate-500">Name, description, and stats shown for all items.</p>
         <div v-if="inventoryItems.length === 0" class="mt-2 text-sm text-slate-500">No items.</div>
-        <ul v-else class="mt-2 space-y-2">
+        <ul v-else class="mt-2 space-y-3">
           <li
             v-for="item in inventoryItems"
             :key="item.id"
-            class="flex flex-wrap items-center justify-between gap-2 rounded border border-slate-700 bg-slate-800/40 p-3"
+            class="rounded border border-slate-700 bg-slate-800/40 p-3"
           >
-            <div class="min-w-0">
-              <span class="font-medium text-slate-100">{{ item.name }}</span>
-              <span class="ml-2 text-xs text-slate-500">&times;{{ item.qty }}</span>
-              <span
-                class="ml-2 rounded px-1.5 py-0.5 text-xs"
-                :class="{
-                  'bg-red-900/40 text-red-300': item.type === 'weapon',
-                  'bg-emerald-900/40 text-emerald-300': item.type === 'consumable',
-                  'bg-sky-900/40 text-sky-300': item.type === 'tool',
-                  'bg-slate-600/40 text-slate-300': item.type === 'armor',
-                }"
-              >
-                {{ item.type }}
-              </span>
-            </div>
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap items-start justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-medium text-slate-100">{{ item.name }}</span>
+                  <span class="text-xs text-slate-500">&times;{{ item.qty }}</span>
+                  <span
+                    class="rounded px-1.5 py-0.5 text-xs"
+                    :class="{
+                      'bg-red-900/40 text-red-300': item.type === 'weapon',
+                      'bg-emerald-900/40 text-emerald-300': item.type === 'consumable',
+                      'bg-sky-900/40 text-sky-300': item.type === 'tool',
+                      'bg-slate-600/40 text-slate-300': item.type === 'armor',
+                    }"
+                  >
+                    {{ item.type }}
+                  </span>
+                </div>
+                <p v-if="item.description" class="mt-1 text-sm text-slate-400">{{ item.description }}</p>
+                <p v-else-if="item.damage || item.attackBonus != null || item.acBonus != null || item.scalingAttribute" class="mt-1 text-xs text-slate-500">
+                  <template v-if="item.damage">Dmg: {{ item.damage }}</template>
+                  <template v-if="item.attackBonus != null">{{ item.damage ? ' · ' : '' }}Atk: +{{ item.attackBonus }}</template>
+                  <template v-if="item.acBonus != null">{{ item.damage || item.attackBonus != null ? ' · ' : '' }}AC: +{{ item.acBonus }}</template>
+                  <template v-if="item.scalingAttribute">{{ item.damage || item.attackBonus != null || item.acBonus != null ? ' · ' : '' }}{{ item.scalingAttribute.toUpperCase() }}</template>
+                </p>
+                <p v-else class="mt-1 text-xs text-slate-500">—</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
               <button
                 v-if="item.isWeapon && !item.isEquipped"
                 type="button"
@@ -222,40 +229,16 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
               >
                 Use
               </button>
+              </div>
+            </div>
+            <div v-if="(item.damage || item.attackBonus != null || item.acBonus != null || item.scalingAttribute) && item.description" class="mt-2 border-t border-slate-700/60 pt-2 text-xs text-slate-500">
+              <template v-if="item.damage">Dmg: {{ item.damage }}</template>
+              <template v-if="item.attackBonus != null">{{ item.damage ? ' · ' : '' }}Atk: +{{ item.attackBonus }}</template>
+              <template v-if="item.acBonus != null">{{ item.damage || item.attackBonus != null ? ' · ' : '' }}AC: +{{ item.acBonus }}</template>
+              <template v-if="item.scalingAttribute">{{ item.damage || item.attackBonus != null || item.acBonus != null ? ' · ' : '' }}{{ item.scalingAttribute.toUpperCase() }}</template>
             </div>
           </li>
         </ul>
-      </section>
-      <section v-if="hasUnspentPoints" class="mt-4">
-        <h3 class="text-sm font-semibold uppercase tracking-wide text-amber-400">
-          Attribute Points ({{ playerStore.progression.unspentAttributePoints }})
-        </h3>
-        <div class="mt-2 flex flex-wrap gap-2">
-          <button
-            type="button"
-            class="rounded border border-amber-700 bg-amber-900/40 px-3 py-2 text-sm text-amber-200 hover:bg-amber-900/70"
-            aria-label="Spend 1 point on strength"
-            @click="spendPoint('strength')"
-          >
-            +1 STR ({{ playerStore.attributes.strength }})
-          </button>
-          <button
-            type="button"
-            class="rounded border border-amber-700 bg-amber-900/40 px-3 py-2 text-sm text-amber-200 hover:bg-amber-900/70"
-            aria-label="Spend 1 point on dexterity"
-            @click="spendPoint('dexterity')"
-          >
-            +1 DEX ({{ playerStore.attributes.dexterity }})
-          </button>
-          <button
-            type="button"
-            class="rounded border border-amber-700 bg-amber-900/40 px-3 py-2 text-sm text-amber-200 hover:bg-amber-900/70"
-            aria-label="Spend 1 point on intelligence"
-            @click="spendPoint('intelligence')"
-          >
-            +1 INT ({{ playerStore.attributes.intelligence }})
-          </button>
-        </div>
       </section>
     </div>
   </div>

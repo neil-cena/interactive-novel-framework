@@ -5,8 +5,10 @@ import AuthGate from './components/AuthGate.vue'
 import CombatView from './components/CombatView.vue'
 import ErrorBoundary from './components/ErrorBoundary.vue'
 import InventoryPanel from './components/InventoryPanel.vue'
+import ProgressionPanel from './components/ProgressionPanel.vue'
 import MainMenu from './components/MainMenu.vue'
 import NarrativeView from './components/NarrativeView.vue'
+import NotificationHost from './components/NotificationHost.vue'
 import PwaUpdateNotice from './components/PwaUpdateNotice.vue'
 import PlaytestPanel from './components/PlaytestPanel.vue'
 import TelemetryConsentBanner from './components/TelemetryConsentBanner.vue'
@@ -18,6 +20,7 @@ import { flushOutcomeEvents, trackOutcomeEvent } from './services/analyticsClien
 import { emitGameEvent } from './services/events/gameEventBus'
 import { COMBAT_ENCOUNTERS } from './data/encounters'
 import { ENEMY_DICTIONARY } from './data/enemies'
+import { useNotificationStore } from './stores/notificationStore'
 import { usePlayerStore } from './stores/playerStore'
 import type { CharacterSheetPayload } from './types/characterSheet'
 import type { PlayerState } from './types/player'
@@ -34,7 +37,8 @@ const inventoryButtonRef = ref<HTMLElement | null>(null)
 const gameMode = ref<'narrative' | 'combat'>('narrative')
 const activeEncounterId = ref<string>('combat_1')
 const showInventory = ref(false)
-const levelUpMessage = ref<string | null>(null)
+const showProgression = ref(false)
+const progressionButtonRef = ref<HTMLElement | null>(null)
 
 function handleStartGame(slotId: SaveSlotId, savedState: PlayerState | null, sheetPayload?: CharacterSheetPayload): void {
   if (savedState) {
@@ -85,8 +89,14 @@ function handleCombatResolved(outcome: 'victory' | 'defeat'): void {
     if (totalXp > 0) {
       const leveled = playerStore.awardXp(totalXp)
       if (leveled) {
-        levelUpMessage.value = `Level Up! You are now level ${playerStore.progression.level}. +${GAME_CONFIG.leveling.hpPerLevel} HP, +${GAME_CONFIG.leveling.attributePointsPerLevel} Attribute Point.`
-        window.setTimeout(() => { levelUpMessage.value = null }, 5000)
+        playSfx('level_up')
+        const notificationStore = useNotificationStore()
+        notificationStore.add(
+          'level_up',
+          `Level up! You are now level ${playerStore.progression.level}.`,
+          `+${GAME_CONFIG.leveling.hpPerLevel} HP, +${GAME_CONFIG.leveling.attributePointsPerLevel} attribute point.`,
+          5000,
+        )
       }
     }
   }
@@ -213,6 +223,16 @@ watch(
             Inventory
           </button>
           <button
+            v-if="gameMode === 'narrative'"
+            ref="progressionButtonRef"
+            type="button"
+            class="rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
+            aria-label="Open level and attributes"
+            @click="showProgression = true"
+          >
+            Level & Attributes
+          </button>
+          <button
             type="button"
             class="rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
             aria-label="Save and quit to menu"
@@ -234,10 +254,6 @@ watch(
       </header>
 
       <PlayerHud />
-
-      <div v-if="levelUpMessage" class="rounded border border-amber-600 bg-amber-900/40 p-3 text-sm text-amber-200">
-        {{ levelUpMessage }}
-      </div>
 
       <Transition name="view-fade" mode="out-in">
         <div v-if="gameMode === 'narrative'" :key="'narrative'">
@@ -268,6 +284,13 @@ watch(
       @close="showInventory = false"
     />
 
+    <ProgressionPanel
+      v-if="showProgression"
+      :return-focus-to="progressionButtonRef"
+      @close="showProgression = false"
+    />
+
+    <NotificationHost />
     <PlaytestPanel />
     <PwaUpdateNotice />
     <TelemetryConsentBanner />

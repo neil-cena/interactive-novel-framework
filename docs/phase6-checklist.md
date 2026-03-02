@@ -22,6 +22,12 @@ Phase 6 covers PWA support, app-store readiness, and consent-first telemetry. It
 - [x] CI: `.github/workflows/android-release.yml`, `.github/workflows/ios-release.yml`
 - [ ] Manual: Add/store app icons and splash per platform; configure signing; produce signed AAB and iOS archive
 
+### Post-launch improvements (post Phase 6)
+
+- [x] Non-intrusive notification toasts (dice, skill check, level-up, currency) via `notificationStore` and `NotificationHost.vue`.
+- [x] DnD-style skills and proficiencies: `GAME_CONFIG.skills`, `playerStore.skillsProficiency`, skill_check `skillId` in narrative and authoring.
+- [x] Progression panel (Level & Attributes) separate from inventory; compact PlayerHud; save slots below sign-in on main menu.
+
 ### 6.5 Analytics and telemetry
 
 - [x] Consent store `telemetryConsentStore.ts` and banner `TelemetryConsentBanner.vue`

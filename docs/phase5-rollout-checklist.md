@@ -15,6 +15,11 @@ Use this checklist to roll out Phase 5 safely with feature flags and observabili
 
 See README section **Firebase (Phase 5 cloud features)** for env setup and deployment steps.
 
+## Google Sign-In
+
+- [x] Firebase Google Sign-In (web popup) in `firebaseProvider.ts` and “Sign in with Google” in AuthPanel when Firebase is configured.
+- [ ] Optional: For native Android/iOS, add a Capacitor Google Auth plugin and configure OAuth client IDs; see README **Google Sign-In (web and mobile)**.
+
 ## Feature Flags
 
 - `GAME_CONFIG.features.cloudSave` enabled in dev only.

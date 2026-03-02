@@ -63,33 +63,12 @@ export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
     "attackBonus": 1,
     "scalingAttribute": "dexterity"
   },
-  "simple_spear": {
-    "id": "simple_spear",
-    "name": "Spear",
-    "type": "weapon",
-    "damage": "1d6",
-    "scalingAttribute": "strength"
-  },
-  "walking_stick": {
-    "id": "walking_stick",
-    "name": "Walking Stick",
-    "type": "weapon",
-    "damage": "1d4",
-    "scalingAttribute": "strength"
-  },
   "butcher_knife": {
     "id": "butcher_knife",
     "name": "Butcher Knife",
     "type": "weapon",
     "damage": "1d4",
     "scalingAttribute": "dexterity"
-  },
-  "tenderizer_mallet": {
-    "id": "tenderizer_mallet",
-    "name": "Tenderizer Mallet",
-    "type": "weapon",
-    "damage": "1d4",
-    "scalingAttribute": "strength"
   },
   "robe_scholar": {
     "id": "robe_scholar",
@@ -114,6 +93,12 @@ export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
     "name": "Scale Mail",
     "type": "armor",
     "acBonus": 4
+  },
+  "cloak_of_protection_proxy": {
+    "id": "cloak_of_protection_proxy",
+    "name": "Cloak of Protection",
+    "type": "armor",
+    "acBonus": 1
   },
   "spellbook": {
     "id": "spellbook",
@@ -148,22 +133,6 @@ export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
   "torch_bundle": {
     "id": "torch_bundle",
     "name": "Torch Bundle",
-    "type": "tool"
-  },
-  "ring_fire_resistance": {
-    "id": "ring_fire_resistance",
-    "name": "Ring of Fire Resistance",
-    "type": "tool"
-  },
-  "cloak_of_protection_proxy": {
-    "id": "cloak_of_protection_proxy",
-    "name": "Cloak of Protection",
-    "type": "armor",
-    "acBonus": 1
-  },
-  "gold_ring": {
-    "id": "gold_ring",
-    "name": "Gold Ring",
     "type": "tool"
   },
   "remove_curse_scroll": {

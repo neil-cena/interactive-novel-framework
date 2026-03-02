@@ -66,5 +66,19 @@ export const useAuthStore = defineStore('auth', {
         this.setSession('anonymous', { id: 'anonymous', isAnonymous: true })
       }
     },
+    async signInWithGoogle() {
+      const { authProvider } = getProviders()
+      if (typeof authProvider.signInWithGoogle !== 'function') {
+        this.setSession('error', null, 'Google sign-in is not available.')
+        return
+      }
+      this.setSession('authenticating', this.user)
+      try {
+        const session = await authProvider.signInWithGoogle()
+        this.setSession(session.status, session.user, session.error)
+      } catch (e) {
+        this.setSession('error', null, e instanceof Error ? e.message : 'Google sign-in failed')
+      }
+    },
   },
 })

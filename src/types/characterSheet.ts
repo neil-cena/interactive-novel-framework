@@ -1,4 +1,4 @@
-import type { PlayerAttributes } from './player'
+import type { PlayerAttributes, SkillsProficiency } from './player'
 
 /** A selectable preset character sheet. */
 export interface CharacterSheetPreset {
@@ -16,6 +16,8 @@ export interface CharacterSheetPreset {
   startingItems: Record<string, number>
   startingFlags: Record<string, boolean>
   startingAttributes: PlayerAttributes
+  /** DnD-style skill proficiencies (skill id -> true). */
+  startingProficiencies?: SkillsProficiency
 }
 
 /** Point-buy configuration for custom character creation. */
@@ -45,4 +47,5 @@ export type CharacterSheetPayload =
       startingItems: Record<string, number>
       startingFlags: Record<string, boolean>
       startingAttributes: PlayerAttributes
+      startingProficiencies?: SkillsProficiency
     }

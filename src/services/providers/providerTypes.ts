@@ -13,6 +13,8 @@ export interface AuthProvider {
   signInWithEmail(email: string, password: string): Promise<AuthSession>
   signUpWithEmail(email: string, password: string): Promise<AuthSession>
   signOut(): Promise<void>
+  /** When present, Google Sign-In is available (e.g. Firebase). */
+  signInWithGoogle?(): Promise<AuthSession>
 }
 
 export interface SaveProvider {

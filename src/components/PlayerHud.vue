@@ -18,23 +18,26 @@ const totalAttackBonus = computed(() => {
 </script>
 
 <template>
-  <section class="rounded-lg border border-slate-700 bg-slate-900/80 p-4" aria-label="Player status">
-    <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-300">Player</h2>
-    <div class="mt-2 grid grid-cols-1 gap-2 text-sm text-slate-100 sm:grid-cols-2">
-      <p>HP: {{ playerStore.vitals.hpCurrent }} / {{ playerStore.vitals.hpMax }}</p>
-      <p>Gold: {{ playerStore.inventory.currency }}</p>
-      <p class="min-w-0 truncate" :title="equippedWeapon?.name ?? 'Unarmed'">Weapon: {{ equippedWeapon?.name ?? 'Unarmed' }}</p>
-      <p>Atk Bonus: +{{ totalAttackBonus }}</p>
-    </div>
-    <div class="mt-2 flex gap-3 text-sm text-slate-300">
-      <span>STR {{ playerStore.attributes.strength }}</span>
-      <span>DEX {{ playerStore.attributes.dexterity }}</span>
-      <span>INT {{ playerStore.attributes.intelligence }}</span>
-    </div>
-    <div class="mt-2 flex gap-3 text-sm text-slate-300">
-      <span>Lv {{ playerStore.progression.level }}</span>
-      <span>XP {{ playerStore.progression.xp }} / {{ playerStore.progression.xpToNextLevel }}</span>
-      <span v-if="playerStore.progression.unspentAttributePoints > 0" class="rounded bg-amber-800/60 px-1.5 py-0.5 text-xs text-amber-200">
+  <section
+    class="rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 sm:px-4 sm:py-3"
+    aria-label="Player status"
+  >
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm">
+      <span class="font-medium text-slate-400">Player</span>
+      <span class="text-slate-100">{{ playerStore.vitals.hpCurrent }}/{{ playerStore.vitals.hpMax }} HP</span>
+      <span class="text-slate-300">{{ playerStore.inventory.currency }}g</span>
+      <span class="min-w-0 truncate text-slate-300" :title="equippedWeapon?.name ?? 'Unarmed'">
+        {{ equippedWeapon?.name ?? 'Unarmed' }}
+      </span>
+      <span class="text-slate-400">+{{ totalAttackBonus }} atk</span>
+      <span class="text-slate-400">
+        STR {{ playerStore.attributes.strength }} DEX {{ playerStore.attributes.dexterity }} INT {{ playerStore.attributes.intelligence }}
+      </span>
+      <span class="text-slate-400">Lv{{ playerStore.progression.level }} XP {{ playerStore.progression.xp }}/{{ playerStore.progression.xpToNextLevel }}</span>
+      <span
+        v-if="playerStore.progression.unspentAttributePoints > 0"
+        class="rounded bg-amber-800/60 px-1.5 py-0.5 text-amber-200"
+      >
         {{ playerStore.progression.unspentAttributePoints }} pts
       </span>
     </div>

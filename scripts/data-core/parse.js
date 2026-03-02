@@ -181,7 +181,7 @@ export function parseMechanic(value, logPrefix = '[parse]') {
     return { type: 'combat_init', encounterId }
   }
   if (mechanicType === 'skill_check') {
-    const [dice, dcValue, successNodeId, failureNodeId, rawPart5, rawPart6] = parts
+    const [dice, dcValue, successNodeId, failureNodeId, rawPart5, rawPart6, rawPart7] = parts
     if (!dice || !dcValue || !successNodeId || !failureNodeId) {
       if (typeof console !== 'undefined' && console.warn) {
         console.warn(`${logPrefix} parseMechanic: skill_check missing dice/dc/successNodeId/failureNodeId. Value:`, JSON.stringify(value))
@@ -201,10 +201,26 @@ export function parseMechanic(value, logPrefix = '[parse]') {
     //  - skill_check:dice:dc:success:failure::attribute
     //  - skill_check:dice:dc:success:failure:attribute         (legacy shorthand)
     //  - skill_check:dice:dc:success:failure:encounter:attribute
-    if (rawPart6) {
+    //  - skill_check:dice:dc:success:failure:encounter:attribute:skillId (DnD skill id)
+    //  - skill_check:dice:dc:success:failure:attribute:skillId (new serializer format)
+    if (rawPart7) {
+      // Full explicit format: encounter + attribute + skill id
       if (rawPart5) mechanic.onFailureEncounterId = rawPart5
-      mechanic.attribute = rawPart6
+      if (rawPart6) mechanic.attribute = rawPart6
+      mechanic.skillId = rawPart7
+    } else if (rawPart6) {
+      // Ambiguous 6-part forms:
+      //  A) encounter + attribute
+      //  B) attribute + skillId
+      if (VALID_ATTRIBUTES.has(rawPart5)) {
+        mechanic.attribute = rawPart5
+        mechanic.skillId = rawPart6
+      } else {
+        if (rawPart5) mechanic.onFailureEncounterId = rawPart5
+        mechanic.attribute = rawPart6
+      }
     } else if (rawPart5) {
+      // Backward-compat shorthand: 5th slot is either attribute or encounter
       if (VALID_ATTRIBUTES.has(rawPart5)) {
         mechanic.attribute = rawPart5
       } else {
@@ -263,6 +279,7 @@ export function parseItems(rows, logPrefix = '[parse]') {
       continue
     }
     const item = { id, name: row.name ?? id, type: row.type }
+    if (row.description != null && String(row.description).trim()) item.description = String(row.description).trim()
     if (row.damage) item.damage = row.damage
     if (row.attackBonus !== undefined && row.attackBonus !== '') item.attackBonus = asNumber(row.attackBonus, 0)
     if (row.acBonus !== undefined && row.acBonus !== '') item.acBonus = asNumber(row.acBonus, 0)

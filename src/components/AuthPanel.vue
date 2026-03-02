@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { getProviders } from '../services/providers/providerFactory'
 import { useAuthStore } from '../stores/authStore'
+import { usePlayGamesStore } from '../stores/playGamesStore'
+import { isAndroid } from '../utils/platform'
 
 const authStore = useAuthStore()
+const playGamesStore = usePlayGamesStore()
 const email = ref('')
 const password = ref('')
 const isSignUp = ref(false)
+
+const googleSignInAvailable = computed(() => typeof getProviders().authProvider.signInWithGoogle === 'function')
+const showPlayGamesSignIn = computed(() => isAndroid())
+const isPlayGamesSigningIn = ref(false)
 
 async function signIn() {
   if (!email.value.trim() || !password.value) return
@@ -22,6 +30,17 @@ async function signUp() {
   if (!authStore.error) {
     email.value = ''
     password.value = ''
+  }
+}
+
+async function handlePlayGamesSignIn() {
+  if (!showPlayGamesSignIn.value) return
+  isPlayGamesSigningIn.value = true
+  playGamesStore.clearError()
+  try {
+    await playGamesStore.signInWithPlayGames()
+  } finally {
+    isPlayGamesSigningIn.value = false
   }
 }
 
@@ -42,7 +61,36 @@ function submit() {
       Playing anonymously. Sign in to enable cloud sync.
     </p>
 
+    <div v-if="showPlayGamesSignIn" class="mt-3 space-y-2">
+      <p v-if="playGamesStore.isSignedIn" class="text-sm text-slate-200">
+        Play Games: signed in as <span class="font-semibold">{{ playGamesStore.player?.displayName ?? 'Player' }}</span>
+      </p>
+      <div v-else class="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          class="rounded border border-slate-500 bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
+          :disabled="isPlayGamesSigningIn"
+          aria-label="Sign in with Google Play Games"
+          @click="handlePlayGamesSignIn"
+        >
+          {{ isPlayGamesSigningIn ? 'Signing in…' : 'Sign in with Play Games' }}
+        </button>
+      </div>
+      <p v-if="playGamesStore.error" class="text-xs text-red-300">{{ playGamesStore.error }}</p>
+    </div>
+
     <div v-if="!authStore.isAuthenticated" class="mt-3 space-y-2">
+      <div v-if="googleSignInAvailable" class="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          class="rounded border border-slate-500 bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
+          :disabled="authStore.status === 'authenticating'"
+          @click="authStore.signInWithGoogle"
+        >
+          Sign in with Google
+        </button>
+      </div>
+      <p v-if="googleSignInAvailable" class="text-xs text-slate-500">Or use email and password below.</p>
       <div class="flex flex-wrap items-center gap-2">
         <input
           v-model="email"

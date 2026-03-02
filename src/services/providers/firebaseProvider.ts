@@ -12,10 +12,15 @@ import { auth, firestore, isFirebaseConfigured } from '../firebase/firebaseClien
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithPopup,
+  signInWithCredential,
+  GoogleAuthProvider,
   signOut as fbSignOut,
   onAuthStateChanged,
   type User,
 } from 'firebase/auth'
+import { isNativePlatform } from '../../utils/platform'
+import { signInWithGoogleNative } from '../auth/nativeGoogleAuth'
 import {
   collection,
   doc,
@@ -149,6 +154,47 @@ export class FirebaseAuthProvider implements AuthProvider {
       }
     }
     localStorage.removeItem(AUTH_SESSION_KEY)
+  }
+
+  async signInWithGoogle(): Promise<AuthSession> {
+    const { auth: a } = requireFirebase()
+    if (isNativePlatform()) {
+      const { idToken } = await signInWithGoogleNative()
+      const credential = GoogleAuthProvider.credential(idToken)
+      const result = await signInWithCredential(a, credential)
+      const user = result.user
+      localStorage.setItem(
+        AUTH_SESSION_KEY,
+        JSON.stringify({ userId: user.uid, email: user.email ?? undefined }),
+      )
+      return { status: 'authenticated', user: userToSessionUser(user) }
+    }
+    return this.signInWithGooglePopup(a)
+  }
+
+  private async signInWithGooglePopup(a: NonNullable<typeof auth>): Promise<AuthSession> {
+    const provider = new GoogleAuthProvider()
+    try {
+      const result = await signInWithPopup(a, provider)
+      const user = result.user
+      localStorage.setItem(
+        AUTH_SESSION_KEY,
+        JSON.stringify({ userId: user.uid, email: user.email ?? undefined }),
+      )
+      return { status: 'authenticated', user: userToSessionUser(user) }
+    } catch (err: unknown) {
+      const code = (err as { code?: string })?.code
+      if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+        return { status: 'anonymous', user: { id: 'anonymous', isAnonymous: true } }
+      }
+      if (code === 'auth/popup-blocked') {
+        throw new Error('Sign-in popup was blocked. Allow popups for this site and try again.')
+      }
+      if (code === 'auth/operation-not-allowed') {
+        throw new Error('Google sign-in is not enabled in Firebase Console.')
+      }
+      throw err
+    }
   }
 }
 

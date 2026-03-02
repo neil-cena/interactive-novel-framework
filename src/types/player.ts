@@ -34,6 +34,9 @@ export interface PlayerProgression {
   unspentAttributePoints: number
 }
 
+/** DnD-style: skill id -> whether the character is proficient. */
+export type SkillsProficiency = Record<string, boolean>
+
 export interface PlayerState {
   activeSaveSlot: string | null
   metadata: PlayerMetadata
@@ -42,5 +45,7 @@ export interface PlayerState {
   equipment: PlayerEquipment
   attributes: PlayerAttributes
   progression: PlayerProgression
+  /** Skill proficiencies for DnD-style skill checks. */
+  skillsProficiency: SkillsProficiency
   flags: Record<string, boolean>
 }

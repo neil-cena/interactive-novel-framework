@@ -19,7 +19,7 @@ vi.mock('../../utils/dice', () => ({
 const mockEncounter: CombatEncounter = {
   id: 'test_enc',
   type: 'combat',
-  enemies: [{ enemyId: 'silk_thug', count: 1 }],
+  enemies: [{ enemyId: 'attic_spider', count: 1 }],
   resolution: {
     onVictory: { nextNodeId: 'n_win' },
     onDefeat: { nextNodeId: 'n_lose' },
@@ -29,7 +29,7 @@ const mockEncounter: CombatEncounter = {
 const mockEncounterTwo: CombatEncounter = {
   ...mockEncounter,
   id: 'test_two',
-  enemies: [{ enemyId: 'silk_thug', count: 2 }],
+  enemies: [{ enemyId: 'attic_spider', count: 2 }],
 }
 
 describe('useCombat', () => {
@@ -51,8 +51,8 @@ describe('useCombat', () => {
     const { initCombat, enemies, roundCount, log } = useCombat()
     initCombat(mockEncounter)
     expect(enemies.value).toHaveLength(1)
-    expect(enemies.value[0].name).toBe('Silk Mask Thug')
-    expect(enemies.value[0].hpCurrent).toBe(15)
+    expect(enemies.value[0].name).toBe('Attic Spider')
+    expect(enemies.value[0].hpCurrent).toBe(14)
     expect(enemies.value[0].ac).toBe(12)
     expect(roundCount.value).toBe(1)
     expect(log.value).toContain('Combat begins.')
@@ -62,8 +62,8 @@ describe('useCombat', () => {
     const { initCombat, enemies } = useCombat()
     initCombat(mockEncounterTwo)
     expect(enemies.value).toHaveLength(2)
-    expect(enemies.value[0].name).toBe('Silk Mask Thug 1')
-    expect(enemies.value[1].name).toBe('Silk Mask Thug 2')
+    expect(enemies.value[0].name).toBe('Attic Spider 1')
+    expect(enemies.value[1].name).toBe('Attic Spider 2')
   })
 
   it('initCombat skips missing enemy template and warns', () => {

@@ -39,6 +39,7 @@ function setType(t: string) {
     m.attribute = m.attribute ?? 'dexterity'
     delete m.nextNodeId
     delete m.encounterId
+    if (m.skillId === undefined) m.skillId = ''
   }
   emit('update', m)
 }
@@ -48,6 +49,17 @@ function patch(partial: Record<string, unknown>) {
 }
 
 const ATTRIBUTES = ['strength', 'dexterity', 'intelligence'] as const
+const SKILL_IDS = [
+  '',
+  'acrobatics',
+  'athletics',
+  'insight',
+  'perception',
+  'stealth',
+  'investigation',
+  'persuasion',
+  'sleight_of_hand',
+] as const
 </script>
 
 <template>
@@ -141,6 +153,16 @@ const ATTRIBUTES = ['strength', 'dexterity', 'intelligence'] as const
         >
           <option value="">— None —</option>
           <option v-for="id in encounterIds" :key="id" :value="id">{{ id }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Skill (DnD, optional)</label>
+        <select
+          :value="(mechanic?.skillId as string) ?? ''"
+          @change="(e) => patch({ skillId: (e.target as HTMLSelectElement).value || undefined })"
+        >
+          <option value="">— None —</option>
+          <option v-for="id in SKILL_IDS.filter(Boolean)" :key="id" :value="id">{{ id }}</option>
         </select>
       </div>
     </template>

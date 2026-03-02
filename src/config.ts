@@ -23,6 +23,22 @@ export const GAME_CONFIG = {
     attributePointsPerLevel: 1,
   },
 
+  /** DnD-style skills (ability + optional proficiency) */
+  skills: {
+    proficiencyBonus: 2,
+    list: [
+      { id: 'acrobatics', name: 'Acrobatics', ability: 'dexterity' as const },
+      { id: 'athletics', name: 'Athletics', ability: 'strength' as const },
+      { id: 'animal_handling', name: 'Animal Handling', ability: 'intelligence' as const },
+      { id: 'insight', name: 'Insight', ability: 'intelligence' as const },
+      { id: 'perception', name: 'Perception', ability: 'intelligence' as const },
+      { id: 'stealth', name: 'Stealth', ability: 'dexterity' as const },
+      { id: 'investigation', name: 'Investigation', ability: 'intelligence' as const },
+      { id: 'persuasion', name: 'Persuasion', ability: 'intelligence' as const },
+      { id: 'sleight_of_hand', name: 'Sleight of Hand', ability: 'dexterity' as const },
+    ] as readonly { id: string; name: string; ability: 'strength' | 'dexterity' | 'intelligence' }[],
+  },
+
   /** Combat system */
   combat: {
     baseAc: 10,

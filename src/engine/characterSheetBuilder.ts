@@ -81,5 +81,6 @@ export function buildCustomSheetPayload(
     startingItems: { ...GAME_CONFIG.player.startingItems },
     startingFlags: { ...GAME_CONFIG.player.startingFlags },
     startingAttributes: { ...attributes },
+    startingProficiencies: {},
   }
 }

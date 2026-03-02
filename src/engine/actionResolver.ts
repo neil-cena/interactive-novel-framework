@@ -1,5 +1,6 @@
 import type { Store } from 'pinia'
 import type { ActionPayload } from '../types/story'
+import { useNotificationStore } from '../stores/notificationStore'
 import { rollDice } from '../utils/dice'
 
 export interface ProcessedAction {
@@ -48,6 +49,13 @@ export function resolveAction(payload: ActionPayload, store: PlayerStoreContract
     case 'adjust_currency':
       if (typeof payload.amount === 'number') {
         store.adjustCurrency(payload.amount)
+        try {
+          const notificationStore = useNotificationStore()
+          const msg = payload.amount >= 0 ? `+${payload.amount} gold` : `${payload.amount} gold`
+          notificationStore.add('currency', msg)
+        } catch {
+          // Store may be unavailable (e.g. outside app context)
+        }
         return { type: 'adjust_currency', value: payload.amount }
       }
       console.warn('[actionResolver] adjust_currency: invalid amount', payload)
@@ -56,6 +64,20 @@ export function resolveAction(payload: ActionPayload, store: PlayerStoreContract
       if (typeof payload.amount === 'string') {
         const result = rollDice(payload.amount)
         store.adjustHp(result.total)
+        try {
+          const notificationStore = useNotificationStore()
+          const message =
+            result.rolls.length > 0
+              ? `Heal (${payload.amount}): +${result.total} HP`
+              : `Heal: +${result.total} HP`
+          const detail =
+            result.rolls.length > 0
+              ? `Rolls: [${result.rolls.join(', ')}]${result.modifier >= 0 ? ' +' : ' '}${result.modifier} = ${result.total}`
+              : `Fixed: ${result.total} HP`
+          notificationStore.add('dice', message, detail)
+        } catch {
+          // Store may be unavailable (e.g. outside app context)
+        }
         return { type: 'heal', value: result.total }
       }
       console.warn('[actionResolver] heal: invalid amount (expected dice string)', payload)

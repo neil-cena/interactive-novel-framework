@@ -23,7 +23,18 @@ const { turn, enemies, roundCount, log, turnOrder, isResolved, initCombat, playe
 const isResolving = ref(false)
 const encounterNotFound = ref(false)
 const showAllLogs = ref(false)
+const shakeActive = ref(false)
 const COMBAT_LOG_VISIBLE_COUNT = 6
+
+function triggerCombatShake(): void {
+  shakeActive.value = false
+  void Promise.resolve().then(() => {
+    shakeActive.value = true
+    window.setTimeout(() => {
+      shakeActive.value = false
+    }, 450)
+  })
+}
 
 const playerAc = computed(() => {
   const weaponId = playerStore.equipment.mainHand
@@ -83,7 +94,10 @@ function initializeCombat(): void {
     window.setTimeout(() => {
       enemyTurn(
         playerAc.value,
-        (damage) => playerStore.adjustHp(-damage),
+        (damage) => {
+          playerStore.adjustHp(-damage)
+          if (damage > 0) triggerCombatShake()
+        },
         (hit) => (hit ? playSfx('hit') : playSfx('miss')),
       )
       resolveIfFinished()
@@ -120,7 +134,10 @@ function handleUseItem(itemId: string): void {
   window.setTimeout(() => {
     enemyTurn(
       playerAc.value,
-      (damage) => playerStore.adjustHp(-damage),
+      (damage) => {
+        playerStore.adjustHp(-damage)
+        if (damage > 0) triggerCombatShake()
+      },
       (hit) => (hit ? playSfx('hit') : playSfx('miss')),
     )
     resolveIfFinished()
@@ -139,7 +156,10 @@ function handleAoeAttack(): void {
   window.setTimeout(() => {
     enemyTurn(
       playerAc.value,
-      (damage) => playerStore.adjustHp(-damage),
+      (damage) => {
+        playerStore.adjustHp(-damage)
+        if (damage > 0) triggerCombatShake()
+      },
       (hit) => (hit ? playSfx('hit') : playSfx('miss')),
     )
     resolveIfFinished()
@@ -165,7 +185,10 @@ function handlePlayerAttack(index: number): void {
   window.setTimeout(() => {
     enemyTurn(
       playerAc.value,
-      (damage) => playerStore.adjustHp(-damage),
+      (damage) => {
+        playerStore.adjustHp(-damage)
+        if (damage > 0) triggerCombatShake()
+      },
       (hit) => (hit ? playSfx('hit') : playSfx('miss')),
     )
     resolveIfFinished()
@@ -182,6 +205,7 @@ watch(
 <template>
   <section
     class="rounded-lg border border-red-700 bg-slate-900 p-4 sm:p-6"
+    :class="{ 'combat-shake': shakeActive }"
     role="region"
     aria-labelledby="combat-heading"
   >

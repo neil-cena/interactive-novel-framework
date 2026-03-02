@@ -11,7 +11,7 @@ const props = withDefaults(
     restartKey?: string
   }>(),
   {
-    charsPerSecond: 30,
+    charsPerSecond: 45,
     skipOnClick: true,
     autoStart: true,
     restartKey: '',

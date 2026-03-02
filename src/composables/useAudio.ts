@@ -11,6 +11,13 @@ export type SfxKey =
   | 'victory'
   | 'defeat'
   | 'ui_click'
+  | 'ui_confirm'
+  | 'error'
+  | 'loot'
+  | 'level_up'
+  | 'currency'
+  | 'skill_success'
+  | 'skill_fail'
 
 /** Music track keys for playMusic() */
 export type MusicKey = 'menu' | 'narrative' | 'combat'
@@ -22,6 +29,13 @@ const SFX_PATHS: Record<SfxKey, string> = {
   victory: '/audio/sfx/victory.mp3',
   defeat: '/audio/sfx/defeat.mp3',
   ui_click: '/audio/sfx/ui_click.mp3',
+  ui_confirm: '/audio/sfx/ui_confirm.mp3',
+  error: '/audio/sfx/error.mp3',
+  loot: '/audio/sfx/loot.mp3',
+  level_up: '/audio/sfx/level_up.mp3',
+  currency: '/audio/sfx/currency.mp3',
+  skill_success: '/audio/sfx/skill_success.mp3',
+  skill_fail: '/audio/sfx/skill_fail.mp3',
 }
 
 const MUSIC_PATHS: Record<MusicKey, string> = {
