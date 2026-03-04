@@ -9,11 +9,12 @@ export default defineConfig({
     vue(),
     tailwindcss(),
     VitePWA({
-      registerType: 'prompt',
+      // autoUpdate: new SW activates without relying on the in-app banner (mobile often misses "Reload").
+      registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'audio/**/*', 'icons/*.png'],
       manifest: {
-        name: 'The Cellar Debt',
-        short_name: 'Cellar Debt',
+        name: 'Equivalent Ashes',
+        short_name: 'Equi Ash',
         description: 'Interactive novel with D&D-style combat',
         theme_color: '#0f172a',
         background_color: '#020617',

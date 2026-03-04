@@ -6,8 +6,8 @@ import type { CapacitorConfig } from '@capacitor/cli'
  * Google Cloud Console, same as used for Firebase).
  */
 const config: CapacitorConfig = {
-  appId: 'com.cellardebt.game',
-  appName: 'The Cellar Debt',
+  appId: 'com.piratealchemist.game',
+  appName: 'Pirate Alchemist',
   webDir: 'dist',
   bundledWebRuntime: false,
 }
