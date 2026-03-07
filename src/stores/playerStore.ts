@@ -2,7 +2,13 @@ import { defineStore } from 'pinia'
 import { GAME_CONFIG } from '../config'
 import { getPresetById } from '../data/characterSheets'
 import type { CharacterSheetPayload } from '../types/characterSheet'
-import type { PlayerAttributes, PlayerState } from '../types/player'
+import type {
+  ChoiceHistoryEntry,
+  PlayerAttributes,
+  PlayerState,
+  WorldState,
+  ReputationState,
+} from '../types/player'
 import type { SaveSlotId } from '../utils/storage'
 
 const { player: playerConfig, leveling: levelConfig } = GAME_CONFIG
@@ -58,6 +64,20 @@ export const defaultPlayerState = (): PlayerState => ({
   flags: {
     ...playerConfig.startingFlags,
   },
+  worldState: {
+    vaelEnergy: 100,
+    communityCost: 20,
+    stateChaos: 10,
+    districtStability: 65,
+  },
+  reputation: {
+    scholarRep: 60,
+    ceaRep: 30,
+    freehandsRep: 20,
+    workerRep: 20,
+  },
+  visitedNodes: [],
+  choiceHistory: [],
 })
 
 /** Build initial state from a selected character sheet (preset or custom). */
@@ -91,6 +111,8 @@ export function playerStateFromSheet(payload: CharacterSheetPayload): PlayerStat
       progression: buildProgressionForLevel(startingLevel),
       skillsProficiency: { ...(preset.startingProficiencies ?? {}) },
       flags: { ...preset.startingFlags },
+      worldState: { ...base.worldState },
+      reputation: { ...base.reputation },
     }
   }
   return {
@@ -115,7 +137,33 @@ export function playerStateFromSheet(payload: CharacterSheetPayload): PlayerStat
     attributes: { ...payload.startingAttributes },
     skillsProficiency: { ...(payload.startingProficiencies ?? {}) },
     flags: { ...payload.startingFlags },
+    worldState: { ...base.worldState },
+    reputation: { ...base.reputation },
   }
+}
+
+/**
+ * Fully replaces every property of the Pinia state to avoid the deep-merge
+ * behaviour of $patch(object), which accumulates keys in nested objects
+ * (e.g. inventory.items) instead of replacing them.
+ */
+function applyFullReset(state: PlayerState, next: PlayerState): void {
+  state.activeSaveSlot = next.activeSaveSlot
+  state.metadata = { ...next.metadata }
+  state.vitals = { ...next.vitals }
+  state.inventory = {
+    currency: next.inventory.currency,
+    items: { ...next.inventory.items },
+  }
+  state.equipment = { ...next.equipment }
+  state.attributes = { ...next.attributes }
+  state.progression = { ...next.progression }
+  state.skillsProficiency = { ...next.skillsProficiency }
+  state.flags = { ...next.flags }
+  state.worldState = { ...next.worldState }
+  state.reputation = { ...next.reputation }
+  state.visitedNodes = Array.isArray(next.visitedNodes) ? [...next.visitedNodes] : []
+  state.choiceHistory = Array.isArray(next.choiceHistory) ? [...next.choiceHistory] : []
 }
 
 export const usePlayerStore = defineStore('player', {
@@ -128,29 +176,40 @@ export const usePlayerStore = defineStore('player', {
         ...savedState,
         metadata: { ...defaults.metadata, ...savedState.metadata },
         vitals: { ...defaults.vitals, ...savedState.vitals },
-        inventory: { ...defaults.inventory, ...savedState.inventory },
+        inventory: {
+          currency: savedState.inventory?.currency ?? defaults.inventory.currency,
+          items: { ...(savedState.inventory?.items ?? defaults.inventory.items) },
+        },
         equipment: { ...defaults.equipment, ...savedState.equipment },
         attributes: { ...defaults.attributes, ...savedState.attributes },
         progression: { ...defaults.progression, ...savedState.progression },
-        skillsProficiency: { ...defaults.skillsProficiency, ...savedState.skillsProficiency },
-        flags: { ...defaults.flags, ...savedState.flags },
+        skillsProficiency: { ...(savedState.skillsProficiency ?? defaults.skillsProficiency) },
+        flags: { ...(savedState.flags ?? defaults.flags) },
+        worldState: { ...defaults.worldState, ...savedState.worldState },
+        reputation: { ...defaults.reputation, ...savedState.reputation },
+        visitedNodes: Array.isArray(savedState.visitedNodes) ? [...savedState.visitedNodes] : [],
+        choiceHistory: Array.isArray(savedState.choiceHistory) ? [...savedState.choiceHistory] : [],
       }
-      this.$patch(merged)
+      this.$patch((state) => applyFullReset(state as PlayerState, merged))
       this.activeSaveSlot = slotId
     },
     startNewGame(slotId: SaveSlotId, payload?: CharacterSheetPayload) {
-      if (payload) {
-        this.$patch(playerStateFromSheet(payload))
-      } else {
-        this.$patch(defaultPlayerState())
-      }
+      const newState = payload ? playerStateFromSheet(payload) : defaultPlayerState()
+      this.$patch((state) => applyFullReset(state as PlayerState, newState))
       this.metadata.currentNodeId = playerConfig.startingNodeId
       this.activeSaveSlot = slotId
     },
-    hydrate(state: PlayerState) {
-      this.$patch(state)
+    hydrate(newState: PlayerState) {
+      this.$patch((state) => applyFullReset(state as PlayerState, newState))
     },
     navigateTo(nodeId: string) {
+      if (nodeId === 'meet_elara' && this.visitedNodes.includes('meet_elara')) {
+        if (this.flags.elara_met !== true) {
+          this.setFlag('elara_met', true)
+        }
+        this.metadata.currentNodeId = 'elara_basement_return'
+        return
+      }
       this.metadata.currentNodeId = nodeId
     },
     adjustHp(amount: number) {
@@ -237,8 +296,32 @@ export const usePlayerStore = defineStore('player', {
     equipItem(slot: 'mainHand' | 'armor', itemId: string | null) {
       this.equipment[slot] = itemId
     },
+    adjustWorldState(stat: keyof WorldState, amount: number) {
+      if (!Number.isFinite(amount)) {
+        console.warn('[playerStore] adjustWorldState: invalid amount', amount)
+        return
+      }
+      const current = this.worldState[stat]
+      this.worldState[stat] = Math.max(0, Math.min(100, current + amount))
+    },
+    adjustReputation(stat: keyof ReputationState, amount: number) {
+      if (!Number.isFinite(amount)) {
+        console.warn('[playerStore] adjustReputation: invalid amount', amount)
+        return
+      }
+      const current = this.reputation[stat]
+      this.reputation[stat] = Math.max(0, Math.min(100, current + amount))
+    },
+    markNodeVisited(nodeId: string) {
+      if (!this.visitedNodes.includes(nodeId)) {
+        this.visitedNodes.push(nodeId)
+      }
+    },
+    recordNarrativeChoice(entry: ChoiceHistoryEntry) {
+      this.choiceHistory.push(entry)
+    },
     resetToDefaults() {
-      this.$patch(defaultPlayerState())
+      this.$patch((state) => applyFullReset(state as PlayerState, defaultPlayerState()))
     },
   },
 })

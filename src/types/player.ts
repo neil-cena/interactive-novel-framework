@@ -27,6 +27,20 @@ export interface PlayerAttributes {
   intelligence: number
 }
 
+export interface WorldState {
+  vaelEnergy: number
+  communityCost: number
+  stateChaos: number
+  districtStability: number
+}
+
+export interface ReputationState {
+  scholarRep: number
+  ceaRep: number
+  freehandsRep: number
+  workerRep: number
+}
+
 export interface PlayerProgression {
   xp: number
   level: number
@@ -36,6 +50,14 @@ export interface PlayerProgression {
 
 /** DnD-style: skill id -> whether the character is proficient. */
 export type SkillsProficiency = Record<string, boolean>
+
+/** One narrative choice picked by the player (QA / playtest trail). */
+export interface ChoiceHistoryEntry {
+  nodeId: string
+  choiceId: string
+  label: string
+  mechanicType: string
+}
 
 export interface PlayerState {
   activeSaveSlot: string | null
@@ -48,4 +70,10 @@ export interface PlayerState {
   /** Skill proficiencies for DnD-style skill checks. */
   skillsProficiency: SkillsProficiency
   flags: Record<string, boolean>
+  worldState: WorldState
+  reputation: ReputationState
+  /** Node IDs whose onEnter actions have already been executed this run. Persisted so save/load doesn't re-fire them. */
+  visitedNodes: string[]
+  /** Sequence of narrative choices taken this run (DEV-recorded for playtest; persisted with saves in dev). */
+  choiceHistory: ChoiceHistoryEntry[]
 }
