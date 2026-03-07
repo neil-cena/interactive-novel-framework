@@ -1,7 +1,6 @@
 import type { Store } from 'pinia'
 import type { ActionPayload } from '../types/story'
-import { useNotificationStore } from '../stores/notificationStore'
-import { rollDice } from '../utils/dice'
+import { getPluginRegistry } from '../plugins/registry'
 
 export interface ProcessedAction {
   type: string
@@ -17,72 +16,21 @@ type PlayerStoreContract = Store & {
 }
 
 export function resolveAction(payload: ActionPayload, store: PlayerStoreContract): ProcessedAction {
-  switch (payload.action) {
-    case 'set_flag':
-      if (typeof payload.key === 'string' && typeof payload.value === 'boolean') {
-        store.setFlag(payload.key, payload.value)
-      } else {
-        console.warn('[actionResolver] set_flag: invalid payload (key or value)', payload)
-      }
-      return { type: 'set_flag' }
-    case 'adjust_hp':
-      if (typeof payload.amount === 'number') {
-        store.adjustHp(payload.amount)
-        return { type: 'adjust_hp', value: payload.amount }
-      }
-      console.warn('[actionResolver] adjust_hp: invalid amount', payload)
-      return { type: 'adjust_hp' }
-    case 'add_item':
-      if (typeof payload.itemId === 'string') {
-        store.addItem(payload.itemId, payload.qty ?? 1)
-      } else {
-        console.warn('[actionResolver] add_item: missing itemId', payload)
-      }
-      return { type: 'add_item' }
-    case 'remove_item':
-      if (typeof payload.itemId === 'string') {
-        store.removeItem(payload.itemId, payload.qty ?? 1)
-      } else {
-        console.warn('[actionResolver] remove_item: missing itemId', payload)
-      }
-      return { type: 'remove_item' }
-    case 'adjust_currency':
-      if (typeof payload.amount === 'number') {
-        store.adjustCurrency(payload.amount)
-        try {
-          const notificationStore = useNotificationStore()
-          const msg = payload.amount >= 0 ? `+${payload.amount} gold` : `${payload.amount} gold`
-          notificationStore.add('currency', msg)
-        } catch {
-          // Store may be unavailable (e.g. outside app context)
-        }
-        return { type: 'adjust_currency', value: payload.amount }
-      }
-      console.warn('[actionResolver] adjust_currency: invalid amount', payload)
-      return { type: 'adjust_currency' }
-    case 'heal':
-      if (typeof payload.amount === 'string') {
-        const result = rollDice(payload.amount)
-        store.adjustHp(result.total)
-        try {
-          const notificationStore = useNotificationStore()
-          const message =
-            result.rolls.length > 0
-              ? `Heal (${payload.amount}): +${result.total} HP`
-              : `Heal: +${result.total} HP`
-          const detail =
-            result.rolls.length > 0
-              ? `Rolls: [${result.rolls.join(', ')}]${result.modifier >= 0 ? ' +' : ' '}${result.modifier} = ${result.total}`
-              : `Fixed: ${result.total} HP`
-          notificationStore.add('dice', message, detail)
-        } catch {
-          // Store may be unavailable (e.g. outside app context)
-        }
-        return { type: 'heal', value: result.total }
-      }
-      console.warn('[actionResolver] heal: invalid amount (expected dice string)', payload)
-      return { type: 'heal' }
-    default:
-      return { type: payload.action }
+  if (payload.action === 'set_flag') {
+    if (typeof payload.key === 'string' && typeof payload.value === 'boolean') {
+      store.setFlag(payload.key, payload.value)
+    } else {
+      console.warn('[actionResolver] set_flag: invalid payload (key or value)', payload)
+    }
+    return { type: 'set_flag' }
   }
+
+  const registry = getPluginRegistry()
+  const handler = registry.actions[payload.action]
+  if (handler) {
+    return handler(payload as Record<string, unknown>, { store: store as never })
+  }
+
+  console.warn(`[actionResolver] Unknown action type: "${payload.action}"`, payload)
+  return { type: payload.action }
 }

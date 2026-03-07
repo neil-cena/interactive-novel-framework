@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { resolveAction } from '../actionResolver'
+import { createPluginRegistry } from '../../plugins/registry'
+import { vitalsPlugin } from '../../plugins/vitals'
+import { inventoryPlugin } from '../../plugins/inventory'
 
 const mockNotificationAdd = vi.fn()
 vi.mock('../../stores/notificationStore', () => ({
@@ -16,6 +19,9 @@ describe('resolveAction', () => {
   })
 
   beforeEach(() => {
+    const registry = createPluginRegistry()
+    registry.register(vitalsPlugin)
+    registry.register(inventoryPlugin)
     vi.spyOn(console, 'warn').mockImplementation(() => {})
     mockNotificationAdd.mockClear()
   })
