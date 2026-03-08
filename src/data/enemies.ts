@@ -2,15 +2,6 @@
 import type { EnemyTemplate } from '../types/combat'
 
 export const ENEMY_DICTIONARY: Record<string, EnemyTemplate> = {
-  "animated_knife": {
-    "id": "animated_knife",
-    "name": "Animated Kitchen Knife",
-    "hp": 10,
-    "ac": 13,
-    "attackBonus": 4,
-    "damage": "1d4+2",
-    "xpReward": 25
-  },
   "attic_spider": {
     "id": "attic_spider",
     "name": "Attic Spider",
@@ -19,68 +10,5 @@ export const ENEMY_DICTIONARY: Record<string, EnemyTemplate> = {
     "attackBonus": 4,
     "damage": "1d6+2",
     "xpReward": 35
-  },
-  "cultist_zombie": {
-    "id": "cultist_zombie",
-    "name": "Cultist Zombie",
-    "hp": 20,
-    "ac": 8,
-    "attackBonus": 4,
-    "damage": "1d6+1",
-    "xpReward": 35
-  },
-  "living_shadow": {
-    "id": "living_shadow",
-    "name": "Living Shadow",
-    "hp": 16,
-    "ac": 12,
-    "attackBonus": 4,
-    "damage": "1d6+2",
-    "xpReward": 55
-  },
-  "durst_ghast_gustav": {
-    "id": "durst_ghast_gustav",
-    "name": "Gustav Durst (Ghast)",
-    "hp": 42,
-    "ac": 13,
-    "attackBonus": 6,
-    "damage": "1d8+3",
-    "xpReward": 250
-  },
-  "durst_ghast_elisabeth": {
-    "id": "durst_ghast_elisabeth",
-    "name": "Elisabeth Durst (Ghast)",
-    "hp": 44,
-    "ac": 13,
-    "attackBonus": 6,
-    "damage": "1d8+3",
-    "xpReward": 260
-  },
-  "cultist_ghoul": {
-    "id": "cultist_ghoul",
-    "name": "Durst Cult Ghoul",
-    "hp": 24,
-    "ac": 12,
-    "attackBonus": 4,
-    "damage": "1d6+2",
-    "xpReward": 90
-  },
-  "animated_armor_escape": {
-    "id": "animated_armor_escape",
-    "name": "Animated Armor",
-    "hp": 28,
-    "ac": 18,
-    "attackBonus": 4,
-    "damage": "1d6+2",
-    "xpReward": 120
-  },
-  "animated_rug_escape": {
-    "id": "animated_rug_escape",
-    "name": "Animated Rug",
-    "hp": 30,
-    "ac": 12,
-    "attackBonus": 5,
-    "damage": "2d6",
-    "xpReward": 150
   }
 }
