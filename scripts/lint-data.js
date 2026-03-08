@@ -5,16 +5,8 @@
 
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { readCsv } from './data-core/io.js'
-import {
-  parseNodes,
-  parseItems,
-  parseEnemies,
-  parseEncounters,
-} from './data-core/parse.js'
-import { validateData } from './data-core/validate.js'
-import { analyzeGraph } from './data-core/graph.js'
-import { DIAGNOSTIC_SEVERITY } from './data-core/types.js'
+import { getReleaseGraphAnalyzeOptions } from './data-core/qa-bind-options.js'
+import { runCsvDataPreflight } from './data-core/qa-data-preflight.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -37,95 +29,23 @@ function parseArgs() {
   return options
 }
 
-/**
- * Collect duplicate-ID diagnostics from raw CSV rows (1-based row numbers).
- * @param {Array<Record<string, string>>} rows
- * @param {string} file
- * @param {string} idColumn
- * @returns {import('./data-core/types.js').Diagnostic[]}
- */
-function duplicateIdDiagnostics(rows, file, idColumn = 'id') {
-  const seen = new Map()
-  const diagnostics = []
-  rows.forEach((row, index) => {
-    const id = row[idColumn]?.trim()
-    if (!id) return
-    const rowNum = index + 2
-    if (seen.has(id)) {
-      diagnostics.push({
-        code: 'DATA001',
-        severity: DIAGNOSTIC_SEVERITY.error,
-        file,
-        row: rowNum,
-        message: `Duplicate ID "${id}" (also at row ${seen.get(id)})`,
-        context: { id, file },
-      })
-    } else {
-      seen.set(id, rowNum)
-    }
-  })
-  return diagnostics
-}
-
 function run() {
   const options = parseArgs()
 
-  let nodesRows
-  let itemsRows
-  let enemiesRows
-  let encountersRows
-
+  let pre
   try {
-    nodesRows = readCsv(csvDir, 'nodes.csv')
-    itemsRows = readCsv(csvDir, 'items.csv')
-    enemiesRows = readCsv(csvDir, 'enemies.csv')
-    encountersRows = readCsv(csvDir, 'encounters.csv')
+    pre = runCsvDataPreflight(csvDir, getReleaseGraphAnalyzeOptions())
   } catch (err) {
-    console.error('Fatal:', err.message)
+    console.error('Fatal:', err instanceof Error ? err.message : err)
     process.exit(2)
   }
 
-  const duplicateDiag = [
-    ...duplicateIdDiagnostics(nodesRows, 'nodes.csv'),
-    ...duplicateIdDiagnostics(itemsRows, 'items.csv'),
-    ...duplicateIdDiagnostics(enemiesRows, 'enemies.csv'),
-    ...duplicateIdDiagnostics(encountersRows, 'encounters.csv'),
-  ]
-
-  const nodes = parseNodes(nodesRows)
-  const items = parseItems(itemsRows)
-  const enemies = parseEnemies(enemiesRows)
-  const encounters = parseEncounters(encountersRows)
-
-  const { errors: validateErrors, warnings: validateWarnings } = validateData(
-    nodes,
-    items,
-    enemies,
-    encounters,
-  )
-  const { diagnostics: graphDiagnostics } = analyzeGraph(nodes, encounters)
-
-  function attachFile(d) {
-    const c = d.context || {}
-    if (c.nodeId != null) return { ...d, file: d.file || 'nodes.csv' }
-    if (c.itemId != null) return { ...d, file: d.file || 'items.csv' }
-    if (c.enemyId != null) return { ...d, file: d.file || 'enemies.csv' }
-    if (c.encounterId != null) return { ...d, file: d.file || 'encounters.csv' }
-    return d
-  }
-  const allErrors = [
-    ...duplicateDiag.filter((d) => d.severity === 'error'),
-    ...validateErrors.map(attachFile),
-  ]
-  const allWarnings = [
-    ...duplicateDiag.filter((d) => d.severity === 'warning'),
-    ...validateWarnings.map(attachFile),
-    ...graphDiagnostics.map(attachFile),
-  ]
+  const allErrors = [...pre.allErrors]
+  let allWarnings = [...pre.allWarnings]
 
   if (options.strict) {
     allErrors.push(...allWarnings)
-    allWarnings.length = 0
+    allWarnings = []
   }
 
   const errorCount = allErrors.length

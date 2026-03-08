@@ -70,7 +70,15 @@ export function parseAction(actionToken, logPrefix = '[parse]') {
       return { action, itemId, qty: asNumber(qtyValue, 1) }
     }
     case 'adjust_hp':
-    case 'adjust_currency': {
+    case 'adjust_currency':
+    case 'adjust_energy':
+    case 'adjust_community_cost':
+    case 'adjust_state_chaos':
+    case 'adjust_stability':
+    case 'adjust_scholar_rep':
+    case 'adjust_cea_rep':
+    case 'adjust_freehands_rep':
+    case 'adjust_worker_rep': {
       const [amountValue] = parts
       return { action, amount: asNumber(amountValue, 0) }
     }
@@ -131,6 +139,16 @@ export function parseVisibility(value, logPrefix = '[parse]') {
         }
         return { type: 'has_item', itemId }
       }
+      if (type === 'not_has_item') {
+        const [itemId] = parts
+        if (!itemId) {
+          if (typeof console !== 'undefined' && console.warn) {
+            console.warn(`${logPrefix} parseVisibility: not_has_item missing itemId. Token:`, JSON.stringify(token))
+          }
+          return null
+        }
+        return { type: 'not_has_item', itemId }
+      }
       if (type === 'stat_check') {
         const [stat, operator, rawValue] = parts
         if (!stat || !operator || rawValue === undefined || rawValue === '') {
@@ -140,6 +158,26 @@ export function parseVisibility(value, logPrefix = '[parse]') {
           return null
         }
         return { type: 'stat_check', stat, operator, value: asNumber(rawValue, 0) }
+      }
+      if (type === 'world_check') {
+        const [stat, operator, rawValue] = parts
+        if (!stat || !operator || rawValue === undefined || rawValue === '') {
+          if (typeof console !== 'undefined' && console.warn) {
+            console.warn(`${logPrefix} parseVisibility: world_check missing stat/operator/value. Token:`, JSON.stringify(token))
+          }
+          return null
+        }
+        return { type: 'world_check', stat, operator, value: asNumber(rawValue, 0) }
+      }
+      if (type === 'reputation_check') {
+        const [stat, operator, rawValue] = parts
+        if (!stat || !operator || rawValue === undefined || rawValue === '') {
+          if (typeof console !== 'undefined' && console.warn) {
+            console.warn(`${logPrefix} parseVisibility: reputation_check missing stat/operator/value. Token:`, JSON.stringify(token))
+          }
+          return null
+        }
+        return { type: 'reputation_check', stat, operator, value: asNumber(rawValue, 0) }
       }
       if (typeof console !== 'undefined' && console.warn) {
         console.warn(`${logPrefix} parseVisibility: unknown type:`, type, 'Token:', JSON.stringify(token))
@@ -151,7 +189,10 @@ export function parseVisibility(value, logPrefix = '[parse]') {
 }
 
 export function parseMechanic(value, logPrefix = '[parse]') {
-  const [mechanicType, ...parts] = String(value ?? '')
+  if (value == null || String(value).trim() === '') {
+    return null
+  }
+  const [mechanicType, ...parts] = String(value)
     .split(':')
     .map((segment) => segment.trim())
   if (!mechanicType) {
@@ -179,6 +220,26 @@ export function parseMechanic(value, logPrefix = '[parse]') {
       return null
     }
     return { type: 'combat_init', encounterId }
+  }
+  if (mechanicType === 'theater_begin') {
+    const [exitNodeId] = parts
+    if (!exitNodeId) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`${logPrefix} parseMechanic: theater_begin missing exitNodeId. Value:`, JSON.stringify(value))
+      }
+      return null
+    }
+    return { type: 'theater_begin', exitNodeId }
+  }
+  if (mechanicType === 'feral_parliament_begin') {
+    const [exitNodeId] = parts
+    if (!exitNodeId) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`${logPrefix} parseMechanic: feral_parliament_begin missing exitNodeId. Value:`, JSON.stringify(value))
+      }
+      return null
+    }
+    return { type: 'feral_parliament_begin', exitNodeId }
   }
   if (mechanicType === 'skill_check') {
     const [dice, dcValue, successNodeId, failureNodeId, rawPart5, rawPart6, rawPart7] = parts
@@ -246,7 +307,7 @@ export function parseNodes(rows, logPrefix = '[parse]') {
       continue
     }
     const choices = []
-    for (let index = 1; index <= 3; index += 1) {
+    for (let index = 1; index <= 6; index += 1) {
       const choiceId = row[`choice${index}_id`]
       if (!choiceId) continue
       const label = row[`choice${index}_label`]
@@ -256,6 +317,8 @@ export function parseNodes(rows, logPrefix = '[parse]') {
       const choice = { id: choiceId, label, mechanic }
       const visibility = parseVisibility(row[`choice${index}_visibility`], logPrefix)
       if (visibility) choice.visibilityRequirements = visibility
+      const onSelect = parseOnEnter(row[`choice${index}_onselect`], logPrefix)
+      if (onSelect) choice.onSelect = onSelect
       choices.push(choice)
     }
     const node = { id, type: row.type, text: row.text ?? '' }

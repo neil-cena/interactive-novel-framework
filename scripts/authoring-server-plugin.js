@@ -4,6 +4,7 @@
 
 import path from 'node:path'
 import fs from 'node:fs'
+import { Buffer } from 'node:buffer'
 import { fileURLToPath } from 'node:url'
 import { readCsv, readRawFile, writeFileInDir } from './data-core/io.js'
 import {
@@ -14,6 +15,10 @@ import {
 } from './data-core/parse.js'
 import { validateData } from './data-core/validate.js'
 import { analyzeGraph } from './data-core/graph.js'
+import { getReleaseGraphAnalyzeOptions } from './data-core/qa-bind-options.js'
+import { getQaProfile } from './data-core/qa-profiles.js'
+import { evaluateStructuralQaOutcome } from './data-core/qa-orchestrator.js'
+import { QA_REPORT_ENVELOPE_VERSION } from './data-core/qa-envelope.js'
 import {
   serializeNodesToCsv,
   serializeItemsToCsv,
@@ -22,10 +27,16 @@ import {
 } from './data-core/export-csv.js'
 import { buildCurrentModelFromCsv, validateAssets } from './data-core/package-io.js'
 import { isValidPackageManifest, sanitizeModelTextFields } from './data-core/package-schema.js'
+import { runStructuralQa } from './data-core/qa-exhaustive.js'
+import { formatQaReportMarkdown } from './data-core/qa-report-md.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const projectRoot = path.resolve(__dirname, '..') // scripts/ -> project root
+
+const QA_EXHAUSTIVE_BODY_LIMIT = 5 * 1024 * 1024
+/** Max JSON body for validate / save / save-draft / import-package (bytes). */
+const AUTHORING_JSON_BODY_LIMIT = 8 * 1024 * 1024
 
 export function authoringServerPlugin() {
   const csvDir = path.join(projectRoot, 'data', 'csv')
@@ -40,7 +51,14 @@ export function authoringServerPlugin() {
           return
         }
         if (req.url === '/api/authoring/validate' && req.method === 'POST') {
-          collectBody(req, (err, body) => {
+          if (!assertAuthoringAuth(req, res)) return
+          collectBodyCapped(req, AUTHORING_JSON_BODY_LIMIT, (err, body) => {
+            if (err?.message === 'PAYLOAD_TOO_LARGE') {
+              res.statusCode = 413
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: 'Request body too large' }))
+              return
+            }
             if (err) {
               res.statusCode = 400
               res.setHeader('Content-Type', 'application/json')
@@ -52,7 +70,14 @@ export function authoringServerPlugin() {
           return
         }
         if (req.url === '/api/authoring/save' && req.method === 'POST') {
-          collectBody(req, (err, body) => {
+          if (!assertAuthoringAuth(req, res)) return
+          collectBodyCapped(req, AUTHORING_JSON_BODY_LIMIT, (err, body) => {
+            if (err?.message === 'PAYLOAD_TOO_LARGE') {
+              res.statusCode = 413
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: 'Request body too large' }))
+              return
+            }
             if (err) {
               res.statusCode = 400
               res.setHeader('Content-Type', 'application/json')
@@ -64,7 +89,14 @@ export function authoringServerPlugin() {
           return
         }
         if (req.url === '/api/authoring/save-draft' && req.method === 'POST') {
-          collectBody(req, (err, body) => {
+          if (!assertAuthoringAuth(req, res)) return
+          collectBodyCapped(req, AUTHORING_JSON_BODY_LIMIT, (err, body) => {
+            if (err?.message === 'PAYLOAD_TOO_LARGE') {
+              res.statusCode = 413
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: 'Request body too large' }))
+              return
+            }
             if (err) {
               res.statusCode = 400
               res.setHeader('Content-Type', 'application/json')
@@ -84,7 +116,14 @@ export function authoringServerPlugin() {
           return
         }
         if (req.url === '/api/authoring/import-package' && req.method === 'POST') {
-          collectBody(req, (err, body) => {
+          if (!assertAuthoringAuth(req, res)) return
+          collectBodyCapped(req, AUTHORING_JSON_BODY_LIMIT, (err, body) => {
+            if (err?.message === 'PAYLOAD_TOO_LARGE') {
+              res.statusCode = 413
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: 'Request body too large' }))
+              return
+            }
             if (err) {
               res.statusCode = 400
               res.setHeader('Content-Type', 'application/json')
@@ -95,24 +134,117 @@ export function authoringServerPlugin() {
           })
           return
         }
+        if (req.url === '/api/authoring/qa-exhaustive' && req.method === 'POST') {
+          if (!assertAuthoringAuth(req, res)) return
+          collectBodyCapped(req, QA_EXHAUSTIVE_BODY_LIMIT, (err, body) => {
+            if (err?.message === 'PAYLOAD_TOO_LARGE') {
+              res.statusCode = 413
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: 'Request body too large' }))
+              return
+            }
+            if (err) {
+              res.statusCode = 400
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: err.message }))
+              return
+            }
+            handleQaExhaustive(body, res)
+          })
+          return
+        }
         next()
       })
     },
   }
 }
 
-function collectBody(req, cb) {
-  let body = ''
-  req.on('data', (chunk) => { body += chunk })
+/**
+ * @param {import('node:http').IncomingMessage} req
+ * @param {import('node:http').ServerResponse} res
+ * @returns {boolean}
+ */
+function assertAuthoringAuth(req, res) {
+  const tok = process.env.AUTHORING_API_TOKEN
+  if (!tok) return true
+  const raw = req.headers.authorization ?? req.headers.Authorization
+  const h = Array.isArray(raw) ? raw[0] : raw
+  if (typeof h !== 'string' || h !== `Bearer ${tok}`) {
+    res.statusCode = 401
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ error: 'Unauthorized' }))
+    return false
+  }
+  return true
+}
+
+/**
+ * @param {import('node:http').IncomingMessage} req
+ * @param {number} maxBytes
+ * @param {(err: Error | null, body?: unknown) => void} cb
+ */
+function collectBodyCapped(req, maxBytes, cb) {
+  let settled = false
+  const chunks = []
+  let total = 0
+
+  function finish(err, body) {
+    if (settled) return
+    settled = true
+    cb(err, body)
+  }
+
+  req.on('data', (chunk) => {
+    if (settled) return
+    const buf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)
+    total += buf.length
+    if (total > maxBytes) {
+      finish(new Error('PAYLOAD_TOO_LARGE'))
+      req.destroy()
+      return
+    }
+    chunks.push(buf)
+  })
   req.on('end', () => {
+    if (settled) return
     try {
-      const parsed = JSON.parse(body || '{}')
-      cb(null, parsed)
+      const raw = Buffer.concat(chunks).toString('utf8')
+      const parsed = JSON.parse(raw || '{}')
+      finish(null, parsed)
     } catch (e) {
-      cb(new Error('Invalid JSON body'))
+      finish(new Error('Invalid JSON body'))
     }
   })
-  req.on('error', (e) => cb(e))
+  req.on('error', (e) => finish(e))
+}
+
+function handleQaExhaustive(body, res) {
+  try {
+    const nodes = body?.nodes ?? {}
+    const items = body?.items ?? {}
+    const enemies = body?.enemies ?? {}
+    const encounters = body?.encounters ?? {}
+    const profile = getQaProfile('local-full')
+    const result = runStructuralQa(nodes, items, enemies, encounters)
+    const markdown = formatQaReportMarkdown(result, { maxChars: 500_000, nodes })
+    const mergedOutcome = evaluateStructuralQaOutcome(result, profile)
+    res.setHeader('Content-Type', 'application/json')
+    res.end(
+      JSON.stringify({
+        result,
+        markdown,
+        qaEnvelope: {
+          version: QA_REPORT_ENVELOPE_VERSION,
+          profileId: 'authoring-in-memory',
+          mergedOutcome,
+        },
+      }),
+    )
+  } catch (err) {
+    res.statusCode = 500
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ error: err.message }))
+  }
 }
 
 function handleLoad(req, res, csvDir) {
@@ -126,7 +258,7 @@ function handleLoad(req, res, csvDir) {
     const enemies = parseEnemies(enemiesRows)
     const encounters = parseEncounters(encountersRows)
     const { errors, warnings } = validateData(nodes, items, enemies, encounters)
-    const { diagnostics: graphDiagnostics } = analyzeGraph(nodes, encounters)
+    const { diagnostics: graphDiagnostics } = analyzeGraph(nodes, encounters, getReleaseGraphAnalyzeOptions())
     res.setHeader('Content-Type', 'application/json')
     res.end(
       JSON.stringify({
@@ -148,7 +280,7 @@ function handleLoad(req, res, csvDir) {
 function handleValidate(body, res) {
   const { nodes = {}, items = {}, enemies = {}, encounters = {} } = body
   const { errors, warnings } = validateData(nodes, items, enemies, encounters)
-  const { diagnostics: graphDiagnostics } = analyzeGraph(nodes, encounters)
+  const { diagnostics: graphDiagnostics } = analyzeGraph(nodes, encounters, getReleaseGraphAnalyzeOptions())
   res.setHeader('Content-Type', 'application/json')
   res.end(
     JSON.stringify({
@@ -194,8 +326,8 @@ function handleSave(body, res, csvDir) {
     res.end(
       JSON.stringify({
         success: true,
-        written,
-        backups,
+        written: written.map((p) => path.basename(p)),
+        backups: backups.map((p) => path.basename(p)),
         warnings,
       }),
     )
@@ -219,7 +351,7 @@ function handleSaveDraft(body, res, csvDir, draftFileName) {
   try {
     writeFileInDir(csvDir, draftFileName, JSON.stringify(payload, null, 2))
     res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ success: true, path: path.join(csvDir, draftFileName), savedAt: payload.savedAt }))
+    res.end(JSON.stringify({ success: true, file: draftFileName, savedAt: payload.savedAt }))
   } catch (err) {
     res.statusCode = 500
     res.setHeader('Content-Type', 'application/json')

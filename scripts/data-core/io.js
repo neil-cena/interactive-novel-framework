@@ -25,8 +25,14 @@ export function readCsv(csvDir, fileName) {
   })
 
   if (parsed.errors.length > 0) {
-    const message = parsed.errors.map((err) => `${fileName}: ${err.message}`).join('\n')
-    throw new Error(`CSV parse errors:\n${message}`)
+    // TooFewFields is a non-fatal warning — PapaParse fills missing trailing
+    // columns with '' in header mode, which is the desired behaviour for rows
+    // that have fewer choices than the maximum choice count.
+    const fatalErrors = parsed.errors.filter((err) => err.code !== 'TooFewFields')
+    if (fatalErrors.length > 0) {
+      const message = fatalErrors.map((err) => `${fileName}: ${err.message}`).join('\n')
+      throw new Error(`CSV parse errors:\n${message}`)
+    }
   }
 
   return parsed.data

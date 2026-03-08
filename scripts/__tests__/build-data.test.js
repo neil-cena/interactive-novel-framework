@@ -231,6 +231,18 @@ describe('validateData', () => {
     const { errors } = validateData(nodes, items, enemies, encounters)
     expect(errors).toHaveLength(0)
   })
+  it('reports DATA014 when purifier_basement_done appears without exactly one outcome flag in same onEnter', () => {
+    const nodes = {
+      bad: {
+        id: 'bad',
+        type: 'narrative',
+        text: '',
+        onEnter: [{ action: 'set_flag', key: 'purifier_basement_done', value: true }],
+      },
+    }
+    const { errors } = validateData(nodes, {}, {}, {})
+    expect(errors.some((e) => e.code === 'DATA014')).toBe(true)
+  })
 })
 
 describe('parseItems', () => {
