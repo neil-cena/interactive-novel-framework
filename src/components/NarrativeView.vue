@@ -1,33 +1,32 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import ChoiceList from './ChoiceList.vue'
-import TypewriterText from './TypewriterText.vue'
 import { useAudio } from '../composables/useAudio'
 import { GAME_CONFIG } from '../config'
 import { STORY_NODES } from '../data/nodes'
-import { rollDice } from '../utils/dice'
-import { isSaveSlotId } from '../utils/storage'
 import { resolveAction } from '../engine/actionResolver'
 import { trackOutcomeEvent } from '../services/analyticsClient'
-import { emitGameEvent } from '../services/events/gameEventBus'
 import { usePlayerStore } from '../stores/playerStore'
 import { useNotifications } from '../composables/useNotifications'
+import { usePluginRegistry } from '../plugins/registry'
+import { applyNarrativeChoice } from '../composables/applyNarrativeChoice'
 import type { Choice } from '../types/story'
 
 const emit = defineEmits<{
-  combatStart: [encounterId: string]
+  startGameMode: [mode: string, data?: Record<string, unknown>]
   requestQuit: []
 }>()
 
 const playerStore = usePlayerStore()
+const registry = usePluginRegistry()
 const { playSfx } = useAudio()
 const { notify } = useNotifications()
 const nodeImageError = ref(false)
-const processedNodes = ref<Set<string>>(new Set())
 const visibilityState = computed(() => ({
   flags: playerStore.flags,
   inventory: playerStore.inventory,
   vitals: playerStore.vitals,
+  worldState: playerStore.worldState,
 }))
 
 const currentNode = computed(() => STORY_NODES[playerStore.metadata.currentNodeId])
@@ -37,12 +36,27 @@ watch(
   () => {
     nodeImageError.value = false
     const node = currentNode.value
-    if (!node || !node.onEnter || processedNodes.value.has(node.id)) {
+    if (!node) {
+      return
+    }
+
+    // Re-entering first-intro after `meet_elara` is already in history (e.g. save dropped
+    // `elara_met` or `onEnter` was skipped) would replay the full basement intro; route to
+    // the return beat and heal the flag instead.
+    if (node.id === 'meet_elara' && playerStore.visitedNodes.includes('meet_elara')) {
+      if (playerStore.flags.elara_met !== true && node.onEnter) {
+        node.onEnter.forEach((payload) => resolveAction(payload, playerStore))
+      }
+      playerStore.navigateTo('elara_basement_return')
+      return
+    }
+
+    if (!node.onEnter || playerStore.visitedNodes.includes(node.id)) {
       return
     }
 
     node.onEnter.forEach((payload) => resolveAction(payload, playerStore))
-    processedNodes.value.add(node.id)
+    playerStore.markNodeVisited(node.id)
     trackOutcomeEvent({
       storyId: 'default',
       type: 'node_visit',
@@ -58,82 +72,21 @@ watch(
       })
     }
   },
-  { immediate: true },
+  { immediate: true, flush: 'post' },
 )
 
 function handleChoice(choice: Choice): void {
-  emitGameEvent('choiceSelected', { nodeId: playerStore.metadata.currentNodeId, choiceId: choice.id })
-  trackOutcomeEvent({
-    storyId: 'default',
-    type: 'choice_selected',
-    ts: Date.now(),
-    metadata: {
-      nodeId: playerStore.metadata.currentNodeId,
-      choiceId: choice.id,
-      mechanicType: choice.mechanic.type,
-    },
+  applyNarrativeChoice(choice, {
+    playerStore,
+    currentNode: currentNode.value,
+    registry,
+    startGameMode: (mode, data) => emit('startGameMode', mode, data),
+    notify: (type, message, detail) => notify(type as never, message, detail),
+    playSfx: (id) => playSfx(id as never),
   })
-  if (choice.mechanic.type === 'navigate') {
-    const shouldStartNewRun =
-      choice.mechanic.nextNodeId === GAME_CONFIG.player.startingNodeId &&
-      currentNode.value?.id !== GAME_CONFIG.player.startingNodeId
-    if (shouldStartNewRun) {
-      if (playerStore.activeSaveSlot && isSaveSlotId(playerStore.activeSaveSlot)) {
-        playerStore.startNewGame(playerStore.activeSaveSlot)
-      } else {
-        playerStore.resetToDefaults()
-      }
-      processedNodes.value = new Set()
-      return
-    }
-
-    playerStore.navigateTo(choice.mechanic.nextNodeId)
-    return
-  }
-
-  if (choice.mechanic.type === 'combat_init') {
-    emit('combatStart', choice.mechanic.encounterId)
-    return
-  }
-
-  const check = choice.mechanic
-  playSfx('dice_roll')
-  let attrMod = check.attribute ? playerStore.attributes[check.attribute] : 0
-  if (check.skillId && playerStore.skillsProficiency[check.skillId]) {
-    attrMod += GAME_CONFIG.skills.proficiencyBonus
-  }
-  const roll = rollDice(check.dice)
-  const adjustedTotal = roll.total + attrMod
-
-  const detail =
-    check.attribute ?
-      `[${roll.rolls.join(', ')}] ${roll.modifier >= 0 ? '+' : ''}${roll.modifier} + ${attrMod} (${check.attribute.toUpperCase()}) = ${adjustedTotal} vs DC ${check.dc}`
-    : `[${roll.rolls.join(', ')}] ${roll.modifier >= 0 ? '+' : ''}${roll.modifier} = ${adjustedTotal} vs DC ${check.dc}`
-  const success = adjustedTotal >= check.dc
-  playSfx(success ? 'skill_success' : 'skill_fail')
-  notify('skill_check', success ? 'Skill check passed' : 'Skill check failed', detail)
-
-  if (success) {
-    trackOutcomeEvent({
-      storyId: 'default',
-      type: 'chapter_completed',
-      ts: Date.now(),
-      metadata: { nodeId: playerStore.metadata.currentNodeId, choiceId: choice.id, result: 'success' },
-    })
-    playerStore.navigateTo(check.onSuccess.nextNodeId)
-    return
-  }
-
-  if (check.onFailureEncounterId) {
-    emit('combatStart', check.onFailureEncounterId)
-    return
-  }
-
-  playerStore.navigateTo(check.onFailure.nextNodeId)
 }
 
 function goToStart(): void {
-  processedNodes.value = new Set()
   playerStore.navigateTo(GAME_CONFIG.player.startingNodeId)
 }
 </script>
@@ -143,6 +96,8 @@ function goToStart(): void {
     class="rounded-lg border border-slate-700 bg-slate-900 p-4 sm:p-6"
     role="region"
     aria-label="Story narrative"
+    aria-live="polite"
+    aria-atomic="true"
   >
     <template v-if="currentNode">
       <Transition name="node-fade" mode="out-in">
@@ -155,12 +110,9 @@ function goToStart(): void {
             class="node-image mb-4 max-h-64 w-full rounded border border-slate-600 object-contain"
             @error="nodeImageError = true"
           />
-          <TypewriterText
-            :text="currentNode.text"
-            :chars-per-second="45"
-            :skip-on-click="true"
-            :restart-key="playerStore.metadata.currentNodeId"
-          />
+          <p class="narrative-text break-words whitespace-pre-line text-base leading-relaxed text-slate-100">
+            {{ currentNode.text }}
+          </p>
           <ChoiceList
             v-if="currentNode.choices && currentNode.choices.length > 0"
             :choices="currentNode.choices"

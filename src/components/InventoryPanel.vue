@@ -4,6 +4,7 @@ import { computed, nextTick, ref, unref, watch } from 'vue'
 import { ITEM_DICTIONARY } from '../data/items'
 import { resolveAction } from '../engine/actionResolver'
 import { usePlayerStore } from '../stores/playerStore'
+import { usePluginRegistry } from '../plugins/registry'
 
 const props = defineProps<{
   /** Element or ref to focus when closing (e.g. Inventory button). */
@@ -12,7 +13,10 @@ const props = defineProps<{
 
 const emit = defineEmits<{ close: [] }>()
 const playerStore = usePlayerStore()
+const registry = usePluginRegistry()
 const panelRef = ref<HTMLElement | null>(null)
+
+const hasCombat = computed(() => registry.hasPlugin('combat'))
 
 function closeAndReturnFocus() {
   const el = unref(props.returnFocusTo)
@@ -113,7 +117,7 @@ function handleUseConsumable(itemId: string) {
 
       <section class="mt-4">
         <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Equipped Weapon</h3>
-        <div v-if="equippedWeapon" class="mt-2 rounded border border-slate-600 bg-slate-800/60 p-3">
+        <div v-if="hasCombat && equippedWeapon" class="mt-2 rounded border border-slate-600 bg-slate-800/60 p-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <span class="font-medium text-slate-100">{{ equippedWeapon.name }}</span>
             <button
@@ -131,12 +135,12 @@ function handleUseConsumable(itemId: string) {
             <span v-if="equippedWeapon.scalingAttribute">{{ equippedWeapon.scalingAttribute.toUpperCase() }}</span>
           </div>
         </div>
-        <p v-else class="mt-2 text-sm text-slate-500">Unarmed</p>
+        <p v-else-if="hasCombat" class="mt-2 text-sm text-slate-500">Unarmed</p>
       </section>
 
       <section class="mt-4">
         <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Equipped Armor</h3>
-        <div v-if="equippedArmor" class="mt-2 rounded border border-slate-600 bg-slate-800/60 p-3">
+        <div v-if="hasCombat && equippedArmor" class="mt-2 rounded border border-slate-600 bg-slate-800/60 p-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <span class="font-medium text-slate-100">{{ equippedArmor.name }}</span>
             <button
@@ -150,7 +154,7 @@ function handleUseConsumable(itemId: string) {
           </div>
           <div v-if="equippedArmor.acBonus != null" class="mt-1 text-xs text-slate-400">AC: +{{ equippedArmor.acBonus }}</div>
         </div>
-        <p v-else class="mt-2 text-sm text-slate-500">No armor</p>
+        <p v-else-if="hasCombat" class="mt-2 text-sm text-slate-500">No armor</p>
       </section>
 
       <section class="mt-4">
@@ -191,7 +195,7 @@ function handleUseConsumable(itemId: string) {
               </div>
               <div class="flex flex-wrap gap-2">
               <button
-                v-if="item.isWeapon && !item.isEquipped"
+                v-if="hasCombat && item.isWeapon && !item.isEquipped"
                 type="button"
                 class="rounded border border-amber-700 bg-amber-900/40 px-3 py-2 text-sm text-amber-200 hover:bg-amber-900/70"
                 :aria-label="`Equip weapon ${item.name}`"
@@ -200,13 +204,13 @@ function handleUseConsumable(itemId: string) {
                 Equip
               </button>
               <span
-                v-if="item.isWeapon && item.isEquipped"
+                v-if="hasCombat && item.isWeapon && item.isEquipped"
                 class="rounded bg-amber-900/30 px-2 py-1 text-xs text-amber-400"
               >
                 Equipped
               </span>
               <button
-                v-if="item.isArmor && !item.isArmorEquipped"
+                v-if="hasCombat && item.isArmor && !item.isArmorEquipped"
                 type="button"
                 class="rounded border border-slate-500 bg-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-600"
                 :aria-label="`Equip armor ${item.name}`"
@@ -215,7 +219,7 @@ function handleUseConsumable(itemId: string) {
                 Equip armor
               </button>
               <span
-                v-if="item.isArmor && item.isArmorEquipped"
+                v-if="hasCombat && item.isArmor && item.isArmorEquipped"
                 class="rounded bg-slate-700/50 px-2 py-1 text-xs text-slate-400"
               >
                 Worn

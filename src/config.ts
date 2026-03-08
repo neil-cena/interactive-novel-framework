@@ -5,13 +5,13 @@
 export const GAME_CONFIG = {
   /** Player default state */
   player: {
-    startingNodeId: 'n_start',
+    startingNodeId: 'start',
     startingHp: 20,
-    startingCurrency: 10,
-    startingWeaponId: 'dagger_iron',
-    startingItems: { lockpick: 1 } as Record<string, number>,
-    startingFlags: { met_goblin: false } as Record<string, boolean>,
-    startingAttributes: { strength: 0, dexterity: 2, intelligence: 1 },
+    startingCurrency: 0,
+    startingWeaponId: null as string | null,
+    startingItems: { scholar_ledger: 1, fuel_blocks: 1, diagnostic_plates: 1 } as Record<string, number>,
+    startingFlags: {} as Record<string, boolean>,
+    startingAttributes: { strength: 0, dexterity: 0, intelligence: 2 },
   },
 
   /** Leveling / progression */
@@ -62,7 +62,7 @@ export const GAME_CONFIG = {
 
   /** UI strings */
   ui: {
-    gameTitle: 'The Cellar Debt',
+    gameTitle: 'Equivalent Ashes',
   },
 } as const
 

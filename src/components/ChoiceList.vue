@@ -6,7 +6,7 @@ import { isChoiceVisible } from '../engine/visibilityResolver'
 
 const props = defineProps<{
   choices: Choice[]
-  state: Pick<PlayerState, 'flags' | 'inventory' | 'vitals'>
+  state: Pick<PlayerState, 'flags' | 'inventory' | 'vitals' | 'worldState'>
 }>()
 
 const emit = defineEmits<{
@@ -21,8 +21,8 @@ function onKeydown(e: KeyboardEvent) {
   const target = e.target as HTMLElement
   if (target.closest('input') || target.closest('textarea')) return
   const key = e.key
-  if (key !== '1' && key !== '2' && key !== '3') return
-  const index = key === '1' ? 0 : key === '2' ? 1 : 2
+  if (!/^[1-6]$/.test(key)) return
+  const index = Number.parseInt(key, 10) - 1
   const choice = visibleChoices.value[index]
   if (choice) {
     e.preventDefault()

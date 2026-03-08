@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import AudioControls from './components/AudioControls.vue'
 import AuthGate from './components/AuthGate.vue'
-import CombatView from './components/CombatView.vue'
 import ErrorBoundary from './components/ErrorBoundary.vue'
 import InventoryPanel from './components/InventoryPanel.vue'
 import ProgressionPanel from './components/ProgressionPanel.vue'
@@ -16,12 +15,9 @@ import PlayerHud from './components/PlayerHud.vue'
 import { useAudio } from './composables/useAudio'
 import { useAccessibilityStore } from './stores/accessibilityStore'
 import { useAuthStore } from './stores/authStore'
-import { flushOutcomeEvents, trackOutcomeEvent } from './services/analyticsClient'
-import { emitGameEvent } from './services/events/gameEventBus'
-import { COMBAT_ENCOUNTERS } from './data/encounters'
-import { ENEMY_DICTIONARY } from './data/enemies'
-import { useNotificationStore } from './stores/notificationStore'
+import { flushOutcomeEvents } from './services/analyticsClient'
 import { usePlayerStore } from './stores/playerStore'
+import { usePluginRegistry } from './plugins/registry'
 import type { CharacterSheetPayload } from './types/characterSheet'
 import type { PlayerState } from './types/player'
 import { GAME_CONFIG } from './config'
@@ -30,15 +26,18 @@ import { isSaveSlotId, saveGame, saveGameNow, syncCloudSavesNow, type SaveSlotId
 const playerStore = usePlayerStore()
 const accessibilityStore = useAccessibilityStore()
 const authStore = useAuthStore()
-const { unlock: unlockAudio, playMusic, stopMusic, playSfx } = useAudio()
+const registry = usePluginRegistry()
+const { unlock: unlockAudio, playMusic, stopMusic } = useAudio()
 const currentView = ref<'menu' | 'game'>('menu')
 const mainContentRef = ref<HTMLElement | null>(null)
 const inventoryButtonRef = ref<HTMLElement | null>(null)
-const gameMode = ref<'narrative' | 'combat'>('narrative')
-const activeEncounterId = ref<string>('combat_1')
+const gameMode = ref<string>('narrative')
+const gameModeData = ref<Record<string, unknown>>({})
 const showInventory = ref(false)
 const showProgression = ref(false)
 const progressionButtonRef = ref<HTMLElement | null>(null)
+
+const gameModeComponent = computed(() => registry.gameModes[gameMode.value])
 
 function handleStartGame(slotId: SaveSlotId, savedState: PlayerState | null, sheetPayload?: CharacterSheetPayload): void {
   if (savedState) {
@@ -51,67 +50,14 @@ function handleStartGame(slotId: SaveSlotId, savedState: PlayerState | null, she
   currentView.value = 'game'
 }
 
-function handleCombatStart(encounterId: string): void {
-  activeEncounterId.value = encounterId
-  gameMode.value = 'combat'
+function handleStartGameMode(mode: string, data?: Record<string, unknown>): void {
+  gameModeData.value = data ?? {}
+  gameMode.value = mode
 }
 
-const resolutionOutcome = ref<'victory' | 'defeat' | null>(null)
-const resolutionTimeoutId = ref<ReturnType<typeof setTimeout> | null>(null)
-
-function handleCombatResolved(outcome: 'victory' | 'defeat'): void {
-  const encounter = COMBAT_ENCOUNTERS[activeEncounterId.value]
-  if (!encounter) {
-    gameMode.value = 'narrative'
-    return
-  }
-  playSfx(outcome)
-  emitGameEvent('combatResolved', { outcome, encounterId: activeEncounterId.value })
-  trackOutcomeEvent({
-    storyId: 'default',
-    type: 'combat_outcome',
-    ts: Date.now(),
-    metadata: { encounterId: activeEncounterId.value, outcome },
-  })
-  trackOutcomeEvent({
-    storyId: 'default',
-    type: outcome === 'victory' ? 'chapter_completed' : 'run_failed',
-    ts: Date.now(),
-    metadata: { encounterId: activeEncounterId.value, outcome },
-  })
-
-  if (outcome === 'victory') {
-    let totalXp = 0
-    for (const spawn of encounter.enemies) {
-      const template = ENEMY_DICTIONARY[spawn.enemyId]
-      if (template) totalXp += template.xpReward * spawn.count
-    }
-    if (totalXp > 0) {
-      const leveled = playerStore.awardXp(totalXp)
-      if (leveled) {
-        playSfx('level_up')
-        const notificationStore = useNotificationStore()
-        notificationStore.add(
-          'level_up',
-          `Level up! You are now level ${playerStore.progression.level}.`,
-          `+${GAME_CONFIG.leveling.hpPerLevel} HP, +${GAME_CONFIG.leveling.attributePointsPerLevel} attribute point.`,
-          5000,
-        )
-      }
-    }
-  }
-
-  const nextNodeId =
-    outcome === 'victory' ? encounter.resolution.onVictory.nextNodeId : encounter.resolution.onDefeat.nextNodeId
-
-  playerStore.navigateTo(nextNodeId)
-  resolutionOutcome.value = outcome
-  if (resolutionTimeoutId.value != null) clearTimeout(resolutionTimeoutId.value)
-  resolutionTimeoutId.value = window.setTimeout(() => {
-    resolutionOutcome.value = null
-    gameMode.value = 'narrative'
-    resolutionTimeoutId.value = null
-  }, 1200)
+function handleExitMode(): void {
+  gameModeData.value = {}
+  gameMode.value = 'narrative'
 }
 
 function handleSaveAndQuit(): void {
@@ -152,7 +98,6 @@ watch(
       playMusic('narrative', { loop: true, fadeMs: 200 })
     } else {
       stopMusic({ fadeMs: 300 })
-      playMusic('combat', { loop: true, fadeMs: 200 })
     }
     if (currentView.value === 'game') focusFirstFocusableInGame()
   },
@@ -164,7 +109,9 @@ function onGameKeydown(e: KeyboardEvent): void {
     const target = e.target as HTMLElement
     if (target.closest('input') || target.closest('textarea')) return
     e.preventDefault()
-    if (gameMode.value === 'narrative') showInventory.value = !showInventory.value
+    if (gameMode.value === 'narrative' && registry.hasPlugin('inventory')) {
+      showInventory.value = !showInventory.value
+    }
   }
 }
 
@@ -192,6 +139,29 @@ watch(
     void syncCloudSavesNow()
   },
 )
+
+/** Snap the window to top (header, HUD, narrative). */
+function scrollGameLayoutToTop(): void {
+  window.scrollTo(0, 0)
+}
+
+/** Entering game from the menu leaves the old window scrollY; reset so the session starts at the top. */
+watch(currentView, (view, prev) => {
+  if (view !== 'game' || prev !== 'menu') return
+  void nextTick(() => {
+    scrollGameLayoutToTop()
+  })
+})
+
+watch(
+  () => playerStore.metadata.currentNodeId,
+  () => {
+    if (currentView.value !== 'game' || gameMode.value !== 'narrative') return
+    void nextTick(() => {
+      scrollGameLayoutToTop()
+    })
+  },
+)
 </script>
 
 <template>
@@ -213,7 +183,7 @@ watch(
         <div class="flex flex-wrap items-center gap-2">
           <AudioControls />
           <button
-            v-if="gameMode === 'narrative'"
+            v-if="gameMode === 'narrative' && registry.hasPlugin('inventory')"
             ref="inventoryButtonRef"
             type="button"
             class="rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
@@ -223,7 +193,7 @@ watch(
             Inventory
           </button>
           <button
-            v-if="gameMode === 'narrative'"
+            v-if="gameMode === 'narrative' && registry.hasPlugin('progression')"
             ref="progressionButtonRef"
             type="button"
             class="rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
@@ -257,35 +227,37 @@ watch(
 
       <Transition name="view-fade" mode="out-in">
         <div v-if="gameMode === 'narrative'" :key="'narrative'">
-          <NarrativeView @combat-start="handleCombatStart" @request-quit="handleReturnToMenu" />
+          <NarrativeView @start-game-mode="handleStartGameMode" @request-quit="handleReturnToMenu" />
         </div>
-        <div v-else :key="'combat'" class="relative">
-          <CombatView :encounter-id="activeEncounterId" @resolved="handleCombatResolved" @error="handleReturnToMenu" />
-          <Transition name="resolution-fade">
-            <div
-              v-if="resolutionOutcome"
-              class="resolution-overlay absolute inset-0 flex items-center justify-center rounded-lg border border-slate-700 bg-slate-900/95"
-            >
-              <p
-                class="text-2xl font-bold"
-                :class="resolutionOutcome === 'victory' ? 'text-emerald-400' : 'text-red-400'"
-              >
-                {{ resolutionOutcome === 'victory' ? 'Victory!' : 'Defeat' }}
-              </p>
-            </div>
-          </Transition>
+        <component
+          v-else-if="gameModeComponent"
+          :is="gameModeComponent"
+          :key="gameMode"
+          :mode-data="gameModeData"
+          @exit-mode="handleExitMode"
+          @return-to-menu="handleReturnToMenu"
+        />
+        <div v-else :key="'unknown-mode'" class="rounded border border-red-700 bg-slate-900/90 p-6">
+          <p class="text-base font-medium text-red-300">Unknown game mode: {{ gameMode }}</p>
+          <button
+            type="button"
+            class="mt-4 rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-100 hover:bg-slate-700"
+            @click="handleExitMode"
+          >
+            Return to narrative
+          </button>
         </div>
       </Transition>
     </main>
 
     <InventoryPanel
-      v-if="showInventory"
+      v-if="showInventory && registry.hasPlugin('inventory')"
       :return-focus-to="inventoryButtonRef"
       @close="showInventory = false"
     />
 
     <ProgressionPanel
-      v-if="showProgression"
+      v-if="showProgression && registry.hasPlugin('progression')"
       :return-focus-to="progressionButtonRef"
       @close="showProgression = false"
     />
@@ -308,20 +280,9 @@ watch(
   opacity: 0;
 }
 
-.resolution-fade-enter-active,
-.resolution-fade-leave-active {
-  transition: opacity 0.2s ease;
-}
-.resolution-fade-enter-from,
-.resolution-fade-leave-to {
-  opacity: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .view-fade-enter-active,
-  .view-fade-leave-active,
-  .resolution-fade-enter-active,
-  .resolution-fade-leave-active {
+  .view-fade-leave-active {
     transition-duration: 0.01ms;
   }
 }
