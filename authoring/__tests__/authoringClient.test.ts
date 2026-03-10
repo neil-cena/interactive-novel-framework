@@ -33,7 +33,7 @@ describe('authoringClient', () => {
   })
 
   it('saveDraftToApi sends POST and returns metadata', async () => {
-    const mockRes = { ok: true, json: async () => ({ success: true, path: 'x', savedAt: new Date().toISOString() }) }
+    const mockRes = { ok: true, json: async () => ({ success: true, file: '.authoring-draft.json', savedAt: new Date().toISOString() }) }
     ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue(mockRes)
     const res = await saveDraftToApi({ nodes: {}, items: {}, enemies: {}, encounters: {} })
     expect(res).toHaveProperty('success', true)

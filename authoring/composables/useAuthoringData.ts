@@ -2,6 +2,7 @@ import { ref, computed, shallowRef, watch } from 'vue'
 import { loadFromApi, saveToApi, validateOnApi, saveDraftToApi, loadDraftFromApi, type AuthoringModel, type Diagnostic, type StoryNodeModel, type ItemModel, type EnemyModel, type EncounterModel } from '../api/authoringClient'
 import { modelToVueFlow } from '../adapters/graphAdapter'
 import { analyzeGraph } from '@data-core/graph.js'
+import { RELEASE_GRAPH_OPTIONS } from '@data-core/graph-options.js'
 import { createIdFactory, collectIdContext } from '../utils/idFactory'
 import { useHistory } from './useHistory'
 
@@ -61,11 +62,11 @@ export function useAuthoringData() {
   }
 
   const orphanSet = computed(() => {
-    const { orphans } = analyzeGraph(nodes.value, encounters.value)
+    const { orphans } = analyzeGraph(nodes.value, encounters.value, RELEASE_GRAPH_OPTIONS)
     return new Set(orphans)
   })
   const deadEndSet = computed(() => {
-    const { deadEnds } = analyzeGraph(nodes.value, encounters.value)
+    const { deadEnds } = analyzeGraph(nodes.value, encounters.value, RELEASE_GRAPH_OPTIONS)
     return new Set(deadEnds)
   })
 

@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, computed, ref, watch } from 'vue'
 import GraphCanvas from './components/GraphCanvas.vue'
 import NodeInspector from './components/NodeInspector.vue'
 import DiagnosticsPanel from './components/DiagnosticsPanel.vue'
+import QaExhaustivePanel from './components/QaExhaustivePanel.vue'
 import EntityTabs from './components/EntityTabs.vue'
 import EncountersEditor from './components/EncountersEditor.vue'
 import ItemsEditor from './components/ItemsEditor.vue'
@@ -54,6 +55,14 @@ const {
   undo,
   redo,
 } = useAuthoringData()
+
+const qaModel = computed(() => ({
+  nodes: nodes.value,
+  items: items.value,
+  enemies: enemies.value,
+  encounters: encounters.value,
+}))
+
 const saveError = ref<string | null>(null)
 const selectedEdge = ref<EdgeData | null>(null)
 const addNodeMenuOpen = ref(false)
@@ -392,6 +401,7 @@ function handleDiagnosticFocus(diagnostic: { context?: Record<string, unknown> }
       </aside>
     </div>
     <DiagnosticsPanel :errors="errors" :warnings="warnings" @focus="handleDiagnosticFocus" />
+    <QaExhaustivePanel :model="qaModel" />
   </div>
 </template>
 

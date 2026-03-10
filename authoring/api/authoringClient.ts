@@ -86,7 +86,8 @@ export interface SaveResponse {
 
 export interface SaveDraftResponse {
   success: true
-  path: string
+  /** Draft filename only (no absolute path). */
+  file: string
   savedAt: string
 }
 
@@ -177,4 +178,73 @@ export async function importPackageOnApi(payload: StoryPackage, commit = false):
   const data = await res.json().catch(() => ({}))
   if (!res.ok) throw new Error((data as { error?: string }).error || res.statusText)
   return data as ImportPackageResponse
+}
+
+/** One step along the structural walk (choice / resolution metadata). */
+export interface StructuralQaTraceStep {
+  fromVertex: string
+  toVertex: string
+  transition: Record<string, unknown>
+}
+
+/** Aggregated issue row (deduped by kind + vertex). */
+export interface StructuralQaIssueSummary {
+  terminalKind: string
+  atVertex: string | null
+  count: number
+  example: Record<string, unknown>
+}
+
+/** Payload returned by `POST /api/authoring/qa-exhaustive` (structural graph QA). */
+export interface StructuralQaPayload {
+  abortReason: string | null
+  validateErrors: Diagnostic[]
+  validateWarnings: Diagnostic[]
+  graphDiagnostics: Diagnostic[]
+  orphans: string[]
+  deadEnds: string[]
+  brokenEdges: Array<{ from: string; to: string; reason: string }>
+  traversal: {
+    steps: number
+    startedFrom: string[]
+    completedStarts: number
+    branchingTruncations?: Array<{ at: string; explored: number; available: number }>
+  }
+  countsByKind: Record<string, number>
+  /** Defect-terminal playthrough samples only (no `ending_leaf` rows). Capped by `maxStoredPathEvents`. */
+  pathEvents: Array<Record<string, unknown>>
+  exploration: {
+    enumerationFinished: boolean
+    stoppedBy: string | null
+    totalTerminalEventsObserved: number
+    storedPathEventCount: number
+    pathEventsTruncated: boolean
+    hasStructuralDefects: boolean
+    partialDueToBranchingCap: boolean
+  }
+  uniqueIssueSummaries: StructuralQaIssueSummary[]
+  blocker: Record<string, unknown> | null
+  resourceLimit: Record<string, unknown> | null
+}
+
+export interface QaEnvelopeSummary {
+  version: string
+  profileId: string
+  mergedOutcome: 'failure' | 'inconclusive' | 'pass'
+}
+
+export async function runQaExhaustiveOnApi(payload: AuthoringModel): Promise<{
+  result: StructuralQaPayload
+  markdown: string
+  qaEnvelope?: QaEnvelopeSummary
+}> {
+  const res = await fetch('/api/authoring/qa-exhaustive', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  const data = await res.json().catch(() => ({}))
+  if (res.status === 413) throw new Error('Request body too large for structural QA (max 5 MB).')
+  if (!res.ok) throw new Error((data as { error?: string }).error || res.statusText)
+  return data as { result: StructuralQaPayload; markdown: string; qaEnvelope?: QaEnvelopeSummary }
 }
