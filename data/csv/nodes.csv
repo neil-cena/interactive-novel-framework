@@ -171,7 +171,7 @@ meet_kaelen,narrative,"The foreman sees you coming. His eyes drop to your ledger
 
 'Name's Kaelen.' He doesn't offer his hand. 'The crane works fine. Better than fine. We're ahead of quota for the first time in three months, which is the first time in three months anyone in this district has had anything to be ahead of.'
 
-Behind him, his crew has stopped working. Six men and women, watching you with the particular attention of people whose livelihoods are standing in the gap between your ledger and your pen. You notice the youngest—barely fifteen, lanky in the way of someone who hasn't finished growing into their shoulders—gripping a wrench so hard his knuckles are white. He has the eyes of someone watching something he can't stop.",,,c_kaelen_1,I can see there's been work done on it. Show me what you did.,,navigate:kaelen_shows,,c_kaelen_2,"This crane is going to fail. I need to understand why, before someone gets hurt.",,navigate:kaelen_defensive,,c_kaelen_4,"Step back, drink your energy tonic, then re-approach while you can still feel your face.",has_item:energy_tonic|world_check:vaelEnergy:<=:62,navigate:meet_kaelen_tonic,remove_item:energy_tonic:1|adjust_energy:20|adjust_hp:8,c_kaelen_3,Flash your seal and order the crew to stand down immediately.,,navigate:death_bluff_crew,,,,,,,,,,,
+Behind him, his crew has stopped working. Six men and women, watching you with the particular attention of people whose livelihoods are standing in the gap between your ledger and your pen. You notice the youngest—barely fifteen, lanky in the way of someone who hasn't finished growing into their shoulders—gripping a wrench so hard his knuckles are white. He has the eyes of someone watching something he can't stop.",,set_flag:kaelen_met:true,c_kaelen_1,I can see there's been work done on it. Show me what you did.,,navigate:kaelen_shows,,c_kaelen_2,"This crane is going to fail. I need to understand why, before someone gets hurt.",,navigate:kaelen_defensive,,c_kaelen_4,"Step back, drink your energy tonic, then re-approach while you can still feel your face.",has_item:energy_tonic|world_check:vaelEnergy:<=:62,navigate:meet_kaelen_tonic,remove_item:energy_tonic:1|adjust_energy:20|adjust_hp:8,c_kaelen_3,Flash your seal and order the crew to stand down immediately.,,navigate:death_bluff_crew,,,,,,,,,,,
 meet_kaelen_tonic,narrative,"You turn away for sixty seconds—long enough to crack the tonic vial and swallow something that tastes like copper, stabilizers, and spite. The label warned you about opinions. It did not warn you about foremen.
 
 When you walk back to Kaelen, your hands steadier, he notices anyway. Dock workers always notice who came back different.",,,c_kt_1,I can see there's been work done on it. Show me what you did.,,navigate:kaelen_shows,,c_kt_2,This crane is going to fail. I need the full picture before someone gets hurt.,,navigate:kaelen_defensive,,c_kt_3,Flash your seal and order the crew to stand down immediately.,,navigate:death_bluff_crew,,,,,,,,,,,,,,,,
@@ -807,7 +807,7 @@ The Freehand woman—the one who spoke to you this morning—leans toward you. Y
 
 You can't. 'One hand pays. Many hands carry,' you say, reciting the saying without thinking.
 
-She gives you a look that is not unkind. 'We've been the many hands for two years, Scholar. We're tired.'
+She gives you a look that is not unkind. 'We've been the many hands since the redirects started—seven months, if you count the way the clerks count. Feels longer. We're tired.'
 
 The man across the table adds: 'You want to know where Toris was this afternoon before you came to see him? Someone saw him at the Breakwater — that tavern in the upper quarter where the Council people take their real meetings. Three hours of wine while the maintenance requisition sat on his desk.'
 
@@ -1076,7 +1076,7 @@ You wake up two hours later in a drainage ditch. Your ledger is gone. Your chalk
 **[GAME OVER — AUTHORITY IS A SOCIAL CONSTRUCT]**",,,c_death_crew,Restart.,,navigate:start,,,,,,,,,,,,,,,,,,,,,,,,,,
 death_touch_warn,narrative,"Kaelen's hand closes on your wrist before your fingers cross the chalk. 'Don't,' he says quietly—too quietly for theater, loud enough for the crew. 'That's live reinforcement. Discharge follows the path of least resistance. Right now that's shaped like a Scholar with wet palms and a guilty conscience. My people use gloves. Grounded tools. You have a plate—use it without inventing new data points.'
 
-You can step back into what you already measured. You can ask him to prove the reading another way. Or you can finish the thought your body started before your ethics caught up.",,,c_dtw_1,Step back. The plate already told you enough.,,navigate:kaelen_shows,,c_dtw_2,Ask for a grounded demonstration—no skin contact.,,navigate:kaelen_shows,,c_dtw_3,Touch the line anyway. One fingertip. For the ledger.,,navigate:death_touch_mod,,,,,,,,,,,,,,,,
+You can step back into what you already measured. You can ask him to prove the reading another way. Or you can finish the thought your body started before your ethics caught up.",,,c_dtw_1,Step back. The plate already told you enough.,,navigate:kaelen_shows,adjust_worker_rep:2,c_dtw_2,Ask for a grounded demonstration—no skin contact.,,navigate:kaelen_shows,adjust_energy:-4,c_dtw_3,Touch the line anyway. One fingertip. For the ledger.,,navigate:death_touch_mod,,,,,,,,,,,,,,,,
 death_touch_mod,narrative,"You already had the warning. Your scholarly curiosity still gets the better of your scholarly self-preservation. You reach out and touch the active reinforcement circle with your bare finger.
 
 In your defense, you have handled alchemical circle work before. In the laboratory. Under controlled conditions. With proper equipment. None of those qualifiers apply here.
@@ -1424,7 +1424,7 @@ She is quiet for a moment.
 
 She looks at the plaque again.
 
-'The Drowning of Karet Bay happened because good work was done correctly, thoroughly, and in compliance with every protocol—and nobody stopped to ask whether correct and good were the same thing that day.' A pause. 'I've been asking myself that question for nineteen years. I still don't have the answer.'
+'The Drowning of Karet Bay happened because a trade consortium moved a river with paperwork that cleared every desk—and nobody with a stamp asked early enough who would pay when the freshwater failed. The courts made that cost visible afterward. Different century, same shape: what looks correct in the file can still be a bad exchange for the people under it.' A pause. 'I've been asking myself how close we are to that shape for nineteen years. I still don't have a clean answer.'
 
 She hands you the briefing. 'Whatever you decide—decide it. Don't defer it. This district does not have time for deferred.'
 
@@ -1681,7 +1681,7 @@ An hour passes. Maybe more. The manifests yield their patterns reluctantly at fi
 
 The redirection isn't limited to Karet Bay. Three other districts—Morrow Reach, the Ashton Flats, Old Saline—show identical material draws over the same seven-month period. Different routing codes, different authorization chains, but the same destination: the Transit Rail Project. The same gradual erosion. The same bureaucratic camouflage of small, individually unremarkable transfers adding up to systematic deprivation.
 
-You cross-reference the total material volume. The transit rail project, according to its published budget, requires roughly 40% of the resources it's actually consuming. The remaining 60% is being drawn from maintenance allocations across the eastern seaboard, hidden in the aggregate by the same trick Senna identified—small individual transfers, each within discretionary authority, that combine into something far larger than any single authorization would permit.
+You cross-reference the total material volume. The transit rail project, according to its published budget, requires roughly 40% of the resources it's actually consuming. The remaining 60% is being drawn from maintenance allocations across the Harbor Cities corridor and the downriver River Provinces, hidden in the aggregate by the same trick Senna identified—small individual transfers, each within discretionary authority, that combine into something far larger than any single authorization would permit.
 
 The scale reframes the problem. This isn't a local logistics failure. This isn't one district being neglected. This is a regional policy decision disguised as a series of administrative adjustments. Someone—or some office, some committee, some authority with the power to coordinate across multiple allocation boards—decided that the transit rail was worth more than the infrastructure that keeps four working districts functional.
 

@@ -189,7 +189,7 @@ The four world stats in this story have specific narrative meanings. All state c
 | `stateChaos` | How destabilized the CEA's institutional grip has become | Radical options become visible | Only official channels remain viable |
 | `communityCost` | How much the district has been made to absorb | Kaelen's crew is mobilized; community help is available | The district cannot organize in time |
 
-**State gate audit (current story):** The only end-state checks currently in `final_assessment` are `districtStability <= 80` (CEA ending) and `stateChaos >= 10` (radical ending). Both conditions start true at game start (`districtStability = 65`, `stateChaos = 10`). This means both endings are currently always available regardless of player behavior. This must be corrected in a future pass: the conditions should reflect accumulated play, not starting values.
+**State gate audit (current story):** At `final_assessment`, the CEA-style controlled-collapse options split on `districtStability` (≤55 vs >55 so only one of the two labels shows at a time; both route to the same epilogue chain). The radical overload option uses `stateChaos >= 20` (starting value `10`, so the player must raise chaos through play—e.g. confrontation beats, Red Balance contact, or related choices). A separate radical branch requires `transit_anomaly`. Sacrifice and collective routes use always-on or item/reputation gates. Stats still need periodic review as new nodes are added so no ending becomes trivially guaranteed without fiction support.
 
 **Items that must gate content (current build):**
 - `alchemical_chalk` — already checked at `crane_collapse`
@@ -221,5 +221,5 @@ This story is a short introduction. Alternative strings are seeded but not yet f
 
 *Hard or soft closure:* Depends on choices made within the string. If Vael burns their remaining energy on unauthorized work, hard closure (distortion). If Vael is careful and strategic, soft closure: Vael remains in the district, Scholars-credential revoked, doing real work.
 
-*Note: Neither alternative string is fully implemented in the current build. They are documented here as design targets.*
+*Note: The Chronicler thread (`theater_revelation` → `chronicler_commitment` → `ending_chronicler_v2`) is implemented in `nodes.csv`; the full arc described above (including every threshold in the unlock list) may still be tuned. "The Craft" remains a design target rather than a complete playable string.*
 
