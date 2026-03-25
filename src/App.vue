@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Analytics } from '@vercel/analytics/vue';
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import AudioControls from './components/AudioControls.vue'
 import AuthGate from './components/AuthGate.vue'
@@ -165,6 +166,7 @@ watch(
 </script>
 
 <template>
+  <Analytics />
   <AuthGate>
     <MainMenu v-if="currentView === 'menu'" @start-game="handleStartGame" />
 
