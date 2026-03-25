@@ -7,6 +7,7 @@ import {
   parseVisibility,
   parseMechanic,
   parseOnEnter,
+  parseNodes,
   parseItems,
   parseEnemies,
   validateData,
@@ -135,6 +136,12 @@ describe('parseMechanic', () => {
     expect(result?.onFailureEncounterId).toBe('enc_1')
     expect(result?.attribute).toBe('intelligence')
   })
+  it('parses skill_check with attribute and skillId (no encounter)', () => {
+    const result = parseMechanic('skill_check:1d20:12:n_win:n_fail:intelligence:persuasion')
+    expect(result?.onFailureEncounterId).toBeUndefined()
+    expect(result?.attribute).toBe('intelligence')
+    expect(result?.skillId).toBe('persuasion')
+  })
   it('parses skill_check with attribute-only shorthand in 5th slot', () => {
     const result = parseMechanic('skill_check:1d20:14:n_office_in:n_office_caught:intelligence')
     expect(result?.onFailureEncounterId).toBeUndefined()
@@ -156,6 +163,9 @@ describe('parseVisibility', () => {
 
   it('parses has_flag', () => {
     expect(parseVisibility('has_flag:ready')).toEqual([{ type: 'has_flag', key: 'ready' }])
+  })
+  it('parses not_has_flag', () => {
+    expect(parseVisibility('not_has_flag:robbed_armory')).toEqual([{ type: 'not_has_flag', key: 'robbed_armory' }])
   })
   it('parses has_item', () => {
     expect(parseVisibility('has_item:sword')).toEqual([{ type: 'has_item', itemId: 'sword' }])
@@ -220,6 +230,18 @@ describe('validateData', () => {
     }
     const { errors } = validateData(nodes, items, enemies, encounters)
     expect(errors).toHaveLength(0)
+  })
+  it('reports DATA014 when purifier_basement_done appears without exactly one outcome flag in same onEnter', () => {
+    const nodes = {
+      bad: {
+        id: 'bad',
+        type: 'narrative',
+        text: '',
+        onEnter: [{ action: 'set_flag', key: 'purifier_basement_done', value: true }],
+      },
+    }
+    const { errors } = validateData(nodes, {}, {}, {})
+    expect(errors.some((e) => e.code === 'DATA014')).toBe(true)
   })
 })
 
@@ -309,6 +331,34 @@ describe('analyzeGraph', () => {
   })
 })
 
+describe('parseNodes', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('parses node with image column', () => {
+    const rows = [
+      { id: 'n1', type: 'narrative', text: 'Hello', image: '/images/scene1.png' },
+    ]
+    const nodes = parseNodes(rows)
+    expect(nodes.n1).toBeDefined()
+    expect(nodes.n1.image).toBe('/images/scene1.png')
+  })
+
+  it('omits image when empty or whitespace', () => {
+    const rows = [
+      { id: 'n1', type: 'narrative', text: 'Hi', image: '' },
+      { id: 'n2', type: 'ending', text: 'End', image: '   ' },
+    ]
+    const nodes = parseNodes(rows)
+    expect(nodes.n1.image).toBeUndefined()
+    expect(nodes.n2.image).toBeUndefined()
+  })
+})
+
 describe('export-csv round-trip', () => {
   it('serializes nodes to CSV with ids and types', () => {
     const nodes = {
@@ -320,6 +370,21 @@ describe('export-csv round-trip', () => {
     expect(csv).toContain('narrative')
     expect(csv).toContain('id')
     expect(csv.split('\n').length).toBeGreaterThanOrEqual(2)
+  })
+
+  it('serializes node image column and round-trips with parseNodes', () => {
+    const nodes = {
+      n_img: { id: 'n_img', type: 'narrative', text: 'Scene', image: '/img/room.png' },
+    }
+    const csv = serializeNodesToCsv(nodes)
+    expect(csv).toContain('image')
+    expect(csv).toContain('/img/room.png')
+    const header = csv.split('\n')[0]
+    const cols = header.split(',')
+    expect(cols).toContain('image')
+    const rows = [{ id: 'n_img', type: 'narrative', text: 'Scene', image: '/img/room.png' }]
+    const parsed = parseNodes(rows)
+    expect(parsed.n_img.image).toBe('/img/room.png')
   })
   it('serializes items and encounters to CSV shape', () => {
     const items = { potion: { id: 'potion', name: 'Potion', type: 'consumable' } }

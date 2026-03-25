@@ -14,6 +14,7 @@ import {
 } from './data-core/parse.js'
 import { validateData } from './data-core/validate.js'
 import { analyzeGraph } from './data-core/graph.js'
+import { getReleaseGraphAnalyzeOptions } from './data-core/qa-bind-options.js'
 import { generateTsFile } from './data-core/generate.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -37,7 +38,7 @@ function run() {
   const encounters = parseEncounters(encountersRows)
 
   const { errors, warnings } = validateData(nodes, items, enemies, encounters)
-  const { diagnostics: graphDiagnostics } = analyzeGraph(nodes, encounters)
+  const { diagnostics: graphDiagnostics } = analyzeGraph(nodes, encounters, getReleaseGraphAnalyzeOptions())
   const allWarnings = [...warnings, ...graphDiagnostics]
 
   for (const w of allWarnings) {

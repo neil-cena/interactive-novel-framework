@@ -1,0 +1,704 @@
+{
+  "manifest": {
+    "storyId": "midnight_rose_full_v2_mechanics",
+    "title": "Curse of Strahd: Death House (Midnight Rose) - Mechanics Rewrite",
+    "author": "David Sweet (Adapted + Systems Rewrite)",
+    "version": "2.0.0",
+    "description": "Rewritten trial campaign using all framework mechanics with class-sheet-first flow, richer dialogue, skill-proficiency routes, and fail-forward combat branches."
+  },
+  "model": {
+    "nodes": {
+      "n_start": {
+        "id": "n_start",
+        "type": "narrative",
+        "text": "The Mists close around your party. Rose appears at the road and begs you to save Ireena from the house before midnight.",
+        "onEnter": [
+          { "action": "set_flag", "key": "time_6pm", "value": true }
+        ],
+        "choices": [
+          { "id": "c_enter_house", "label": "[Enter Death House]", "mechanic": { "type": "navigate", "nextNodeId": "n_foyer" } },
+          { "id": "c_test_mists", "label": "[Test the Mists]", "mechanic": { "type": "navigate", "nextNodeId": "n_mists_reject" } },
+          { "id": "c_talk_rose", "label": "\"What is this place, Rose?\"", "mechanic": { "type": "navigate", "nextNodeId": "n_rose_dialogue" } }
+        ]
+      },
+      "n_mists_reject": {
+        "id": "n_mists_reject",
+        "type": "narrative",
+        "text": "The fog twists your sense of direction and shoves you back to the front steps, breathless.",
+        "onEnter": [
+          { "action": "adjust_hp", "amount": -2 }
+        ],
+        "choices": [
+          { "id": "c_back_foyer_1", "label": "[Enter the house]", "mechanic": { "type": "navigate", "nextNodeId": "n_foyer" } }
+        ]
+      },
+      "n_rose_dialogue": {
+        "id": "n_rose_dialogue",
+        "type": "narrative",
+        "text": "Rose speaks quickly. \"Ireena was dragged below. The house lies. The house bargains. Don't trust what it shows you.\"",
+        "choices": [
+          { "id": "c_ask_ireena", "label": "\"Who is Ireena, and where is she now?\"", "mechanic": { "type": "navigate", "nextNodeId": "n_rose_ireena" } },
+          { "id": "c_ask_midnight", "label": "\"What happens if we're too late?\"", "mechanic": { "type": "navigate", "nextNodeId": "n_rose_midnight" } },
+          { "id": "c_enter_after_talk", "label": "[Enter Death House]", "mechanic": { "type": "navigate", "nextNodeId": "n_foyer" } }
+        ]
+      },
+      "n_rose_ireena": {
+        "id": "n_rose_ireena",
+        "type": "narrative",
+        "text": "\"She is alive for now. The altar below needs fear to wake what it guards.\"",
+        "onEnter": [
+          { "action": "set_flag", "key": "learned_ireena_urgent", "value": true }
+        ],
+        "choices": [
+          { "id": "c_back_rose_1", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_rose_dialogue" } }
+        ]
+      },
+      "n_rose_midnight": {
+        "id": "n_rose_midnight",
+        "type": "narrative",
+        "text": "\"By midnight, exits close and the halls grow teeth.\"",
+        "onEnter": [
+          { "action": "set_flag", "key": "learned_midnight_deadline", "value": true }
+        ],
+        "choices": [
+          { "id": "c_back_rose_2", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_rose_dialogue" } }
+        ]
+      },
+      "n_foyer": {
+        "id": "n_foyer",
+        "type": "narrative",
+        "text": "Dusty portraits watch from every wall. Upstairs waits silence; downstairs waits a locked service corridor.",
+        "choices": [
+          { "id": "c_first_floor", "label": "[Search first floor]", "mechanic": { "type": "navigate", "nextNodeId": "n_first_floor_hub" } },
+          { "id": "c_upstairs", "label": "[Go upstairs]", "mechanic": { "type": "navigate", "nextNodeId": "n_upper_hall" } },
+          { "id": "c_service_door", "label": "[Inspect service lock]", "mechanic": { "type": "navigate", "nextNodeId": "n_service_lock" } }
+        ]
+      },
+      "n_service_lock": {
+        "id": "n_service_lock",
+        "type": "narrative",
+        "text": "The service door lock is rusted but delicate.",
+        "choices": [
+          {
+            "id": "c_pick_service",
+            "label": "[Pick lock (Sleight of Hand DC 13)]",
+            "mechanic": {
+              "type": "skill_check",
+              "dice": "1d20",
+              "dc": 13,
+              "attribute": "dexterity",
+              "skillId": "sleight_of_hand",
+              "onSuccess": { "nextNodeId": "n_service_open" },
+              "onFailure": { "nextNodeId": "n_service_fail" },
+              "onFailureEncounterId": "enc_animated_knife"
+            }
+          },
+          { "id": "c_leave_service", "label": "[Leave it for now]", "mechanic": { "type": "navigate", "nextNodeId": "n_foyer" } }
+        ]
+      },
+      "n_service_open": {
+        "id": "n_service_open",
+        "type": "narrative",
+        "text": "You open the service door and recover hidden holy water and old keys.",
+        "onEnter": [
+          { "action": "set_flag", "key": "service_opened", "value": true },
+          { "action": "add_item", "itemId": "holy_water_dawn", "qty": 1 },
+          { "action": "add_item", "itemId": "iron_attic_key", "qty": 1 }
+        ],
+        "choices": [
+          { "id": "c_back_foyer_2", "label": "[Back to foyer]", "mechanic": { "type": "navigate", "nextNodeId": "n_foyer" } }
+        ]
+      },
+      "n_service_fail": {
+        "id": "n_service_fail",
+        "type": "narrative",
+        "text": "The mechanism snaps and a spring blade cuts your hand.",
+        "onEnter": [
+          { "action": "adjust_hp", "amount": -3 }
+        ],
+        "choices": [
+          { "id": "c_back_foyer_3", "label": "[Back to foyer]", "mechanic": { "type": "navigate", "nextNodeId": "n_foyer" } }
+        ]
+      },
+      "n_knife_victory": {
+        "id": "n_knife_victory",
+        "type": "narrative",
+        "text": "The cursed blade drops. Behind it lies a ring-lined cloak chest.",
+        "onEnter": [
+          { "action": "add_item", "itemId": "cloak_of_protection_proxy", "qty": 1 }
+        ],
+        "choices": [
+          { "id": "c_to_service_after_knife", "label": "[Continue]", "mechanic": { "type": "navigate", "nextNodeId": "n_service_open" } }
+        ]
+      },
+      "n_first_floor_hub": {
+        "id": "n_first_floor_hub",
+        "type": "narrative",
+        "text": "Main hall, kitchen, and tea room branch from here.",
+        "choices": [
+          { "id": "c_main_hall", "label": "[Main hall illusion]", "mechanic": { "type": "navigate", "nextNodeId": "n_main_hall_illusion" } },
+          { "id": "c_kitchen", "label": "[Kitchen and pantry]", "mechanic": { "type": "navigate", "nextNodeId": "n_kitchen" } },
+          { "id": "c_upstairs_from_first", "label": "[Take stairs up]", "mechanic": { "type": "navigate", "nextNodeId": "n_upper_hall" } }
+        ]
+      },
+      "n_main_hall_illusion": {
+        "id": "n_main_hall_illusion",
+        "type": "narrative",
+        "text": "A butler phantom serves a long-dead feast. The illusion shatters and leaves a polished blade.",
+        "onEnter": [
+          { "action": "add_item", "itemId": "durst_longsword_p1", "qty": 1 }
+        ],
+        "choices": [
+          { "id": "c_back_first_1", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_first_floor_hub" } }
+        ]
+      },
+      "n_kitchen": {
+        "id": "n_kitchen",
+        "type": "narrative",
+        "text": "Rot and old blood stain the counters. A pantry door clicks shut behind you.",
+        "onEnter": [
+          { "action": "add_item", "itemId": "butcher_knife", "qty": 1 }
+        ],
+        "choices": [
+          { "id": "c_open_pantry", "label": "[Open pantry]", "mechanic": { "type": "navigate", "nextNodeId": "n_pantry" } },
+          { "id": "c_back_first_2", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_first_floor_hub" } }
+        ]
+      },
+      "n_pantry": {
+        "id": "n_pantry",
+        "type": "narrative",
+        "text": "Freezing air bites your lungs. You stagger out with frost-numb fingers.",
+        "onEnter": [
+          { "action": "adjust_hp", "amount": -2 }
+        ],
+        "choices": [
+          { "id": "c_back_kitchen", "label": "[Back to kitchen]", "mechanic": { "type": "navigate", "nextNodeId": "n_kitchen" } }
+        ]
+      },
+      "n_upper_hall": {
+        "id": "n_upper_hall",
+        "type": "narrative",
+        "text": "The clock strikes seven. Corridors lead to the law office, steward suite, and attic stairs.",
+        "onEnter": [
+          { "action": "set_flag", "key": "time_7pm", "value": true }
+        ],
+        "choices": [
+          { "id": "c_law_office", "label": "[Law office]", "mechanic": { "type": "navigate", "nextNodeId": "n_law_office" } },
+          { "id": "c_steward_suite", "label": "[Steward suite]", "mechanic": { "type": "navigate", "nextNodeId": "n_steward_suite" } },
+          { "id": "c_attic_entry", "label": "[Attic stairs]", "mechanic": { "type": "navigate", "nextNodeId": "n_attic_entry" } }
+        ]
+      },
+      "n_law_office": {
+        "id": "n_law_office",
+        "type": "narrative",
+        "text": "A hidden compartment in a law shelf can be found by logic or luck.",
+        "choices": [
+          {
+            "id": "c_find_secret",
+            "label": "[Investigation DC 13]",
+            "mechanic": {
+              "type": "skill_check",
+              "dice": "1d20",
+              "dc": 13,
+              "attribute": "intelligence",
+              "skillId": "investigation",
+              "onSuccess": { "nextNodeId": "n_secret_room" },
+              "onFailure": { "nextNodeId": "n_law_fail" }
+            }
+          },
+          { "id": "c_back_upper_1", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_upper_hall" } }
+        ]
+      },
+      "n_law_fail": {
+        "id": "n_law_fail",
+        "type": "narrative",
+        "text": "You trigger a dust trap and cough through a burning throat.",
+        "onEnter": [
+          { "action": "adjust_hp", "amount": -2 }
+        ],
+        "choices": [
+          { "id": "c_back_upper_2", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_upper_hall" } }
+        ]
+      },
+      "n_secret_room": {
+        "id": "n_secret_room",
+        "type": "narrative",
+        "text": "You find letters, ritual notes, and a locked case of restorative vials.",
+        "onEnter": [
+          { "action": "adjust_currency", "amount": 60 },
+          { "action": "add_item", "itemId": "lesser_restoration_scroll", "qty": 1 },
+          { "action": "add_item", "itemId": "health_potion", "qty": 1 }
+        ],
+        "choices": [
+          { "id": "c_back_upper_3", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_upper_hall" } }
+        ]
+      },
+      "n_steward_suite": {
+        "id": "n_steward_suite",
+        "type": "narrative",
+        "text": "Brigetta's ghost appears in the mirror and asks if you truly mean to save Ireena.",
+        "choices": [
+          {
+            "id": "c_assure_brigetta",
+            "label": "\"I give you my word: we'll protect her.\"",
+            "mechanic": {
+              "type": "skill_check",
+              "dice": "1d20",
+              "dc": 12,
+              "attribute": "intelligence",
+              "skillId": "persuasion",
+              "onSuccess": { "nextNodeId": "n_brigetta_trust" },
+              "onFailure": { "nextNodeId": "n_brigetta_cold" }
+            }
+          },
+          { "id": "c_back_upper_4", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_upper_hall" } }
+        ]
+      },
+      "n_brigetta_trust": {
+        "id": "n_brigetta_trust",
+        "type": "narrative",
+        "text": "Brigetta points to hidden attic rafters and warns of a spider nest.",
+        "onEnter": [
+          { "action": "set_flag", "key": "brigetta_trust", "value": true }
+        ],
+        "choices": [
+          { "id": "c_to_attic_from_brigetta", "label": "[Go to attic]", "mechanic": { "type": "navigate", "nextNodeId": "n_attic_entry" } }
+        ]
+      },
+      "n_brigetta_cold": {
+        "id": "n_brigetta_cold",
+        "type": "narrative",
+        "text": "\"Then prove it.\" She vanishes, leaving the mirror cracked and your nerves shaken.",
+        "onEnter": [
+          { "action": "adjust_hp", "amount": -1 }
+        ],
+        "choices": [
+          { "id": "c_to_attic_anyway", "label": "[Go to attic]", "mechanic": { "type": "navigate", "nextNodeId": "n_attic_entry" } }
+        ]
+      },
+      "n_attic_entry": {
+        "id": "n_attic_entry",
+        "type": "narrative",
+        "text": "You hear a child crying from behind a warped door and movement in the rafters.",
+        "onEnter": [
+          { "action": "set_flag", "key": "time_9pm", "value": true }
+        ],
+        "choices": [
+          { "id": "c_search_rafters", "label": "[Search rafters (Perception DC 13)]", "mechanic": { "type": "skill_check", "dice": "1d20", "dc": 13, "attribute": "intelligence", "skillId": "perception", "onSuccess": { "nextNodeId": "n_attic_cache" }, "onFailure": { "nextNodeId": "n_attic_spider" } } },
+          { "id": "c_open_children_room", "label": "[Open children's room]", "mechanic": { "type": "navigate", "nextNodeId": "n_children_room" } },
+          { "id": "c_attic_spider", "label": "[Investigate noises]", "mechanic": { "type": "navigate", "nextNodeId": "n_attic_spider" } }
+        ]
+      },
+      "n_attic_cache": {
+        "id": "n_attic_cache",
+        "type": "narrative",
+        "text": "You find a stashed shortbow, lockpicks, and old prayer seals.",
+        "onEnter": [
+          { "action": "add_item", "itemId": "longbow_plus1", "qty": 1 },
+          { "action": "add_item", "itemId": "lockpick_set", "qty": 1 }
+        ],
+        "choices": [
+          { "id": "c_to_children_after_cache", "label": "[Open children's room]", "mechanic": { "type": "navigate", "nextNodeId": "n_children_room" } }
+        ]
+      },
+      "n_attic_spider": {
+        "id": "n_attic_spider",
+        "type": "encounter",
+        "text": "A giant spider drops from the rafters.",
+        "choices": [
+          { "id": "c_fight_spider", "label": "[Fight]", "mechanic": { "type": "combat_init", "encounterId": "enc_attic_spider" } }
+        ]
+      },
+      "n_attic_spider_clear": {
+        "id": "n_attic_spider_clear",
+        "type": "narrative",
+        "text": "The webs settle. A hidden beam compartment holds a cure scroll.",
+        "onEnter": [
+          { "action": "add_item", "itemId": "remove_curse_scroll", "qty": 1 }
+        ],
+        "choices": [
+          { "id": "c_to_children_after_spider", "label": "[Open children's room]", "mechanic": { "type": "navigate", "nextNodeId": "n_children_room" } }
+        ]
+      },
+      "n_children_room": {
+        "id": "n_children_room",
+        "type": "narrative",
+        "text": "Rose reveals a hidden stair to the dungeon and presses a holy symbol into your hand.",
+        "onEnter": [
+          { "action": "set_flag", "key": "met_rose_inside", "value": true },
+          { "action": "add_item", "itemId": "holy_symbol_dawn", "qty": 1 },
+          { "action": "heal", "amount": "1d6+1" }
+        ],
+        "choices": [
+          { "id": "c_descend_secret", "label": "[Descend to dungeon]", "mechanic": { "type": "navigate", "nextNodeId": "n_dungeon_access" } }
+        ]
+      },
+      "n_dungeon_access": {
+        "id": "n_dungeon_access",
+        "type": "narrative",
+        "text": "Narrow tunnels split toward crypts, cult cells, and the ritual hall.",
+        "choices": [
+          { "id": "c_to_crypts", "label": "[Explore crypts]", "mechanic": { "type": "navigate", "nextNodeId": "n_crypts" } },
+          { "id": "c_to_cells", "label": "[Inspect cult cells]", "mechanic": { "type": "navigate", "nextNodeId": "n_cult_cells" } },
+          { "id": "c_to_ritual", "label": "[Head toward ritual hall]", "mechanic": { "type": "navigate", "nextNodeId": "n_dark_heart_threshold" } }
+        ]
+      },
+      "n_crypts": {
+        "id": "n_crypts",
+        "type": "narrative",
+        "text": "Most coffins are empty. One hides silvered steel and a trapdoor latch.",
+        "onEnter": [
+          { "action": "add_item", "itemId": "silvered_shortsword", "qty": 1 },
+          { "action": "set_flag", "key": "found_trapdoor", "value": true }
+        ],
+        "choices": [
+          { "id": "c_to_pit", "label": "[Follow trapped corridor]", "mechanic": { "type": "navigate", "nextNodeId": "n_spiked_pit" } },
+          { "id": "c_back_dungeon_1", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_dungeon_access" } }
+        ]
+      },
+      "n_cult_cells": {
+        "id": "n_cult_cells",
+        "type": "encounter",
+        "text": "Two cultist corpses rise from chained cells.",
+        "choices": [
+          { "id": "c_fight_cells", "label": "[Fight undead cultists]", "mechanic": { "type": "combat_init", "encounterId": "enc_cultist_massacre" } }
+        ]
+      },
+      "n_cells_clear": {
+        "id": "n_cells_clear",
+        "type": "narrative",
+        "text": "The bodies fall still again. You find coin and a +1 dagger.",
+        "onEnter": [
+          { "action": "adjust_currency", "amount": 55 },
+          { "action": "add_item", "itemId": "dagger_plus1", "qty": 1 }
+        ],
+        "choices": [
+          { "id": "c_to_pit_from_cells", "label": "[Continue to trapped corridor]", "mechanic": { "type": "navigate", "nextNodeId": "n_spiked_pit" } },
+          { "id": "c_back_dungeon_2", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_dungeon_access" } }
+        ]
+      },
+      "n_spiked_pit": {
+        "id": "n_spiked_pit",
+        "type": "narrative",
+        "text": "A disguised pit blocks the hall.",
+        "choices": [
+          {
+            "id": "c_jump_pit",
+            "label": "[Leap it (Acrobatics DC 15)]",
+            "mechanic": {
+              "type": "skill_check",
+              "dice": "1d20",
+              "dc": 15,
+              "attribute": "dexterity",
+              "skillId": "acrobatics",
+              "onSuccess": { "nextNodeId": "n_shadow_crossroads" },
+              "onFailure": { "nextNodeId": "n_pit_fall" }
+            }
+          },
+          {
+            "id": "c_find_planks",
+            "label": "[Find stable route (Investigation DC 13)]",
+            "mechanic": {
+              "type": "skill_check",
+              "dice": "1d20",
+              "dc": 13,
+              "attribute": "intelligence",
+              "skillId": "investigation",
+              "onSuccess": { "nextNodeId": "n_shadow_crossroads" },
+              "onFailure": { "nextNodeId": "n_pit_fall" }
+            }
+          },
+          { "id": "c_detour_pit", "label": "[Detour slowly]", "mechanic": { "type": "navigate", "nextNodeId": "n_shadow_crossroads" } }
+        ]
+      },
+      "n_pit_fall": {
+        "id": "n_pit_fall",
+        "type": "narrative",
+        "text": "You fall into spikes and crawl out bleeding.",
+        "onEnter": [
+          { "action": "adjust_hp", "amount": -10 }
+        ],
+        "choices": [
+          { "id": "c_to_crossroads_after_fall", "label": "[Keep moving]", "mechanic": { "type": "navigate", "nextNodeId": "n_shadow_crossroads" } }
+        ]
+      },
+      "n_shadow_crossroads": {
+        "id": "n_shadow_crossroads",
+        "type": "encounter",
+        "text": "Living shadows peel from the walls and strike.",
+        "choices": [
+          { "id": "c_fight_shadows", "label": "[Fight shadows]", "mechanic": { "type": "combat_init", "encounterId": "enc_shadows" } }
+        ]
+      },
+      "n_shadow_crossroads_clear": {
+        "id": "n_shadow_crossroads_clear",
+        "type": "narrative",
+        "text": "Ireena's footprints continue toward a flooded ritual chamber.",
+        "choices": [
+          { "id": "c_to_angelic", "label": "[Search hidden chapel]", "mechanic": { "type": "navigate", "nextNodeId": "n_angelic_tears" } },
+          { "id": "c_to_dark_heart", "label": "[Follow prints to altar]", "mechanic": { "type": "navigate", "nextNodeId": "n_dark_heart_threshold" } }
+        ]
+      },
+      "n_angelic_tears": {
+        "id": "n_angelic_tears",
+        "type": "narrative",
+        "text": "A hidden chapel holds blessed water and a hidden trapdoor route upstairs.",
+        "onEnter": [
+          { "action": "add_item", "itemId": "holy_water_dawn", "qty": 2 },
+          { "action": "set_flag", "key": "trapdoor_open", "value": true }
+        ],
+        "choices": [
+          { "id": "c_back_crossroads", "label": "[Return to footprints]", "mechanic": { "type": "navigate", "nextNodeId": "n_shadow_crossroads_clear" } }
+        ]
+      },
+      "n_dark_heart_threshold": {
+        "id": "n_dark_heart_threshold",
+        "type": "narrative",
+        "text": "Ireena is chained beside an altar over black water. The Dursts rise as you approach.",
+        "onEnter": [
+          { "action": "set_flag", "key": "found_ireena", "value": true },
+          { "action": "set_flag", "key": "time_11pm", "value": true }
+        ],
+        "choices": [
+          { "id": "c_talk_ireena", "label": "\"Ireena, can you hear me?\"", "mechanic": { "type": "navigate", "nextNodeId": "n_dialogue_ireena" } },
+          { "id": "c_start_boss", "label": "[Start ritual battle]", "mechanic": { "type": "combat_init", "encounterId": "enc_dark_heart_boss" } },
+          { "id": "c_retreat_low_hp", "label": "[Retreat to recover]", "visibilityRequirements": [{ "type": "stat_check", "stat": "hpCurrent", "operator": "<=", "value": 12 }], "mechanic": { "type": "navigate", "nextNodeId": "n_shadow_crossroads_clear" } }
+        ]
+      },
+      "n_dialogue_ireena": {
+        "id": "n_dialogue_ireena",
+        "type": "narrative",
+        "text": "Ireena grips your arm. \"Please don't leave me here.\"",
+        "choices": [
+          { "id": "c_reassure_ireena", "label": "\"You're not dying here. Stay with me.\"", "mechanic": { "type": "skill_check", "dice": "1d20", "dc": 12, "attribute": "intelligence", "skillId": "insight", "onSuccess": { "nextNodeId": "n_ireena_trust" }, "onFailure": { "nextNodeId": "n_ireena_fear" } } },
+          { "id": "c_back_to_boss", "label": "[Prepare for battle]", "mechanic": { "type": "navigate", "nextNodeId": "n_dark_heart_threshold" } }
+        ]
+      },
+      "n_ireena_trust": {
+        "id": "n_ireena_trust",
+        "type": "narrative",
+        "text": "She steadies. \"Then let's survive this.\"",
+        "onEnter": [
+          { "action": "set_flag", "key": "ireena_trusts_party", "value": true }
+        ],
+        "choices": [
+          { "id": "c_to_boss_after_trust", "label": "[Fight the Dursts]", "mechanic": { "type": "navigate", "nextNodeId": "n_dark_heart_threshold" } }
+        ]
+      },
+      "n_ireena_fear": {
+        "id": "n_ireena_fear",
+        "type": "narrative",
+        "text": "She panics and pulls free, making the opening attack harder.",
+        "onEnter": [
+          { "action": "adjust_hp", "amount": -2 }
+        ],
+        "choices": [
+          { "id": "c_to_boss_after_fear", "label": "[Fight anyway]", "mechanic": { "type": "navigate", "nextNodeId": "n_dark_heart_threshold" } }
+        ]
+      },
+      "n_dark_heart_victory": {
+        "id": "n_dark_heart_victory",
+        "type": "narrative",
+        "text": "The Dursts fall. The house convulses and starts collapsing. You must escape now.",
+        "onEnter": [
+          { "action": "set_flag", "key": "rescued_ireena", "value": true },
+          { "action": "set_flag", "key": "escape_started", "value": true }
+        ],
+        "choices": [
+          { "id": "c_escape_start", "label": "[Run for the stairs]", "mechanic": { "type": "navigate", "nextNodeId": "n_escape_upper_hall" } }
+        ]
+      },
+      "n_escape_upper_hall": {
+        "id": "n_escape_upper_hall",
+        "type": "encounter",
+        "text": "Animated armor blocks the upper hall as fire spreads.",
+        "choices": [
+          { "id": "c_fight_escape_armor", "label": "[Break through]", "mechanic": { "type": "combat_init", "encounterId": "enc_escape_armor" } },
+          { "id": "c_use_trapdoor", "label": "[Use hidden trapdoor route]", "visibilityRequirements": [{ "type": "has_flag", "key": "trapdoor_open" }], "mechanic": { "type": "navigate", "nextNodeId": "n_escape_foyer" } }
+        ]
+      },
+      "n_escape_armor_clear": {
+        "id": "n_escape_armor_clear",
+        "type": "narrative",
+        "text": "The armor collapses and the path opens.",
+        "choices": [
+          { "id": "c_to_escape_foyer", "label": "[Run for foyer]", "mechanic": { "type": "navigate", "nextNodeId": "n_escape_foyer" } }
+        ]
+      },
+      "n_escape_foyer": {
+        "id": "n_escape_foyer",
+        "type": "encounter",
+        "text": "A living rug tries to drag you back into burning corridors.",
+        "choices": [
+          { "id": "c_fight_rug", "label": "[Cut through]", "mechanic": { "type": "combat_init", "encounterId": "enc_escape_rug" } },
+          { "id": "c_dash_gate", "label": "[Dash for the gate]", "mechanic": { "type": "navigate", "nextNodeId": "n_escape_gate" } }
+        ]
+      },
+      "n_escape_rug_clear": {
+        "id": "n_escape_rug_clear",
+        "type": "narrative",
+        "text": "The rug unravels. The front gate twists into a jaw of teeth.",
+        "choices": [
+          { "id": "c_to_escape_gate_2", "label": "[Face the gate]", "mechanic": { "type": "navigate", "nextNodeId": "n_escape_gate" } }
+        ]
+      },
+      "n_escape_gate": {
+        "id": "n_escape_gate",
+        "type": "narrative",
+        "text": "You need perfect timing to pass the snapping doorway.",
+        "choices": [
+          { "id": "c_escape_acrobatics", "label": "[Acrobatics DC 13]", "mechanic": { "type": "skill_check", "dice": "1d20", "dc": 13, "attribute": "dexterity", "skillId": "acrobatics", "onSuccess": { "nextNodeId": "n_survivors" }, "onFailure": { "nextNodeId": "n_escape_wounded" } } },
+          { "id": "c_escape_read_pattern", "label": "[Perception DC 13]", "mechanic": { "type": "skill_check", "dice": "1d20", "dc": 13, "attribute": "intelligence", "skillId": "perception", "onSuccess": { "nextNodeId": "n_survivors" }, "onFailure": { "nextNodeId": "n_escape_wounded" } } },
+          { "id": "c_escape_reckless", "label": "[Force through]", "mechanic": { "type": "navigate", "nextNodeId": "n_escape_wounded" } }
+        ]
+      },
+      "n_escape_wounded": {
+        "id": "n_escape_wounded",
+        "type": "narrative",
+        "text": "The teeth rake your side as you force your way through.",
+        "onEnter": [
+          { "action": "adjust_hp", "amount": -10 }
+        ],
+        "choices": [
+          { "id": "c_survive_gt0", "label": "[Keep moving with Ireena]", "visibilityRequirements": [{ "type": "stat_check", "stat": "hpCurrent", "operator": ">", "value": 0 }], "mechanic": { "type": "navigate", "nextNodeId": "n_survivors" } },
+          { "id": "c_doomed_lte0", "label": "[Collapse in the doorway]", "visibilityRequirements": [{ "type": "stat_check", "stat": "hpCurrent", "operator": "<=", "value": 0 }], "mechanic": { "type": "navigate", "nextNodeId": "n_doomed" } }
+        ]
+      },
+      "n_survivors": {
+        "id": "n_survivors",
+        "type": "ending",
+        "text": "You escape with Ireena before midnight as Death House collapses into the fog.",
+        "onEnter": [
+          { "action": "adjust_currency", "amount": 100 }
+        ],
+        "choices": [
+          { "id": "c_survivor_talk", "label": "\"Tell me where these mists lead.\"", "mechanic": { "type": "navigate", "nextNodeId": "n_camp_dialogue" } },
+          { "id": "c_restart_survivors", "label": "[Play again]", "mechanic": { "type": "navigate", "nextNodeId": "n_start" } }
+        ]
+      },
+      "n_camp_dialogue": {
+        "id": "n_camp_dialogue",
+        "type": "ending",
+        "text": "Kolyan and Ismark thank you at a hunting camp. Dawn will bring a harder road.",
+        "choices": [
+          { "id": "c_camp_lore", "label": "\"What exactly is Barovia?\"", "mechanic": { "type": "navigate", "nextNodeId": "n_camp_lore" } },
+          { "id": "c_camp_restart", "label": "[End run]", "mechanic": { "type": "navigate", "nextNodeId": "n_start" } }
+        ]
+      },
+      "n_camp_lore": {
+        "id": "n_camp_lore",
+        "type": "ending",
+        "text": "They warn you this was only the first test the Mists had planned.",
+        "choices": [
+          { "id": "c_back_camp", "label": "[Back]", "mechanic": { "type": "navigate", "nextNodeId": "n_camp_dialogue" } }
+        ]
+      },
+      "n_doomed": {
+        "id": "n_doomed",
+        "type": "ending",
+        "text": "Midnight claims the doomed. Death House keeps your name.",
+        "choices": [
+          { "id": "c_restart_doomed", "label": "[Try again]", "mechanic": { "type": "navigate", "nextNodeId": "n_start" } }
+        ]
+      },
+      "n_game_over": {
+        "id": "n_game_over",
+        "type": "ending",
+        "text": "Your story ends in the dark below Death House.",
+        "choices": [
+          { "id": "c_restart_game_over", "label": "[Try again]", "mechanic": { "type": "navigate", "nextNodeId": "n_start" } }
+        ]
+      }
+    },
+    "items": {
+      "dagger_iron": { "id": "dagger_iron", "name": "Iron Dagger", "type": "weapon", "damage": "1d4", "scalingAttribute": "dexterity" },
+      "greatsword_iron": { "id": "greatsword_iron", "name": "Iron Greatsword", "type": "weapon", "damage": "2d6", "scalingAttribute": "strength" },
+      "blade_of_shadows": { "id": "blade_of_shadows", "name": "Blade of Shadows", "type": "weapon", "damage": "1d6", "attackBonus": 1, "scalingAttribute": "dexterity" },
+      "mace_iron": { "id": "mace_iron", "name": "Iron Mace", "type": "weapon", "damage": "1d6", "scalingAttribute": "strength" },
+      "durst_longsword_p1": { "id": "durst_longsword_p1", "name": "Durst Longsword (+1)", "type": "weapon", "damage": "1d8", "attackBonus": 1, "scalingAttribute": "strength" },
+      "silvered_shortsword": { "id": "silvered_shortsword", "name": "Silvered Shortsword", "type": "weapon", "damage": "1d6", "attackBonus": 1, "scalingAttribute": "dexterity" },
+      "dagger_plus1": { "id": "dagger_plus1", "name": "Dagger (+1)", "type": "weapon", "damage": "1d4", "attackBonus": 1, "scalingAttribute": "dexterity" },
+      "longbow_plus1": { "id": "longbow_plus1", "name": "Longbow (+1)", "type": "weapon", "damage": "1d8", "attackBonus": 1, "scalingAttribute": "dexterity" },
+      "butcher_knife": { "id": "butcher_knife", "name": "Butcher Knife", "type": "weapon", "damage": "1d4", "scalingAttribute": "dexterity" },
+
+      "robe_scholar": { "id": "robe_scholar", "name": "Scholar Robes", "type": "armor", "acBonus": 0 },
+      "chainmail": { "id": "chainmail", "name": "Chainmail", "type": "armor", "acBonus": 6 },
+      "leather_armor": { "id": "leather_armor", "name": "Leather Armor", "type": "armor", "acBonus": 2 },
+      "scale_mail": { "id": "scale_mail", "name": "Scale Mail", "type": "armor", "acBonus": 4 },
+      "cloak_of_protection_proxy": { "id": "cloak_of_protection_proxy", "name": "Cloak of Protection", "type": "armor", "acBonus": 1 },
+
+      "spellbook": { "id": "spellbook", "name": "Spellbook", "type": "tool" },
+      "holy_symbol": { "id": "holy_symbol", "name": "Holy Symbol", "type": "tool" },
+      "holy_symbol_dawn": { "id": "holy_symbol_dawn", "name": "Holy Symbol of Dawn", "type": "tool" },
+      "iron_attic_key": { "id": "iron_attic_key", "name": "Iron Key", "type": "tool" },
+      "thieves_tools": { "id": "thieves_tools", "name": "Thieves' Tools", "type": "tool" },
+      "lockpick_set": { "id": "lockpick_set", "name": "Lockpick Set", "type": "tool" },
+      "torch_bundle": { "id": "torch_bundle", "name": "Torch Bundle", "type": "tool" },
+      "remove_curse_scroll": { "id": "remove_curse_scroll", "name": "Scroll: Remove Curse", "type": "tool" },
+      "lesser_restoration_scroll": { "id": "lesser_restoration_scroll", "name": "Scroll: Lesser Restoration", "type": "tool" },
+
+      "health_potion": { "id": "health_potion", "name": "Health Potion", "type": "consumable", "effect": { "action": "heal", "amount": "2d4+2" } },
+      "holy_water_dawn": { "id": "holy_water_dawn", "name": "Holy Water of Dawn", "type": "consumable", "effect": { "action": "heal", "amount": "3d6" } },
+      "smoke_bomb": { "id": "smoke_bomb", "name": "Smoke Bomb", "type": "consumable", "effect": { "action": "set_flag", "key": "has_surprise", "value": true } }
+    },
+    "enemies": {
+      "animated_knife": { "id": "animated_knife", "name": "Animated Kitchen Knife", "hp": 10, "ac": 13, "attackBonus": 4, "damage": "1d4+2", "xpReward": 25 },
+      "attic_spider": { "id": "attic_spider", "name": "Attic Spider", "hp": 14, "ac": 12, "attackBonus": 4, "damage": "1d6+2", "xpReward": 35 },
+      "cultist_zombie": { "id": "cultist_zombie", "name": "Cultist Zombie", "hp": 20, "ac": 8, "attackBonus": 4, "damage": "1d6+1", "xpReward": 35 },
+      "living_shadow": { "id": "living_shadow", "name": "Living Shadow", "hp": 16, "ac": 12, "attackBonus": 4, "damage": "1d6+2", "xpReward": 55 },
+      "durst_ghast_gustav": { "id": "durst_ghast_gustav", "name": "Gustav Durst (Ghast)", "hp": 42, "ac": 13, "attackBonus": 6, "damage": "1d8+3", "xpReward": 250 },
+      "durst_ghast_elisabeth": { "id": "durst_ghast_elisabeth", "name": "Elisabeth Durst (Ghast)", "hp": 44, "ac": 13, "attackBonus": 6, "damage": "1d8+3", "xpReward": 260 },
+      "cultist_ghoul": { "id": "cultist_ghoul", "name": "Durst Cult Ghoul", "hp": 24, "ac": 12, "attackBonus": 4, "damage": "1d6+2", "xpReward": 90 },
+      "animated_armor_escape": { "id": "animated_armor_escape", "name": "Animated Armor", "hp": 28, "ac": 18, "attackBonus": 4, "damage": "1d6+2", "xpReward": 120 },
+      "animated_rug_escape": { "id": "animated_rug_escape", "name": "Animated Rug", "hp": 30, "ac": 12, "attackBonus": 5, "damage": "2d6", "xpReward": 150 }
+    },
+    "encounters": {
+      "enc_animated_knife": {
+        "id": "enc_animated_knife",
+        "type": "combat",
+        "enemies": [{ "enemyId": "animated_knife", "count": 1 }],
+        "resolution": { "onVictory": { "nextNodeId": "n_knife_victory" }, "onDefeat": { "nextNodeId": "n_game_over" } }
+      },
+      "enc_attic_spider": {
+        "id": "enc_attic_spider",
+        "type": "combat",
+        "enemies": [{ "enemyId": "attic_spider", "count": 1 }],
+        "resolution": { "onVictory": { "nextNodeId": "n_attic_spider_clear" }, "onDefeat": { "nextNodeId": "n_game_over" } }
+      },
+      "enc_cultist_massacre": {
+        "id": "enc_cultist_massacre",
+        "type": "combat",
+        "enemies": [{ "enemyId": "cultist_zombie", "count": 2 }],
+        "resolution": { "onVictory": { "nextNodeId": "n_cells_clear" }, "onDefeat": { "nextNodeId": "n_game_over" } }
+      },
+      "enc_shadows": {
+        "id": "enc_shadows",
+        "type": "combat",
+        "enemies": [{ "enemyId": "living_shadow", "count": 3 }],
+        "resolution": { "onVictory": { "nextNodeId": "n_shadow_crossroads_clear" }, "onDefeat": { "nextNodeId": "n_game_over" } }
+      },
+      "enc_dark_heart_boss": {
+        "id": "enc_dark_heart_boss",
+        "type": "combat",
+        "enemies": [
+          { "enemyId": "durst_ghast_gustav", "count": 1 },
+          { "enemyId": "durst_ghast_elisabeth", "count": 1 },
+          { "enemyId": "cultist_ghoul", "count": 1 }
+        ],
+        "resolution": { "onVictory": { "nextNodeId": "n_dark_heart_victory" }, "onDefeat": { "nextNodeId": "n_doomed" } }
+      },
+      "enc_escape_armor": {
+        "id": "enc_escape_armor",
+        "type": "combat",
+        "enemies": [{ "enemyId": "animated_armor_escape", "count": 2 }],
+        "resolution": { "onVictory": { "nextNodeId": "n_escape_armor_clear" }, "onDefeat": { "nextNodeId": "n_doomed" } }
+      },
+      "enc_escape_rug": {
+        "id": "enc_escape_rug",
+        "type": "combat",
+        "enemies": [{ "enemyId": "animated_rug_escape", "count": 1 }],
+        "resolution": { "onVictory": { "nextNodeId": "n_escape_rug_clear" }, "onDefeat": { "nextNodeId": "n_doomed" } }
+      }
+    }
+  }
+}

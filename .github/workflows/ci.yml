@@ -5,6 +5,7 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
 
 jobs:
   build-and-test:
@@ -21,8 +22,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint data
-        run: npm run lint:data
+      - name: QA (ci-pr profile)
+        run: npm run qa:ci
 
       - name: Build data
         run: npm run build:data
@@ -32,3 +33,20 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # Optional full structural + narrative pass (manual). May fail if story graph has structural defects.
+  qa-nightly-profile:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: QA (nightly profile — includes structural walk)
+        run: npm run qa:ci -- --profile=nightly
+        env:
+          QA_PROFILE: nightly

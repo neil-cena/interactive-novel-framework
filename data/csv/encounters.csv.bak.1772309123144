@@ -1,0 +1,3 @@
+id,enemies,onVictory,onDefeat
+combat_alley_thug,silk_thug:1,n_alley_thug_looted,n_game_over
+combat_boss_garrick,silk_enforcer:1,n_boss_defeated,n_game_over

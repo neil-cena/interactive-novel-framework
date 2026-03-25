@@ -48,6 +48,7 @@ function serializeAction(action) {
 function serializeVisibility(req) {
   if (!req?.type) return ''
   if (req.type === 'has_flag') return `has_flag:${req.key ?? ''}`
+  if (req.type === 'not_has_flag') return `not_has_flag:${req.key ?? ''}`
   if (req.type === 'has_item') return `has_item:${req.itemId ?? ''}`
   if (req.type === 'stat_check') return `stat_check:${req.stat ?? ''}:${req.operator ?? ''}:${req.value ?? 0}`
   return ''
@@ -71,6 +72,7 @@ function serializeMechanic(m) {
     ]
     if (m.onFailureEncounterId) parts.push(m.onFailureEncounterId)
     if (m.attribute) parts.push(m.attribute)
+    if (m.skillId) parts.push(m.skillId)
     return `skill_check:${parts.join(':')}`
   }
   return ''
@@ -80,6 +82,7 @@ const NODES_HEADERS = [
   'id',
   'type',
   'text',
+  'image',
   'onEnter',
   'choice1_id',
   'choice1_label',
@@ -99,7 +102,7 @@ const ITEMS_HEADERS = ['id', 'name', 'type', 'damage', 'attackBonus', 'acBonus',
 
 const ENEMIES_HEADERS = ['id', 'name', 'hp', 'maxHp', 'ac', 'attackBonus', 'damage', 'xpReward']
 
-const ENCOUNTERS_HEADERS = ['id', 'enemies', 'onVictory', 'onDefeat']
+const ENCOUNTERS_HEADERS = ['id', 'name', 'enemies', 'onVictory', 'onDefeat']
 
 /**
  * @param {Record<string, { id: string, type: string, text: string, onEnter?: Array<{ action: string, key?: string, value?: boolean, itemId?: string, qty?: number, amount?: number }>, choices?: Array<{ id: string, label: string, visibilityRequirements?: Array<{ type: string, key?: string, itemId?: string, stat?: string, operator?: string, value?: number }>, mechanic?: { type: string, nextNodeId?: string, encounterId?: string, dice?: string, dc?: number, onSuccess?: { nextNodeId: string }, onFailure?: { nextNodeId: string }, onFailureEncounterId?: string, attribute?: string } }> }>} nodes
@@ -116,6 +119,7 @@ export function serializeNodesToCsv(nodes) {
       escapeCsvField(node.id),
       escapeCsvField(node.type),
       escapeCsvField(node.text),
+      escapeCsvField(node.image ?? ''),
       escapeCsvField(onEnterStr),
       escapeCsvField(c1?.id ?? ''),
       escapeCsvField(c1?.label ?? ''),
@@ -182,7 +186,7 @@ export function serializeEnemiesToCsv(enemies) {
 }
 
 /**
- * @param {Record<string, { id: string, enemies?: Array<{ enemyId: string, count?: number }>, resolution?: { onVictory?: { nextNodeId: string }, onDefeat?: { nextNodeId: string } } }>} encounters
+ * @param {Record<string, { id: string, name?: string, enemies?: Array<{ enemyId: string, count?: number }>, resolution?: { onVictory?: { nextNodeId: string }, onDefeat?: { nextNodeId: string } } }>} encounters
  * @returns {string}
  */
 export function serializeEncountersToCsv(encounters) {
@@ -193,6 +197,7 @@ export function serializeEncountersToCsv(encounters) {
     const onDefeat = enc.resolution?.onDefeat?.nextNodeId ?? ''
     const row = [
       escapeCsvField(enc.id),
+      escapeCsvField(enc.name ?? enc.id),
       escapeCsvField(enemiesStr),
       escapeCsvField(onVictory),
       escapeCsvField(onDefeat),

@@ -20,6 +20,7 @@ const {
   grantAttributePoint,
   resetToDefaults,
   stateSnapshot,
+  choiceHistory,
 } = usePlaytestMode()
 
 const filterText = ref('')
@@ -81,6 +82,20 @@ const attrs: (keyof PlayerAttributes)[] = ['strength', 'dexterity', 'intelligenc
           </option>
         </select>
         <button type="button" @click="teleport(teleportTarget)">Go to node</button>
+      </section>
+      <section class="playtest-section">
+        <h4>Choices (session)</h4>
+        <p v-if="choiceHistory.length === 0" class="choice-log-empty">No narrative choices recorded yet.</p>
+        <ol v-else class="choice-log">
+          <li v-for="(e, i) in choiceHistory" :key="`${i}-${e.nodeId}-${e.choiceId}`" class="choice-log-item">
+            <span class="choice-log-idx">{{ i + 1 }}.</span>
+            <span class="choice-log-body">
+              <span class="choice-log-node">{{ e.nodeId }}</span>
+              — {{ e.label }}
+              <span class="choice-log-meta">({{ e.choiceId }}, {{ e.mechanicType }})</span>
+            </span>
+          </li>
+        </ol>
       </section>
       <section class="playtest-section">
         <h4>State</h4>
@@ -195,6 +210,35 @@ const attrs: (keyof PlayerAttributes)[] = ['strength', 'dexterity', 'intelligenc
 .node-list {
   width: 100%;
   margin-bottom: 6px;
+}
+.choice-log-empty {
+  margin: 0;
+  color: #888;
+  font-size: 11px;
+}
+.choice-log {
+  margin: 0;
+  padding-left: 1.25rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.choice-log-item {
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+.choice-log-idx {
+  color: #888;
+  margin-right: 4px;
+}
+.choice-log-node {
+  color: #90caf9;
+  word-break: break-all;
+}
+.choice-log-meta {
+  display: block;
+  color: #888;
+  font-size: 10px;
+  margin-top: 2px;
 }
 .state-pre {
   margin: 0;

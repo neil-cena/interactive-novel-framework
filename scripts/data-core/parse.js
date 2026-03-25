@@ -70,7 +70,15 @@ export function parseAction(actionToken, logPrefix = '[parse]') {
       return { action, itemId, qty: asNumber(qtyValue, 1) }
     }
     case 'adjust_hp':
-    case 'adjust_currency': {
+    case 'adjust_currency':
+    case 'adjust_energy':
+    case 'adjust_community_cost':
+    case 'adjust_state_chaos':
+    case 'adjust_stability':
+    case 'adjust_scholar_rep':
+    case 'adjust_cea_rep':
+    case 'adjust_freehands_rep':
+    case 'adjust_worker_rep': {
       const [amountValue] = parts
       return { action, amount: asNumber(amountValue, 0) }
     }
@@ -111,6 +119,16 @@ export function parseVisibility(value, logPrefix = '[parse]') {
         }
         return { type: 'has_flag', key }
       }
+      if (type === 'not_has_flag') {
+        const [key] = parts
+        if (!key) {
+          if (typeof console !== 'undefined' && console.warn) {
+            console.warn(`${logPrefix} parseVisibility: not_has_flag missing key. Token:`, JSON.stringify(token))
+          }
+          return null
+        }
+        return { type: 'not_has_flag', key }
+      }
       if (type === 'has_item') {
         const [itemId] = parts
         if (!itemId) {
@@ -120,6 +138,16 @@ export function parseVisibility(value, logPrefix = '[parse]') {
           return null
         }
         return { type: 'has_item', itemId }
+      }
+      if (type === 'not_has_item') {
+        const [itemId] = parts
+        if (!itemId) {
+          if (typeof console !== 'undefined' && console.warn) {
+            console.warn(`${logPrefix} parseVisibility: not_has_item missing itemId. Token:`, JSON.stringify(token))
+          }
+          return null
+        }
+        return { type: 'not_has_item', itemId }
       }
       if (type === 'stat_check') {
         const [stat, operator, rawValue] = parts
@@ -131,6 +159,26 @@ export function parseVisibility(value, logPrefix = '[parse]') {
         }
         return { type: 'stat_check', stat, operator, value: asNumber(rawValue, 0) }
       }
+      if (type === 'world_check') {
+        const [stat, operator, rawValue] = parts
+        if (!stat || !operator || rawValue === undefined || rawValue === '') {
+          if (typeof console !== 'undefined' && console.warn) {
+            console.warn(`${logPrefix} parseVisibility: world_check missing stat/operator/value. Token:`, JSON.stringify(token))
+          }
+          return null
+        }
+        return { type: 'world_check', stat, operator, value: asNumber(rawValue, 0) }
+      }
+      if (type === 'reputation_check') {
+        const [stat, operator, rawValue] = parts
+        if (!stat || !operator || rawValue === undefined || rawValue === '') {
+          if (typeof console !== 'undefined' && console.warn) {
+            console.warn(`${logPrefix} parseVisibility: reputation_check missing stat/operator/value. Token:`, JSON.stringify(token))
+          }
+          return null
+        }
+        return { type: 'reputation_check', stat, operator, value: asNumber(rawValue, 0) }
+      }
       if (typeof console !== 'undefined' && console.warn) {
         console.warn(`${logPrefix} parseVisibility: unknown type:`, type, 'Token:', JSON.stringify(token))
       }
@@ -141,7 +189,10 @@ export function parseVisibility(value, logPrefix = '[parse]') {
 }
 
 export function parseMechanic(value, logPrefix = '[parse]') {
-  const [mechanicType, ...parts] = String(value ?? '')
+  if (value == null || String(value).trim() === '') {
+    return null
+  }
+  const [mechanicType, ...parts] = String(value)
     .split(':')
     .map((segment) => segment.trim())
   if (!mechanicType) {
@@ -170,8 +221,28 @@ export function parseMechanic(value, logPrefix = '[parse]') {
     }
     return { type: 'combat_init', encounterId }
   }
+  if (mechanicType === 'theater_begin') {
+    const [exitNodeId] = parts
+    if (!exitNodeId) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`${logPrefix} parseMechanic: theater_begin missing exitNodeId. Value:`, JSON.stringify(value))
+      }
+      return null
+    }
+    return { type: 'theater_begin', exitNodeId }
+  }
+  if (mechanicType === 'feral_parliament_begin') {
+    const [exitNodeId] = parts
+    if (!exitNodeId) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`${logPrefix} parseMechanic: feral_parliament_begin missing exitNodeId. Value:`, JSON.stringify(value))
+      }
+      return null
+    }
+    return { type: 'feral_parliament_begin', exitNodeId }
+  }
   if (mechanicType === 'skill_check') {
-    const [dice, dcValue, successNodeId, failureNodeId, rawPart5, rawPart6] = parts
+    const [dice, dcValue, successNodeId, failureNodeId, rawPart5, rawPart6, rawPart7] = parts
     if (!dice || !dcValue || !successNodeId || !failureNodeId) {
       if (typeof console !== 'undefined' && console.warn) {
         console.warn(`${logPrefix} parseMechanic: skill_check missing dice/dc/successNodeId/failureNodeId. Value:`, JSON.stringify(value))
@@ -191,10 +262,26 @@ export function parseMechanic(value, logPrefix = '[parse]') {
     //  - skill_check:dice:dc:success:failure::attribute
     //  - skill_check:dice:dc:success:failure:attribute         (legacy shorthand)
     //  - skill_check:dice:dc:success:failure:encounter:attribute
-    if (rawPart6) {
+    //  - skill_check:dice:dc:success:failure:encounter:attribute:skillId (DnD skill id)
+    //  - skill_check:dice:dc:success:failure:attribute:skillId (new serializer format)
+    if (rawPart7) {
+      // Full explicit format: encounter + attribute + skill id
       if (rawPart5) mechanic.onFailureEncounterId = rawPart5
-      mechanic.attribute = rawPart6
+      if (rawPart6) mechanic.attribute = rawPart6
+      mechanic.skillId = rawPart7
+    } else if (rawPart6) {
+      // Ambiguous 6-part forms:
+      //  A) encounter + attribute
+      //  B) attribute + skillId
+      if (VALID_ATTRIBUTES.has(rawPart5)) {
+        mechanic.attribute = rawPart5
+        mechanic.skillId = rawPart6
+      } else {
+        if (rawPart5) mechanic.onFailureEncounterId = rawPart5
+        mechanic.attribute = rawPart6
+      }
     } else if (rawPart5) {
+      // Backward-compat shorthand: 5th slot is either attribute or encounter
       if (VALID_ATTRIBUTES.has(rawPart5)) {
         mechanic.attribute = rawPart5
       } else {
@@ -220,7 +307,7 @@ export function parseNodes(rows, logPrefix = '[parse]') {
       continue
     }
     const choices = []
-    for (let index = 1; index <= 3; index += 1) {
+    for (let index = 1; index <= 6; index += 1) {
       const choiceId = row[`choice${index}_id`]
       if (!choiceId) continue
       const label = row[`choice${index}_label`]
@@ -230,9 +317,12 @@ export function parseNodes(rows, logPrefix = '[parse]') {
       const choice = { id: choiceId, label, mechanic }
       const visibility = parseVisibility(row[`choice${index}_visibility`], logPrefix)
       if (visibility) choice.visibilityRequirements = visibility
+      const onSelect = parseOnEnter(row[`choice${index}_onselect`], logPrefix)
+      if (onSelect) choice.onSelect = onSelect
       choices.push(choice)
     }
     const node = { id, type: row.type, text: row.text ?? '' }
+    if (row.image != null && String(row.image).trim()) node.image = String(row.image).trim()
     const onEnter = parseOnEnter(row.onEnter, logPrefix)
     if (onEnter) node.onEnter = onEnter
     if (choices.length > 0) node.choices = choices
@@ -252,6 +342,7 @@ export function parseItems(rows, logPrefix = '[parse]') {
       continue
     }
     const item = { id, name: row.name ?? id, type: row.type }
+    if (row.description != null && String(row.description).trim()) item.description = String(row.description).trim()
     if (row.damage) item.damage = row.damage
     if (row.attackBonus !== undefined && row.attackBonus !== '') item.attackBonus = asNumber(row.attackBonus, 0)
     if (row.acBonus !== undefined && row.acBonus !== '') item.acBonus = asNumber(row.acBonus, 0)
@@ -311,6 +402,7 @@ export function parseEncounters(rows, logPrefix = '[parse]') {
     }
     encounters[id] = {
       id,
+      name: row.name ?? id,
       type: 'combat',
       enemies: parseEncounterEnemies(row.enemies),
       resolution: {
@@ -323,7 +415,7 @@ export function parseEncounters(rows, logPrefix = '[parse]') {
 }
 
 export const NODE_TYPES = new Set(['narrative', 'encounter', 'ending'])
-export const ITEM_TYPES = new Set(['weapon', 'consumable', 'tool'])
+export const ITEM_TYPES = new Set(['weapon', 'consumable', 'tool', 'armor'])
 export const VALID_ATTRIBUTES = new Set(['strength', 'dexterity', 'intelligence'])
 export const STAT_CHECK_OPERATORS = new Set(['>=', '<=', '==', '>', '<'])
 export const STAT_CHECK_STATS = new Set(['hpCurrent', 'currency'])

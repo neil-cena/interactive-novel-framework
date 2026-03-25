@@ -1,20 +1,46 @@
 <script setup lang="ts">
 import { VueFlow } from '@vue-flow/core'
 import { ref, watch } from 'vue'
-import type { Node, Edge } from '@vue-flow/core'
+import type { Node, Edge, Connection } from '@vue-flow/core'
+
+export interface EdgeData {
+  sourceNodeId?: string
+  choiceId?: string
+  branchType?: 'success' | 'failure'
+  encounterId?: string
+  resolutionType?: 'onVictory' | 'onDefeat'
+}
 
 const props = defineProps<{
   flowNodes: Node[]
   flowEdges: Edge[]
-  selectedId: string | null
+  selectedNodeId: string | null
+  selectedEdge: EdgeData | null
+  connectable?: boolean
 }>()
-const emit = defineEmits<{ 'select-node': [id: string | null] }>()
+const emit = defineEmits<{
+  'select-node': [id: string | null]
+  'select-edge': [data: EdgeData | null]
+  connect: [connection: { source: string; target: string }]
+}>()
 
 const vueFlowRef = ref<InstanceType<typeof VueFlow> | null>(null)
 
 function onNodeClick(event: { node: Node }) {
   const id = event.node.id.startsWith('enc:') ? null : event.node.id
   emit('select-node', id)
+  emit('select-edge', null)
+}
+
+function onEdgeClick(event: { edge: Edge }) {
+  const data = (event.edge.data ?? {}) as EdgeData
+  emit('select-edge', data)
+}
+
+function onConnect(connection: Connection) {
+  if (connection.source && connection.target) {
+    emit('connect', { source: connection.source, target: connection.target })
+  }
 }
 
 watch(
@@ -36,8 +62,11 @@ watch(
       :edges="flowEdges"
       :default-viewport="{ zoom: 0.8 }"
       fit-view-on-init
+      :connectable="connectable !== false"
       class="vue-flow-wrap"
       @node-click="onNodeClick"
+      @edge-click="onEdgeClick"
+      @connect="onConnect"
     >
       <template #node-default="{ node, data }">
         <div
@@ -45,7 +74,7 @@ watch(
           :class="{
             orphan: data?.isOrphan,
             'dead-end': data?.isDeadEnd,
-            selected: selectedId === (node?.id ?? data?.id),
+            selected: selectedNodeId === (node?.id ?? data?.id),
           }"
           :style="{ backgroundColor: data?.backgroundColor ?? '#f5f5f5' }"
         >

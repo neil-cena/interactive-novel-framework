@@ -5,13 +5,13 @@
 export const GAME_CONFIG = {
   /** Player default state */
   player: {
-    startingNodeId: 'n_start',
+    startingNodeId: 'start',
     startingHp: 20,
-    startingCurrency: 10,
-    startingWeaponId: 'dagger_iron',
-    startingItems: { lockpick: 1 } as Record<string, number>,
-    startingFlags: { met_goblin: false } as Record<string, boolean>,
-    startingAttributes: { strength: 0, dexterity: 2, intelligence: 1 },
+    startingCurrency: 0,
+    startingWeaponId: null as string | null,
+    startingItems: { scholar_ledger: 1, fuel_blocks: 1, diagnostic_plates: 1 } as Record<string, number>,
+    startingFlags: {} as Record<string, boolean>,
+    startingAttributes: { strength: 0, dexterity: 0, intelligence: 2 },
   },
 
   /** Leveling / progression */
@@ -21,6 +21,22 @@ export const GAME_CONFIG = {
     xpThresholds: [0, 100, 250, 500, 1000] as readonly number[],
     hpPerLevel: 5,
     attributePointsPerLevel: 1,
+  },
+
+  /** DnD-style skills (ability + optional proficiency) */
+  skills: {
+    proficiencyBonus: 2,
+    list: [
+      { id: 'acrobatics', name: 'Acrobatics', ability: 'dexterity' as const },
+      { id: 'athletics', name: 'Athletics', ability: 'strength' as const },
+      { id: 'animal_handling', name: 'Animal Handling', ability: 'intelligence' as const },
+      { id: 'insight', name: 'Insight', ability: 'intelligence' as const },
+      { id: 'perception', name: 'Perception', ability: 'intelligence' as const },
+      { id: 'stealth', name: 'Stealth', ability: 'dexterity' as const },
+      { id: 'investigation', name: 'Investigation', ability: 'intelligence' as const },
+      { id: 'persuasion', name: 'Persuasion', ability: 'intelligence' as const },
+      { id: 'sleight_of_hand', name: 'Sleight of Hand', ability: 'dexterity' as const },
+    ] as readonly { id: string; name: string; ability: 'strength' | 'dexterity' | 'intelligence' }[],
   },
 
   /** Combat system */
@@ -37,9 +53,16 @@ export const GAME_CONFIG = {
     debounceDelayMs: 500,
   },
 
+  /** Feature flags (Phase 5 rollout controls) */
+  features: {
+    cloudSave: true,
+    sharedOutcomes: true,
+    storyPackages: true,
+  },
+
   /** UI strings */
   ui: {
-    gameTitle: 'The Cellar Debt',
+    gameTitle: 'Equivalent Ashes',
   },
 } as const
 

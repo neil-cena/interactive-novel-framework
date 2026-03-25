@@ -2,43 +2,237 @@
 import type { ItemTemplate } from '../types/items'
 
 export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
+  "scholar_ledger": {
+    "id": "scholar_ledger",
+    "name": "Scholar's Ledger",
+    "type": "tool",
+    "description": "Vael's bound calculation ledger. Contains structural assessment notes, stress readings, and the running tally of where the cost actually went."
+  },
+  "alchemical_chalk": {
+    "id": "alchemical_chalk",
+    "name": "Alchemical Chalk",
+    "type": "tool",
+    "description": "Sticks of chalk compounded with inert stabilizing salts, used for drawing single-use alchemical circles on any surface. Safe to handle; inert until activated with user energy and fuel."
+  },
+  "fuel_blocks": {
+    "id": "fuel_blocks",
+    "name": "Tier 2 Fuel Blocks",
+    "type": "tool",
+    "description": "Three refined copper-alloy fuel blocks. Tier 2 material—reliable, clean-burning, the industrial standard. Pays the energy cost of alchemical circle work. Without fuel, a circle is just a drawing."
+  },
+  "diagnostic_plates": {
+    "id": "diagnostic_plates",
+    "name": "Pre-inscribed Diagnostic Plates",
+    "type": "tool",
+    "description": "Copper-alloy plates with circles already inscribed: diagnostic, stress assessment, and basic reinforcement. Reusable until the pattern degrades. The Field Scholar's primary toolkit."
+  },
+  "crane_report": {
+    "id": "crane_report",
+    "name": "Crane Anomaly Report",
+    "type": "tool",
+    "description": "Formal documentation of the unauthorized reinforcement circle on Harbor Crane Seven. Notes the Tier 1 paste degradation, stress accumulation rate, and estimated failure timeline."
+  },
+  "energy_readings": {
+    "id": "energy_readings",
+    "name": "Ambient Fuel Distribution Scan",
+    "type": "tool",
+    "description": "Annotated readings of material and energy distribution across Karet Bay's lower district. Shows maintenance circles running at 40% capacity due to depleted fuel reserves."
+  },
+  "worker_testimony": {
+    "id": "worker_testimony",
+    "name": "Kaelen's Statement",
+    "type": "tool",
+    "description": "Kaelen's written account of bonding a reinforcement circle to the crane's load-bearing joint. Explains the material shortage that made Tier 1 paste the only available option."
+  },
+  "purifier_sample": {
+    "id": "purifier_sample",
+    "name": "Purifier Runoff Sample",
+    "type": "tool",
+    "description": "A sealed vial of the toxic chemical compound Elara's purifier extracts from the water supply. Analysis shows it renders alchemical fuel inert on contact."
+  },
+  "seawall_analysis": {
+    "id": "seawall_analysis",
+    "name": "Seawall Structural Analysis",
+    "type": "tool",
+    "description": "Engineering assessment of the bay seawall. Documents the emptied fuel chambers, dormant maintenance circles, and chemical contamination accelerating structural failure."
+  },
+  "toris_orders": {
+    "id": "toris_orders",
+    "name": "Material Redistribution Orders",
+    "type": "tool",
+    "description": "Signed CEA authorization documents directing the redirection of Karet Bay's Tier 2 material allocation to the Highpoint Transit Rail project. Seven months of diverted supply."
+  },
+  "feedback_calculation": {
+    "id": "feedback_calculation",
+    "name": "Cascade Failure Proof",
+    "type": "tool",
+    "description": "Vael's calculations showing how the CEA's material redirection, Elara's purifier, and the district's improvised patchwork create converging failure timelines in the seawall."
+  },
+  "district_map": {
+    "id": "district_map",
+    "name": "Annotated District Map",
+    "type": "tool",
+    "description": "A hand-marked map of Karet Bay's underground drainage and conduit network, noting fuel depletion patterns and the directional flow toward the CEA substation."
+  },
+  "transit_anomaly": {
+    "id": "transit_anomaly",
+    "name": "Transit Rail Anomaly Notes",
+    "type": "tool",
+    "description": "Ledger notes documenting unexplained structural efficiency in the Highpoint Transit Rail. A 12-15% output gap above what the redirected materials can account for. The exchange doesn't balance. There is no known material or method that produces results this clean. The numbers are not wrong — they are impossible, and impossibility in alchemy means either the instruments have failed or something is paying a cost this ledger cannot see."
+  },
+  "energy_tonic": {
+    "id": "energy_tonic",
+    "name": "Energy Tonic",
+    "type": "consumable",
+    "description": "A crude but functional alchemical preparation that stabilizes the body's own reserves and delays fatigue from self-fueled circle work. Label reads: DO NOT INGEST IF EXPERIENCING DISTORTION, PREGNANCY, OR OPINIONS.",
+    "effect": {
+      "action": "adjust_energy",
+      "amount": 15
+    }
+  },
+  "dock_rations": {
+    "id": "dock_rations",
+    "name": "Dock Rations",
+    "type": "consumable",
+    "description": "Salted fish and hard bread. Basic fuel for dock workers.",
+    "effect": {
+      "action": "heal",
+      "amount": "5"
+    }
+  },
+  "cea_authorization": {
+    "id": "cea_authorization",
+    "name": "CEA Inspector Authorization",
+    "type": "tool",
+    "description": "Official brass-sealed credential identifying Vael as a Measured Scholar on Authority business. Opens administrative doors. Does not open the mouths of people who don't want to talk."
+  },
+  "copper_standards": {
+    "id": "copper_standards",
+    "name": "Copper Standards",
+    "type": "tool",
+    "description": "Small stamped copper disks used as everyday currency in the lower bay."
+  },
+  "theater_report": {
+    "id": "theater_report",
+    "name": "Field Assessment — Supplementary Notes (UNOFFICIAL)",
+    "type": "tool",
+    "description": "Your attempt to document the Acceptable Loss Revue as an official field report. The resulting document is eleven pages long. The official section is one paragraph. The remaining ten pages contain detailed notes on theatrical alchemy theory, a sketch of Petra's modified drainage circle, and the lyrics to Act II transcribed in full scholarly notation. You are not sure Mireth will accept this as billable hours."
+  },
+  "feral_accord": {
+    "id": "feral_accord",
+    "name": "Treaty of the Cistern (Informal)",
+    "type": "tool",
+    "description": "A strip of oiled cloth, three fish scales, and a chalk spiral that is legally inert and spiritually binding. Smells faintly of laundry and minor insurrection. Appendix note: \"Subject claims to have attended a legislature composed of laundry and predators. Recommend sleep.\" Mireth will underline \"predators\" twice."
+  },
+  "warehouse_manifest": {
+    "id": "warehouse_manifest",
+    "name": "Warehouse Shipping Manifests",
+    "type": "tool",
+    "description": "Copies of CEA logistics manifests documenting the systematic rerouting of Tier 2 maintenance materials from Karet Bay to the Highpoint Transit Rail project. Seven months of evidence in Senna's careful handwriting."
+  },
+  "supply_ledger": {
+    "id": "supply_ledger",
+    "name": "Supply Chain Ledger",
+    "type": "tool",
+    "description": "Comprehensive analysis of material flows through the warehouse district. Documents the 73% redirection rate across six districts. Not just Karet Bay—the problem is systemic."
+  },
+  "freehands_token": {
+    "id": "freehands_token",
+    "name": "Freehands Network Token",
+    "type": "tool",
+    "description": "A copper washer with a Freehand circle-mark stamped into it. Brin gave it to you. It identifies you as trusted by the mutual-aid network. Workers recognize it before they recognize your Scholar credentials."
+  },
+  "workers_petition": {
+    "id": "workers_petition",
+    "name": "District Workers' Petition",
+    "type": "tool",
+    "description": "A collective petition signed by forty-three dock workers documenting infrastructure failures and requesting emergency material reallocation. Filed through proper channels. Acknowledged. Ignored."
+  },
+  "night_market_rations": {
+    "id": "night_market_rations",
+    "name": "Night Market Dumplings",
+    "type": "consumable",
+    "description": "Unreasonably good dumplings from the night market cart. The vendor has been feeding the night shift for twelve years. They restore more than just energy.",
+    "effect": {
+      "action": "adjust_energy",
+      "amount": 15
+    }
+  },
+  "district_almanac": {
+    "id": "district_almanac",
+    "name": "District Almanac",
+    "type": "tool",
+    "description": "Hand-bound booklet of unofficial district data: water pressure readings, structural assessments, maintenance schedules the CEA stopped publishing. One-person journalism."
+  },
+  "ash_contact_token": {
+    "id": "ash_contact_token",
+    "name": "Ash's Contact Diagram",
+    "type": "tool",
+    "description": "A hand-drawn diagram of the CEA material conduit system, annotated with transfer point vulnerabilities. Ash's way of saying the option exists without asking you to take it."
+  },
+  "structural_survey": {
+    "id": "structural_survey",
+    "name": "Deep Seawall Survey",
+    "type": "tool",
+    "description": "Comprehensive structural profile of the seawall's foundation, including failure point mapping, degradation timeline, and chemical contamination analysis. The first complete assessment that exists anywhere."
+  },
+  "nev_analysis": {
+    "id": "nev_analysis",
+    "name": "Scholar Nev's Parallel Findings",
+    "type": "tool",
+    "description": "Nev's independent material flow audit documenting the same supply chain redirection from the harbor authority end. Combined with your data, it constitutes proof."
+  },
+  "senna_logs": {
+    "id": "senna_logs",
+    "name": "Harbor Coordinator's Shipping Logs",
+    "type": "tool",
+    "description": "Senna's personal records of every irregular shipment that passed through her office. Eleven years of careful documentation by someone who knew the numbers were wrong."
+  },
+  "archived_complaints": {
+    "id": "archived_complaints",
+    "name": "Archived District Complaints",
+    "type": "tool",
+    "description": "Three previous formal complaints about material redirection, filed by district residents, all stamped REVIEWED - NO ACTION REQUIRED by Overseer Toris."
+  },
+  "elara_toolkit": {
+    "id": "elara_toolkit",
+    "name": "Practical Alchemy Toolkit",
+    "type": "tool",
+    "description": "Elara's field tools: hand-ground chalk, salvaged copper wire, a set of templates for common repair circles. Nothing from the Academy catalogue. Everything that actually works."
+  },
+  "complaint_receipts": {
+    "id": "complaint_receipts",
+    "name": "CEA Complaint Receipts",
+    "type": "tool",
+    "description": "Old Tomas's filed complaint receipts. Three form numbers. Three acknowledgments. Zero actions. The paper trail of institutional indifference."
+  },
+  "reclaimed_materials": {
+    "id": "reclaimed_materials",
+    "name": "Reclaimed Tier 2 Materials",
+    "type": "tool",
+    "description": "Tier 2 maintenance materials recovered from the CEA staging area. Originally allocated to Karet Bay. Returned by methods that the CEA would describe as theft and the workers would describe as justice."
+  },
+  "kaelen_trust_mark": {
+    "id": "kaelen_trust_mark",
+    "name": "Kaelen's Trust Mark",
+    "type": "tool",
+    "description": "A dock worker's knot tied in thick rope—Kaelen's way of vouching for you to the crew. It means they'll follow your calculations without question. It means you'd better be right."
+  },
   "dagger_iron": {
     "id": "dagger_iron",
     "name": "Iron Dagger",
     "type": "weapon",
-    "damage": "1d4",
-    "attackBonus": 0,
-    "acBonus": 0,
-    "scalingAttribute": "dexterity",
-    "aoe": false
-  },
-  "blade_of_shadows": {
-    "id": "blade_of_shadows",
-    "name": "Blade of Shadows",
-    "type": "weapon",
-    "damage": "1d6",
-    "attackBonus": 1,
-    "acBonus": 0,
-    "scalingAttribute": "dexterity",
-    "aoe": false
+    "description": "A short blade balanced for quick work.",
+    "damage": "1d4"
   },
   "health_potion": {
     "id": "health_potion",
     "name": "Health Potion",
     "type": "consumable",
+    "description": "Alchemical restorative. Label warns about mixing with diagnostic chalk.",
     "effect": {
       "action": "heal",
-      "amount": "2d4+2"
+      "amount": "6"
     }
-  },
-  "smoke_bomb": {
-    "id": "smoke_bomb",
-    "name": "Smoke Bomb",
-    "type": "tool"
-  },
-  "guard_cloak": {
-    "id": "guard_cloak",
-    "name": "Silk Mask Cloak",
-    "type": "tool"
   }
 }

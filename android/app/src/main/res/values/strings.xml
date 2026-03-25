@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">The Cellar Debt</string>
-    <string name="title_activity_main">The Cellar Debt</string>
-    <string name="package_name">com.cellardebt.game</string>
-    <string name="custom_url_scheme">com.cellardebt.game</string>
+    <string name="app_name">Pirate Alchemist</string>
+    <string name="title_activity_main">Pirate Alchemist</string>
+    <string name="package_name">com.piratealchemist.game</string>
+    <string name="custom_url_scheme">com.piratealchemist.game</string>
 </resources>

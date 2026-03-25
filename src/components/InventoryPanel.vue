@@ -1,14 +1,50 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import type { MaybeRef } from 'vue'
+import { computed, nextTick, ref, unref, watch } from 'vue'
 import { ITEM_DICTIONARY } from '../data/items'
 import { resolveAction } from '../engine/actionResolver'
 import { usePlayerStore } from '../stores/playerStore'
+import { usePluginRegistry } from '../plugins/registry'
+
+const props = defineProps<{
+  /** Element or ref to focus when closing (e.g. Inventory button). */
+  returnFocusTo?: MaybeRef<HTMLElement | null | undefined>
+}>()
 
 const emit = defineEmits<{ close: [] }>()
 const playerStore = usePlayerStore()
+const registry = usePluginRegistry()
+const panelRef = ref<HTMLElement | null>(null)
+
+const hasCombat = computed(() => registry.hasPlugin('combat'))
+
+function closeAndReturnFocus() {
+  const el = unref(props.returnFocusTo)
+  emit('close')
+  nextTick(() => el?.focus({ preventScroll: true }))
+}
+
+watch(
+  () => panelRef.value,
+  (el) => {
+    if (!el) return
+    nextTick(() => {
+      const focusable = el.querySelector<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      )
+      focusable?.focus({ preventScroll: true })
+    })
+  },
+  { immediate: true },
+)
 
 const equippedWeapon = computed(() => {
   const id = playerStore.equipment.mainHand
+  return id ? { id, ...ITEM_DICTIONARY[id] } : null
+})
+
+const equippedArmor = computed(() => {
+  const id = playerStore.equipment.armor
   return id ? { id, ...ITEM_DICTIONARY[id] } : null
 })
 
@@ -19,13 +55,17 @@ const inventoryItems = computed(() => {
       id,
       qty,
       name: template?.name ?? id,
+      description: template?.description,
       type: template?.type ?? 'unknown',
       damage: template?.damage,
       attackBonus: template?.attackBonus,
+      acBonus: template?.acBonus,
       scalingAttribute: template?.scalingAttribute,
       isConsumable: template?.type === 'consumable' && !!template.effect,
       isWeapon: template?.type === 'weapon',
+      isArmor: template?.type === 'armor',
       isEquipped: playerStore.equipment.mainHand === id,
+      isArmorEquipped: playerStore.equipment.armor === id,
     }
   })
 })
@@ -38,28 +78,38 @@ function handleUnequip() {
   playerStore.equipItem('mainHand', null)
 }
 
+function handleEquipArmor(itemId: string) {
+  playerStore.equipItem('armor', itemId)
+}
+
+function handleUnequipArmor() {
+  playerStore.equipItem('armor', null)
+}
+
 function handleUseConsumable(itemId: string) {
   const template = ITEM_DICTIONARY[itemId]
   if (!template?.effect) return
   resolveAction(template.effect, playerStore)
   playerStore.removeItem(itemId, 1)
 }
-
-const hasUnspentPoints = computed(() => playerStore.progression.unspentAttributePoints > 0)
-
-function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
-  playerStore.spendAttributePoint(attr)
-}
 </script>
 
 <template>
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60" @click.self="emit('close')">
-    <div class="w-full max-w-md rounded-lg border border-slate-700 bg-slate-900 p-6 shadow-xl">
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="inventory-title"
+    @click.self="closeAndReturnFocus"
+  >
+    <div ref="panelRef" class="flex max-h-[85vh] w-full max-w-md flex-col overflow-y-auto rounded-lg border border-slate-700 bg-slate-900 p-4 shadow-xl sm:p-6">
       <div class="flex items-center justify-between">
-        <h2 class="text-lg font-bold text-slate-50">Inventory</h2>
+        <h2 id="inventory-title" class="text-lg font-bold text-slate-50">Inventory</h2>
         <button
-          class="rounded border border-slate-600 bg-slate-800 px-2 py-1 text-sm text-slate-300 hover:bg-slate-700"
-          @click="emit('close')"
+          type="button"
+          class="rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700"
+          aria-label="Close inventory"
+          @click="closeAndReturnFocus"
         >
           Close
         </button>
@@ -67,11 +117,13 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
 
       <section class="mt-4">
         <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Equipped Weapon</h3>
-        <div v-if="equippedWeapon" class="mt-2 rounded border border-slate-600 bg-slate-800/60 p-3">
-          <div class="flex items-center justify-between">
+        <div v-if="hasCombat && equippedWeapon" class="mt-2 rounded border border-slate-600 bg-slate-800/60 p-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
             <span class="font-medium text-slate-100">{{ equippedWeapon.name }}</span>
             <button
-              class="rounded border border-slate-500 bg-slate-700 px-2 py-1 text-xs text-slate-200 hover:bg-slate-600"
+              type="button"
+              class="rounded border border-slate-500 bg-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-600"
+              aria-label="Unequip weapon"
               @click="handleUnequip"
             >
               Unequip
@@ -83,81 +135,114 @@ function spendPoint(attr: 'strength' | 'dexterity' | 'intelligence') {
             <span v-if="equippedWeapon.scalingAttribute">{{ equippedWeapon.scalingAttribute.toUpperCase() }}</span>
           </div>
         </div>
-        <p v-else class="mt-2 text-sm text-slate-500">Unarmed</p>
+        <p v-else-if="hasCombat" class="mt-2 text-sm text-slate-500">Unarmed</p>
+      </section>
+
+      <section class="mt-4">
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Equipped Armor</h3>
+        <div v-if="hasCombat && equippedArmor" class="mt-2 rounded border border-slate-600 bg-slate-800/60 p-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="font-medium text-slate-100">{{ equippedArmor.name }}</span>
+            <button
+              type="button"
+              class="rounded border border-slate-500 bg-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-600"
+              aria-label="Unequip armor"
+              @click="handleUnequipArmor"
+            >
+              Unequip
+            </button>
+          </div>
+          <div v-if="equippedArmor.acBonus != null" class="mt-1 text-xs text-slate-400">AC: +{{ equippedArmor.acBonus }}</div>
+        </div>
+        <p v-else-if="hasCombat" class="mt-2 text-sm text-slate-500">No armor</p>
       </section>
 
       <section class="mt-4">
         <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-400">Items</h3>
+        <p class="mt-1 text-xs text-slate-500">Name, description, and stats shown for all items.</p>
         <div v-if="inventoryItems.length === 0" class="mt-2 text-sm text-slate-500">No items.</div>
-        <ul v-else class="mt-2 space-y-2">
+        <ul v-else class="mt-2 space-y-3">
           <li
             v-for="item in inventoryItems"
             :key="item.id"
-            class="flex items-center justify-between rounded border border-slate-700 bg-slate-800/40 p-3"
+            class="rounded border border-slate-700 bg-slate-800/40 p-3"
           >
-            <div>
-              <span class="font-medium text-slate-100">{{ item.name }}</span>
-              <span class="ml-2 text-xs text-slate-500">&times;{{ item.qty }}</span>
-              <span
-                class="ml-2 rounded px-1.5 py-0.5 text-xs"
-                :class="{
-                  'bg-red-900/40 text-red-300': item.type === 'weapon',
-                  'bg-emerald-900/40 text-emerald-300': item.type === 'consumable',
-                  'bg-sky-900/40 text-sky-300': item.type === 'tool',
-                }"
-              >
-                {{ item.type }}
-              </span>
-            </div>
-            <div class="flex gap-2">
+            <div class="flex flex-wrap items-start justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-medium text-slate-100">{{ item.name }}</span>
+                  <span class="text-xs text-slate-500">&times;{{ item.qty }}</span>
+                  <span
+                    class="rounded px-1.5 py-0.5 text-xs"
+                    :class="{
+                      'bg-red-900/40 text-red-300': item.type === 'weapon',
+                      'bg-emerald-900/40 text-emerald-300': item.type === 'consumable',
+                      'bg-sky-900/40 text-sky-300': item.type === 'tool',
+                      'bg-slate-600/40 text-slate-300': item.type === 'armor',
+                    }"
+                  >
+                    {{ item.type }}
+                  </span>
+                </div>
+                <p v-if="item.description" class="mt-1 text-sm text-slate-400">{{ item.description }}</p>
+                <p v-else-if="item.damage || item.attackBonus != null || item.acBonus != null || item.scalingAttribute" class="mt-1 text-xs text-slate-500">
+                  <template v-if="item.damage">Dmg: {{ item.damage }}</template>
+                  <template v-if="item.attackBonus != null">{{ item.damage ? ' · ' : '' }}Atk: +{{ item.attackBonus }}</template>
+                  <template v-if="item.acBonus != null">{{ item.damage || item.attackBonus != null ? ' · ' : '' }}AC: +{{ item.acBonus }}</template>
+                  <template v-if="item.scalingAttribute">{{ item.damage || item.attackBonus != null || item.acBonus != null ? ' · ' : '' }}{{ item.scalingAttribute.toUpperCase() }}</template>
+                </p>
+                <p v-else class="mt-1 text-xs text-slate-500">—</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
               <button
-                v-if="item.isWeapon && !item.isEquipped"
-                class="rounded border border-amber-700 bg-amber-900/40 px-2 py-1 text-xs text-amber-200 hover:bg-amber-900/70"
+                v-if="hasCombat && item.isWeapon && !item.isEquipped"
+                type="button"
+                class="rounded border border-amber-700 bg-amber-900/40 px-3 py-2 text-sm text-amber-200 hover:bg-amber-900/70"
+                :aria-label="`Equip weapon ${item.name}`"
                 @click="handleEquip(item.id)"
               >
                 Equip
               </button>
               <span
-                v-if="item.isWeapon && item.isEquipped"
+                v-if="hasCombat && item.isWeapon && item.isEquipped"
                 class="rounded bg-amber-900/30 px-2 py-1 text-xs text-amber-400"
               >
                 Equipped
               </span>
               <button
+                v-if="hasCombat && item.isArmor && !item.isArmorEquipped"
+                type="button"
+                class="rounded border border-slate-500 bg-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-600"
+                :aria-label="`Equip armor ${item.name}`"
+                @click="handleEquipArmor(item.id)"
+              >
+                Equip armor
+              </button>
+              <span
+                v-if="hasCombat && item.isArmor && item.isArmorEquipped"
+                class="rounded bg-slate-700/50 px-2 py-1 text-xs text-slate-400"
+              >
+                Worn
+              </span>
+              <button
                 v-if="item.isConsumable"
-                class="rounded border border-emerald-700 bg-emerald-900/40 px-2 py-1 text-xs text-emerald-200 hover:bg-emerald-900/70"
+                type="button"
+                class="rounded border border-emerald-700 bg-emerald-900/40 px-3 py-2 text-sm text-emerald-200 hover:bg-emerald-900/70"
+                :aria-label="`Use ${item.name}`"
                 @click="handleUseConsumable(item.id)"
               >
                 Use
               </button>
+              </div>
+            </div>
+            <div v-if="(item.damage || item.attackBonus != null || item.acBonus != null || item.scalingAttribute) && item.description" class="mt-2 border-t border-slate-700/60 pt-2 text-xs text-slate-500">
+              <template v-if="item.damage">Dmg: {{ item.damage }}</template>
+              <template v-if="item.attackBonus != null">{{ item.damage ? ' · ' : '' }}Atk: +{{ item.attackBonus }}</template>
+              <template v-if="item.acBonus != null">{{ item.damage || item.attackBonus != null ? ' · ' : '' }}AC: +{{ item.acBonus }}</template>
+              <template v-if="item.scalingAttribute">{{ item.damage || item.attackBonus != null || item.acBonus != null ? ' · ' : '' }}{{ item.scalingAttribute.toUpperCase() }}</template>
             </div>
           </li>
         </ul>
-      </section>
-      <section v-if="hasUnspentPoints" class="mt-4">
-        <h3 class="text-sm font-semibold uppercase tracking-wide text-amber-400">
-          Attribute Points ({{ playerStore.progression.unspentAttributePoints }})
-        </h3>
-        <div class="mt-2 flex gap-2">
-          <button
-            class="rounded border border-amber-700 bg-amber-900/40 px-3 py-2 text-sm text-amber-200 hover:bg-amber-900/70"
-            @click="spendPoint('strength')"
-          >
-            +1 STR ({{ playerStore.attributes.strength }})
-          </button>
-          <button
-            class="rounded border border-amber-700 bg-amber-900/40 px-3 py-2 text-sm text-amber-200 hover:bg-amber-900/70"
-            @click="spendPoint('dexterity')"
-          >
-            +1 DEX ({{ playerStore.attributes.dexterity }})
-          </button>
-          <button
-            class="rounded border border-amber-700 bg-amber-900/40 px-3 py-2 text-sm text-amber-200 hover:bg-amber-900/70"
-            @click="spendPoint('intelligence')"
-          >
-            +1 INT ({{ playerStore.attributes.intelligence }})
-          </button>
-        </div>
       </section>
     </div>
   </div>

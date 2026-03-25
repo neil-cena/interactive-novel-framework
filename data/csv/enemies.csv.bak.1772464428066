@@ -1,0 +1,5 @@
+id,name,hp,maxHp,ac,attackBonus,damage,xpReward
+owlbear_suite,MacGuffin the Owlbear,30,30,13,4,1d8+2,140
+gate_thug,Gate Thug,22,22,12,4,1d6+2,65
+mik_tystone,Mik Tystone,44,44,14,5,1d8+3,260
+mik_guard_captain,Mik's Guard Captain,34,34,14,5,1d8+2,160

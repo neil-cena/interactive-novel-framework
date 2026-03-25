@@ -78,6 +78,8 @@ export function usePlaytestMode() {
     equipment: { ...playerStore.equipment },
   }))
 
+  const choiceHistory = computed(() => [...playerStore.choiceHistory])
+
   function onKeyDown(e: KeyboardEvent) {
     if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'p') {
       e.preventDefault()
@@ -110,6 +112,7 @@ export function usePlaytestMode() {
     grantAttributePoint,
     resetToDefaults,
     stateSnapshot,
+    choiceHistory,
     playerStore,
   }
 }

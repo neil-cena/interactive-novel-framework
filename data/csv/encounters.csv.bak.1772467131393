@@ -1,0 +1,4 @@
+id,name,enemies,onVictory,onDefeat
+enc_owlbear_suite,enc_owlbear_suite,owlbear_suite:1,n_owlbear_victory,n_game_over
+enc_gate_thugs,enc_gate_thugs,gate_thug:2,n_gate_thugs_victory,n_game_over
+enc_mik_boss,enc_mik_boss,mik_tystone:1 | mik_guard_captain:1,n_mik_victory,n_game_over

@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Per-user save slots: only the owning user can read/write their saves.
+    match /users/{userId}/saves/{slotId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Analytics events: authenticated users can add events; no client read (optional: admin only).
+    match /analytics_events/{eventId} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if false;
+    }
+
+    // Session outcome summaries: authenticated users can write; authenticated can read for aggregation.
+    match /analytics_session_summaries/{sessionId} {
+      allow create, read: if request.auth != null;
+      allow update, delete: if false;
+    }
+
+    // Story package manifests: anyone can read (list); no client write (use Admin SDK or Cloud Functions).
+    match /story_packages/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

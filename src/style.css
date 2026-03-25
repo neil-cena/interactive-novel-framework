@@ -14,6 +14,70 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  min-height: 100dvh;
   background-color: #0f172a;
   color: #e2e8f0;
+  overflow-wrap: break-word;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+#app {
+  overflow-wrap: break-word;
+}
+
+@media (pointer: coarse) {
+  button,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="range"] {
+    min-height: 44px;
+  }
+}
+
+/* High-contrast mode: stronger borders and text contrast */
+.high-contrast button,
+.high-contrast [role="button"] {
+  border-width: 2px;
+  border-color: #94a3b8;
+}
+.high-contrast button:disabled,
+.high-contrast [aria-disabled="true"] {
+  border-color: #64748b;
+  opacity: 1;
+  filter: contrast(0.9);
+}
+.high-contrast .rounded.border {
+  border-width: 2px;
+  border-color: #64748b;
+}
+.high-contrast .text-slate-100,
+.high-contrast .text-slate-50 {
+  color: #f1f5f9;
+}
+.high-contrast .text-amber-200,
+.high-contrast .text-red-300,
+.high-contrast .text-emerald-400 {
+  filter: contrast(1.2);
+}
+/* Combat screen shake - disabled when user prefers reduced motion */
+@keyframes combat-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+.combat-shake {
+  animation: combat-shake 0.4s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

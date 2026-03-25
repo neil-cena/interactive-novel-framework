@@ -56,6 +56,28 @@ export function validateData(nodes, items, enemies, encounters) {
         ),
       )
     }
+    if (node.onEnter) {
+      const purifierOutcomeKeys = ['purifier_destroyed', 'purifier_modified', 'purifier_left']
+      let purifierBasementDone = false
+      let purifierOutcomeCount = 0
+      for (const action of node.onEnter) {
+        if (action.action === 'set_flag' && action.value === true) {
+          if (action.key === 'purifier_basement_done') purifierBasementDone = true
+          if (purifierOutcomeKeys.includes(action.key)) purifierOutcomeCount += 1
+        }
+      }
+      if (purifierBasementDone && purifierOutcomeCount !== 1) {
+        errors.push(
+          diag(
+            E,
+            'DATA014',
+            `Node "${id}" onEnter: purifier_basement_done must appear with exactly one of purifier_destroyed, purifier_modified, purifier_left set true`,
+            { nodeId: id, count: purifierOutcomeCount },
+            'Set exactly one purifier outcome flag in the same onEnter as purifier_basement_done',
+          ),
+        )
+      }
+    }
     if (!node.choices) continue
     for (const choice of node.choices) {
       const m = choice.mechanic
@@ -135,6 +157,28 @@ export function validateData(nodes, items, enemies, encounters) {
             ),
           )
         }
+      } else if (m.type === 'theater_begin') {
+        if (m.exitNodeId && !nodeIds.has(m.exitNodeId)) {
+          errors.push(
+            diag(
+              E,
+              'DATA002',
+              `Node "${id}" choice "${choice.id}": theater_begin targets missing node "${m.exitNodeId}"`,
+              { nodeId: id, choiceId: choice.id, ref: m.exitNodeId, refType: 'node' },
+            ),
+          )
+        }
+      } else if (m.type === 'feral_parliament_begin') {
+        if (m.exitNodeId && !nodeIds.has(m.exitNodeId)) {
+          errors.push(
+            diag(
+              E,
+              'DATA002',
+              `Node "${id}" choice "${choice.id}": feral_parliament_begin targets missing node "${m.exitNodeId}"`,
+              { nodeId: id, choiceId: choice.id, ref: m.exitNodeId, refType: 'node' },
+            ),
+          )
+        }
       }
       if (choice.visibilityRequirements) {
         for (const req of choice.visibilityRequirements) {
@@ -191,6 +235,28 @@ export function validateData(nodes, items, enemies, encounters) {
         }
       }
     }
+
+    if (!node.choices) continue
+    for (const choice of node.choices) {
+      if (choice.onSelect) {
+        for (const action of choice.onSelect) {
+          if (
+            (action.action === 'add_item' || action.action === 'remove_item') &&
+            action.itemId &&
+            !itemIds.has(action.itemId)
+          ) {
+            errors.push(
+              diag(
+                E,
+                'DATA003',
+                `Node "${id}" choice "${choice.id}" onSelect: ${action.action} references missing item "${action.itemId}"`,
+                { nodeId: id, choiceId: choice.id, ref: action.itemId, refType: 'item' },
+              ),
+            )
+          }
+        }
+      }
+    }
   }
 
   for (const [id, encounter] of Object.entries(encounters)) {
@@ -241,7 +307,7 @@ export function validateData(nodes, items, enemies, encounters) {
         diag(
           E,
           'DATA006',
-          `Item "${id}": invalid type "${item.type}". Must be one of: weapon, consumable, tool`,
+          `Item "${id}": invalid type "${item.type}". Must be one of: weapon, consumable, tool, armor`,
           { itemId: id, type: item.type },
         ),
       )

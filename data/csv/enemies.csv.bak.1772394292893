@@ -1,0 +1,3 @@
+id,name,hp,maxHp,ac,attackBonus,damage,xpReward
+owlbear,MacGuffin the Owlbear,34,34,13,4,1d8+2,140
+mik_tystone,Mik Tystone,48,48,14,5,1d8+3,280

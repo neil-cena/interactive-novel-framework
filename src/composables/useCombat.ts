@@ -96,6 +96,7 @@ export function useCombat() {
     enemyIndex: number,
     playerWeaponId: string | null,
     playerAttackBonus: number,
+    onResult?: (hit: boolean) => void,
   ): void {
     const target = enemies.value[enemyIndex]
     if (!target || target.hpCurrent <= 0) {
@@ -114,14 +115,20 @@ export function useCombat() {
       const damageResult = rollDice(damageDice)
       target.hpCurrent = Math.max(0, target.hpCurrent - damageResult.total)
       addLog(`You hit ${target.name} for ${damageResult.total} damage.`)
+      onResult?.(true)
     } else {
       addLog(`You miss ${target.name}.`)
+      onResult?.(false)
     }
 
     turn.value = 'enemy'
   }
 
-  function enemyTurn(playerAc: number, onDamagePlayer: (amount: number) => void): void {
+  function enemyTurn(
+    playerAc: number,
+    onDamagePlayer: (amount: number) => void,
+    onEnemyAttack?: (hit: boolean) => void,
+  ): void {
     const livingEnemies = enemies.value.filter((enemy) => enemy.hpCurrent > 0)
     if (livingEnemies.length === 0) {
       return
@@ -133,8 +140,10 @@ export function useCombat() {
         const damage = rollDice(enemy.damage).total
         onDamagePlayer(damage)
         addLog(`${enemy.name} hits you for ${damage} damage.`)
+        onEnemyAttack?.(true)
       } else {
         addLog(`${enemy.name} misses you.`)
+        onEnemyAttack?.(false)
       }
     })
 
@@ -145,10 +154,13 @@ export function useCombat() {
   function playerAoeAttack(
     playerWeaponId: string | null,
     playerAttackBonus: number,
+    onResult?: (hit: boolean) => void,
   ): void {
     const weapon = playerWeaponId ? ITEM_DICTIONARY[playerWeaponId] : undefined
     const damageDice = weapon?.damage ?? combatConfig.unarmedDamage
     const livingEnemies = enemies.value.filter((e) => e.hpCurrent > 0)
+    let anyHit = false
+    let anyMiss = false
 
     livingEnemies.forEach((target) => {
       const hitRoll = rollDice(
@@ -158,10 +170,16 @@ export function useCombat() {
         const damageResult = rollDice(damageDice)
         target.hpCurrent = Math.max(0, target.hpCurrent - damageResult.total)
         addLog(`You hit ${target.name} for ${damageResult.total} damage.`)
+        anyHit = true
       } else {
         addLog(`You miss ${target.name}.`)
+        anyMiss = true
       }
     })
+    if (onResult) {
+      if (anyHit) onResult(true)
+      if (anyMiss) onResult(false)
+    }
 
     turn.value = 'enemy'
   }

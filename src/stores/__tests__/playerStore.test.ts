@@ -19,7 +19,7 @@ describe('playerStore', () => {
     expect(state.vitals.hpMax).toBe(GAME_CONFIG.player.startingHp)
     expect(state.inventory.currency).toBe(GAME_CONFIG.player.startingCurrency)
     expect(state.equipment.mainHand).toBe(GAME_CONFIG.player.startingWeaponId)
-    expect(state.inventory.items.lockpick).toBe(1)
+    expect(state.inventory.items).toEqual(GAME_CONFIG.player.startingItems)
   })
 
   it('navigateTo updates currentNodeId', () => {
@@ -96,7 +96,7 @@ describe('playerStore', () => {
   it('adjustCurrency adds and subtracts, floors at 0', () => {
     const store = usePlayerStore()
     store.adjustCurrency(5)
-    expect(store.inventory.currency).toBe(15)
+    expect(store.inventory.currency).toBe(GAME_CONFIG.player.startingCurrency + 5)
     store.adjustCurrency(-100)
     expect(store.inventory.currency).toBe(0)
   })
@@ -116,7 +116,7 @@ describe('playerStore', () => {
     expect(store.equipment.mainHand).toBe(null)
   })
 
-  it('startNewGame resets and sets slot', () => {
+  it('startNewGame resets and sets slot when no payload', () => {
     const store = usePlayerStore()
     store.navigateTo('n_market')
     store.adjustHp(-5)
@@ -125,6 +125,66 @@ describe('playerStore', () => {
     expect(store.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp)
     expect(store.vitals.hpMax).toBe(GAME_CONFIG.player.startingHp)
     expect(store.activeSaveSlot).toBe('save_slot_1')
+  })
+
+  it('startNewGame with preset payload initializes from preset', () => {
+    const store = usePlayerStore()
+    store.startNewGame('save_slot_2', { type: 'preset', presetId: 'char_paladin' })
+    expect(store.metadata.characterSheetId).toBe('char_paladin')
+    expect(store.metadata.isCustomSheet).toBe(false)
+    expect(store.vitals.hpCurrent).toBe(41)
+    expect(store.vitals.hpMax).toBe(41)
+    expect(store.attributes.strength).toBe(3)
+    expect(store.attributes.dexterity).toBe(0)
+    expect(store.attributes.intelligence).toBe(-1)
+    expect(store.progression.level).toBe(4)
+    expect(store.progression.unspentAttributePoints).toBe(3)
+    expect(store.activeSaveSlot).toBe('save_slot_2')
+  })
+
+  it('startNewGame with custom payload initializes from custom build', () => {
+    const store = usePlayerStore()
+    store.startNewGame('save_slot_3', {
+      type: 'custom',
+      startingHp: 35,
+      startingWeaponId: null,
+      startingItems: {},
+      startingFlags: {},
+      startingAttributes: { strength: 1, dexterity: 2, intelligence: 1 },
+    })
+    expect(store.metadata.isCustomSheet).toBe(true)
+    expect(store.vitals.hpCurrent).toBe(35)
+    expect(store.vitals.hpMax).toBe(35)
+    expect(store.attributes.strength).toBe(1)
+    expect(store.attributes.dexterity).toBe(2)
+    expect(store.attributes.intelligence).toBe(1)
+    expect(store.activeSaveSlot).toBe('save_slot_3')
+  })
+
+  it('startNewGame with unknown preset id falls back to defaults', () => {
+    const store = usePlayerStore()
+    store.startNewGame('save_slot_1', { type: 'preset', presetId: 'nonexistent' })
+    expect(store.vitals.hpCurrent).toBe(GAME_CONFIG.player.startingHp)
+    expect(store.vitals.hpMax).toBe(GAME_CONFIG.player.startingHp)
+    expect(store.activeSaveSlot).toBe('save_slot_1')
+  })
+
+  it('loadGame with legacy save without sheet metadata merges defaults', () => {
+    const store = usePlayerStore()
+    const legacySave = {
+      metadata: { currentNodeId: 'n_tavern' },
+      vitals: { hpCurrent: 8, hpMax: 20 },
+      inventory: { currency: 5, items: {} },
+      equipment: { mainHand: 'dagger_iron' },
+      attributes: { strength: 0, dexterity: 2, intelligence: 1 },
+      progression: { xp: 0, level: 1, xpToNextLevel: 100, unspentAttributePoints: 0 },
+      flags: {},
+    } as Partial<import('../../types/player').PlayerState>
+    store.loadGame('save_slot_1', legacySave)
+    expect(store.metadata.currentNodeId).toBe('n_tavern')
+    expect(store.vitals.hpCurrent).toBe(8)
+    expect(store.metadata.characterSheetId).toBeUndefined()
+    expect(store.choiceHistory).toEqual([])
   })
 
   it('loadGame patches state and sets slot', () => {
@@ -233,6 +293,47 @@ describe('playerStore', () => {
     const beforeStr = store.attributes.strength
     store.spendAttributePoint('strength')
     expect(store.attributes.strength).toBe(beforeStr)
+  })
+
+  it('recordNarrativeChoice appends in order', () => {
+    const store = usePlayerStore()
+    store.recordNarrativeChoice({
+      nodeId: 'n1',
+      choiceId: 'c1',
+      label: 'Go left',
+      mechanicType: 'navigate',
+    })
+    store.recordNarrativeChoice({
+      nodeId: 'n2',
+      choiceId: 'c2',
+      label: 'Fight',
+      mechanicType: 'combat_init',
+    })
+    expect(store.choiceHistory).toHaveLength(2)
+    expect(store.choiceHistory[0].label).toBe('Go left')
+    expect(store.choiceHistory[1].nodeId).toBe('n2')
+  })
+
+  it('resetToDefaults clears choiceHistory', () => {
+    const store = usePlayerStore()
+    store.recordNarrativeChoice({
+      nodeId: 'n1',
+      choiceId: 'c1',
+      label: 'A',
+      mechanicType: 'navigate',
+    })
+    store.resetToDefaults()
+    expect(store.choiceHistory).toEqual([])
+  })
+
+  it('loadGame restores choiceHistory when present', () => {
+    const store = usePlayerStore()
+    const entries = [{ nodeId: 'a', choiceId: '1', label: 'L1', mechanicType: 'navigate' }]
+    store.loadGame('save_slot_1', {
+      ...defaultPlayerState(),
+      choiceHistory: entries,
+    })
+    expect(store.choiceHistory).toEqual(entries)
   })
 
   it('loadGame deep-merges attributes and progression for old saves', () => {
