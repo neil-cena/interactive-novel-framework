@@ -23,7 +23,7 @@ describe('story funnel (post-crane hub)', () => {
     expect(post.choices[3].mechanic).toEqual(toTransition)
     const mirethChoice = post.choices.find((c) => c.id === 'c_post_3')
     expect(mirethChoice?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'mireth_field_visit' })
-    expect(mirethChoice?.visibilityRequirements).toEqual([{ type: 'has_flag', key: 'dima_met' }])
+    expect(mirethChoice?.visibilityRequirements).toEqual([{ type: 'has_flag', key: 'kaelen_crane_assessed' }])
     const dimaNb = post.choices.find((c) => c.id === 'c_post_4')
     expect(dimaNb?.visibilityRequirements).toEqual([
       { type: 'has_flag', key: 'kaelen_crane_assessed' },
@@ -32,7 +32,7 @@ describe('story funnel (post-crane hub)', () => {
     ])
   })
 
-  it('transition_end_day_one offers main spine (track + seawall), gated Mireth (dima_met), and gated Dima notebook', () => {
+  it('transition_end_day_one offers main spine (track + seawall), gated Mireth (kaelen_crane_assessed), and gated Dima notebook', () => {
     const nodesRows = readCsv(csvDir, 'nodes.csv')
     const nodes = parseNodes(nodesRows)
     const td1 = nodes.transition_end_day_one
@@ -43,7 +43,7 @@ describe('story funnel (post-crane hub)', () => {
     const mirethChoice = td1.choices.find((c) => c.id === 'c_td1_3')
     expect(mirethChoice?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'mireth_field_visit' })
     expect(mirethChoice?.visibilityRequirements).toEqual([
-      { type: 'has_flag', key: 'dima_met' },
+      { type: 'has_flag', key: 'kaelen_crane_assessed' },
       { type: 'not_has_flag', key: 'mireth_warned' },
     ])
     const dimaNb = td1.choices.find((c) => c.id === 'c_td1_4')
@@ -93,13 +93,18 @@ describe('story funnel (post-crane hub)', () => {
     expect(whOrphans).toEqual([])
   })
 
-  it('dock_overview can reach dima_encounter; post_crane_pattern does not', () => {
+  it('dock_overview reaches dima_edge_early; kaelen_shows can reach dima_encounter; post_crane_pattern does not', () => {
     const nodesRows = readCsv(csvDir, 'nodes.csv')
     const nodes = parseNodes(nodesRows)
     const dockTargets = nodes.dock_overview.choices.map((c) =>
       c.mechanic?.type === 'navigate' ? c.mechanic.nextNodeId : null,
     )
-    expect(dockTargets).toContain('dima_encounter')
+    expect(dockTargets).toContain('dima_edge_early')
+    expect(dockTargets).not.toContain('dima_encounter')
+    const showsTargets = nodes.kaelen_shows.choices.map((c) =>
+      c.mechanic?.type === 'navigate' ? c.mechanic.nextNodeId : null,
+    )
+    expect(showsTargets).toContain('dima_encounter')
     const postTargets = nodes.post_crane_pattern.choices.map((c) =>
       c.mechanic?.type === 'navigate' ? c.mechanic.nextNodeId : null,
     )
@@ -125,10 +130,8 @@ describe('story funnel (post-crane hub)', () => {
     const onEnter = nodes.dima_encounter.onEnter ?? []
     expect(onEnter.some((a) => a.action === 'set_flag' && a.key === 'dima_met' && a.value === true)).toBe(true)
 
-    const meet = { type: 'navigate', nextNodeId: 'meet_kaelen' }
-    expect(nodes.dima_encounter.choices.find((c) => c.id === 'c_dima_1')?.mechanic).toEqual(meet)
-    expect(nodes.dima_encounter.choices.find((c) => c.id === 'c_dima_2')?.mechanic).toEqual(meet)
-    expect(nodes.dima_encounter.choices.find((c) => c.id === 'c_dima_3')?.mechanic).toEqual(meet)
+    const backToCrane = { type: 'navigate', nextNodeId: 'kaelen_decision_return' }
+    expect(nodes.dima_encounter.choices.find((c) => c.id === 'c_dima_1')?.mechanic).toEqual(backToCrane)
     expect(nodes.dima_encounter.choices.find((c) => c.id === 'c_dima_1')?.visibilityRequirements).toBeUndefined()
     expect(nodes.dima_encounter.choices.find((c) => c.id === 'c_dima_4')?.visibilityRequirements).toEqual([
       { type: 'has_flag', key: 'saw_the_city' },

@@ -277,7 +277,22 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "label": "A younger worker at the crew's edge is writing in a pocket notebook. Step over before you speak to the foreman.",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "dima_encounter"
+          "nextNodeId": "dima_edge_early"
+        }
+      }
+    ]
+  },
+  "dima_edge_early": {
+    "id": "dima_edge_early",
+    "type": "narrative",
+    "text": "The concrete barrier at the dock's lip shivers when a loaded cart rolls past—chains snapping tight, a winch coughing above the grey water. A young worker sits on it anyway, wrench loose in one hand, a pocket notebook braced on his knee like something he has to touch to believe it's still there. He doesn't look up when you stop at the edge. The bay keeps moving. Behind you, the crane crew is all motion and shouted numbers—weight, clearance, the next load—noise so steady it almost feels like weather.\r\n\r\nHe notices you but doesn't leave. Courage or exhaustion. Maybe both.\r\n\r\nYou could stay at the lip with the wind and the drop—or cross back toward the knot at Crane Seven while the apron still has room for you.",
+    "choices": [
+      {
+        "id": "c_dim_edge_1",
+        "label": "Cross toward Crane Seven—the foreman there signs the access your brief needs.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "meet_kaelen"
         }
       }
     ]
@@ -524,6 +539,59 @@ export const STORY_NODES: Record<string, StoryNode> = {
       },
       {
         "id": "c_shows_4",
+        "label": "Reach toward the active line with a bare hand—the plate says the field is live; your nerves want to disagree.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "death_touch_warn"
+        }
+      },
+      {
+        "id": "c_shows_5",
+        "label": "Step back out to the barrier—the youngest crew member is still at the lip, notebook open.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "dima_encounter"
+        },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "dima_met"
+          }
+        ]
+      }
+    ]
+  },
+  "kaelen_decision_return": {
+    "id": "kaelen_decision_return",
+    "type": "narrative",
+    "text": "The canvas is still hooked aside. The reinforcement circle on the iron hasn't become less true because you stepped away.\r\n\r\nKaelen hasn't gone far; the crew is still trading glances—ledger, joint, you. Your readings are what they were. The only variable left is what you do with them.",
+    "choices": [
+      {
+        "id": "c_kdr_1",
+        "label": "I have to report this to the CEA. The crane needs to be shut down.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "choice_report"
+        }
+      },
+      {
+        "id": "c_kdr_2",
+        "label": "Try to stabilize the joint.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "kaelen_stabilize_gate"
+        }
+      },
+      {
+        "id": "c_kdr_3",
+        "label": "Close your ledger and walk away.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "choice_ignore"
+        }
+      },
+      {
+        "id": "c_kdr_4",
         "label": "Reach toward the active line with a bare hand—the plate says the field is live; your nerves want to disagree.",
         "mechanic": {
           "type": "navigate",
@@ -1140,7 +1208,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
       },
       {
         "id": "c_post_3",
-        "label": "Someone is standing near the Drowning plaque. You recognize the posture.",
+        "label": "At the Drowning plaque, a lone figure holds the still, attentive posture of field method—reading stone the way you read a datum line, not like someone passing through.",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "mireth_field_visit"
@@ -1148,7 +1216,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "visibilityRequirements": [
           {
             "type": "has_flag",
-            "key": "dima_met"
+            "key": "kaelen_crane_assessed"
           }
         ],
         "onSelect": [
@@ -1228,7 +1296,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "visibilityRequirements": [
           {
             "type": "has_flag",
-            "key": "dima_met"
+            "key": "kaelen_crane_assessed"
           },
           {
             "type": "not_has_flag",
@@ -1282,7 +1350,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "dima_encounter": {
     "id": "dima_encounter",
     "type": "narrative",
-    "text": "You find him sitting on a concrete barrier at the edge of the dock, watching the water. He still has the wrench in his hands, though he's not gripping it anymore—just holding it, the way you might hold onto something when you're not sure what to do with your hands. The notebook is in his lap. He was writing something in it when you approached; he didn't close it when he saw you coming.\r\n\r\nHe notices you but doesn't leave. That's either courage or exhaustion. Possibly both.\r\n\r\nYou sit nearby. The bay moves.\r\n\r\n'Was he wrong?' Dima asks eventually. He doesn't look at you. 'Like. Actually wrong. Not against-the-rules wrong. Actually wrong.'\r\n\r\nIt's a harder question than it sounds. You think about the stress calculations in your ledger. You think about the reinforcement circle, rough but technically sound. You think about six nights of his own energy spent on borrowed time—the foreman you haven't spoken to yet, only watched from the edge of the crew.\r\n\r\n'He did real work,' you say, 'with the wrong materials. The work was an honest attempt. The materials were what was available to him.' You pause. 'The people who decided those were the only materials available—that's a different question.'\r\n\r\nDima thinks about this. He has the stillness of someone who's learned to think before responding, probably because responding wrong has cost him something before.\r\n\r\n'So the wrong thing wasn't what he did,' Dima says. 'It was what he had to work with.'\r\n\r\n'Yes.'\r\n\r\nAnother silence. Then: 'That doesn't feel like it's enough to know.'\r\n\r\n'No,' you agree. 'It doesn't.'\r\n\r\nHe nods slowly, in the way of someone receiving an answer they already suspected and were hoping was wrong. He sets the wrench down on the barrier. Then he picks it up again.\r\n\r\nHe writes something in the notebook. You don't ask what.\r\n\r\nYou leave him there, watching the water.",
+    "text": "You find him sitting on a concrete barrier at the edge of the dock, watching the water. He still has the wrench in his hands, though he's not gripping it anymore—just holding it, the way you might hold onto something when you're not sure what to do with your hands. The notebook is in his lap. He was writing something in it when you approached; he didn't close it when he saw you coming.\r\n\r\nHe notices you but doesn't leave. That's either courage or exhaustion. Possibly both.\r\n\r\nYou sit nearby. The bay moves.\r\n\r\n'Was he wrong?' Dima asks eventually. He doesn't look at you. 'Like. Actually wrong. Not against-the-rules wrong. Actually wrong.'\r\n\r\nIt's a harder question than it sounds. You think about the stress calculations in your ledger. You think about the reinforcement circle, rough but technically sound. You think about six nights of his own energy spent on borrowed time—the foreman who was beside you at Crane Seven while those readings landed, who watched the crew and the bay like waiting had become a job in itself.\r\n\r\n'He did real work,' you say, 'with the wrong materials. The work was an honest attempt. The materials were what was available to him.' You pause. 'The people who decided those were the only materials available—that's a different question.'\r\n\r\nDima thinks about this. He has the stillness of someone who's learned to think before responding, probably because responding wrong has cost him something before.\r\n\r\n'So the wrong thing wasn't what he did,' Dima says. 'It was what he had to work with.'\r\n\r\n'Yes.'\r\n\r\nAnother silence. Then: 'That doesn't feel like it's enough to know.'\r\n\r\n'No,' you agree. 'It doesn't.'\r\n\r\nHe nods slowly, in the way of someone receiving an answer they already suspected and were hoping was wrong. He sets the wrench down on the barrier. Then he picks it up again.\r\n\r\nHe writes something in the notebook. You don't ask what.\r\n\r\nYou leave him there, watching the water.",
     "onEnter": [
       {
         "action": "set_flag",
@@ -1293,26 +1361,10 @@ export const STORY_NODES: Record<string, StoryNode> = {
     "choices": [
       {
         "id": "c_dima_1",
-        "label": "Your wider brief starts with the name on the permit: Crane Seven's foreman. Cross the apron while you still have daylight.",
+        "label": "Return to Crane Seven. The joint is still there; the decision you walked away from is still open.",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "meet_kaelen"
-        }
-      },
-      {
-        "id": "c_dima_2",
-        "label": "You mean to reach the seawall cross-section before dark—but dock protocol says the crane foreman signs off on waterfront access. Start there.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "meet_kaelen"
-        }
-      },
-      {
-        "id": "c_dima_3",
-        "label": "That inland drainage spike is screaming for context. Get the foreman's account of recent loads before you chase it inland.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "meet_kaelen"
+          "nextNodeId": "kaelen_decision_return"
         }
       },
       {
@@ -1556,7 +1608,31 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "warehouse_approach"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "warehouse_thread_complete"
+          }
+        ]
+      },
+      {
+        "id": "c_track_cea_from_slum",
+        "label": "Go directly to the CEA—continue your assessment.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "seek_answers"
+        },
+        "visibilityRequirements": [
+          {
+            "type": "has_flag",
+            "key": "warehouse_thread_complete"
+          },
+          {
+            "type": "has_flag",
+            "key": "purifier_basement_done"
+          }
+        ]
       }
     ]
   },
@@ -1640,7 +1716,31 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "warehouse_approach_repeat"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "warehouse_thread_complete"
+          }
+        ]
+      },
+      {
+        "id": "c_tdr_cea_from_slum",
+        "label": "Go directly to the CEA—continue your assessment.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "seek_answers"
+        },
+        "visibilityRequirements": [
+          {
+            "type": "has_flag",
+            "key": "warehouse_thread_complete"
+          },
+          {
+            "type": "has_flag",
+            "key": "purifier_basement_done"
+          }
+        ]
       }
     ]
   },
@@ -4904,7 +5004,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "label": "Next day: follow the drainage signature inland—the disturbance in the district interior.",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "track_disturbance"
+          "nextNodeId": "track_disturbance_repeat"
         },
         "onSelect": [
           {
