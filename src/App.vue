@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Analytics } from '@vercel/analytics/vue';
+import { inject as injectVercelWebAnalytics } from '@vercel/analytics'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import AudioControls from './components/AudioControls.vue'
 import AuthGate from './components/AuthGate.vue'
@@ -116,7 +116,13 @@ function onGameKeydown(e: KeyboardEvent): void {
   }
 }
 
+let vercelWebAnalyticsInjected = false
+
 onMounted(() => {
+  if (typeof window !== 'undefined' && !vercelWebAnalyticsInjected) {
+    vercelWebAnalyticsInjected = true
+    injectVercelWebAnalytics()
+  }
   if (GAME_CONFIG.features.cloudSave) {
     void authStore.bootstrap().then(() => syncCloudSavesNow())
   }
@@ -166,7 +172,6 @@ watch(
 </script>
 
 <template>
-  <Analytics />
   <AuthGate>
     <MainMenu v-if="currentView === 'menu'" @start-game="handleStartGame" />
 
