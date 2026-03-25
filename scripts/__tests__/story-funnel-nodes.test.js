@@ -365,13 +365,22 @@ describe('story funnel (purifier / authority loop guard)', () => {
     }
   })
 
-  it('meet_old_tomas offers exit to track_disturbance when purifier_basement_done', () => {
+  it('meet_old_tomas routes return trail by warehouse_thread_complete', () => {
     const nodesRows = readCsv(csvDir, 'nodes.csv')
     const nodes = parseNodes(nodesRows)
     const tomas = nodes.meet_old_tomas
-    const back = tomas.choices.find((c) => c.id === 'c_tomas_2')
-    expect(back?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'track_disturbance' })
-    expect(back?.visibilityRequirements).toEqual([{ type: 'has_flag', key: 'purifier_basement_done' }])
+    const firstPass = tomas.choices.find((c) => c.id === 'c_tomas_2')
+    expect(firstPass?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'track_disturbance' })
+    expect(firstPass?.visibilityRequirements).toEqual([
+      { type: 'has_flag', key: 'purifier_basement_done' },
+      { type: 'not_has_flag', key: 'warehouse_thread_complete' },
+    ])
+    const afterWarehouse = tomas.choices.find((c) => c.id === 'c_tomas_3')
+    expect(afterWarehouse?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'track_disturbance_repeat' })
+    expect(afterWarehouse?.visibilityRequirements).toEqual([
+      { type: 'has_flag', key: 'purifier_basement_done' },
+      { type: 'has_flag', key: 'warehouse_thread_complete' },
+    ])
   })
 
   it('authority_overplay_2 sets authority_escalation_filed onEnter and Mireth choice navigates to seek_answers', () => {

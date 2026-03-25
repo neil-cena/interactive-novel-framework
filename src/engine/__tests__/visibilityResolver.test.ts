@@ -151,6 +151,24 @@ describe('isChoiceVisible', () => {
     ).toBe(false)
   })
 
+  it('any_of: true when any alternative passes', () => {
+    const req = {
+      type: 'any_of' as const,
+      alternatives: [
+        { type: 'has_flag' as const, key: 'a' },
+        { type: 'has_item' as const, itemId: 'map' },
+      ],
+    }
+    expect(isChoiceVisible([req], { ...baseState, flags: { a: true } })).toBe(true)
+    expect(
+      isChoiceVisible([req], {
+        ...baseState,
+        inventory: { ...baseState.inventory, items: { map: 1 } },
+      }),
+    ).toBe(true)
+    expect(isChoiceVisible([req], baseState)).toBe(false)
+  })
+
   it('invalid requirement type returns false', () => {
     expect(
       isChoiceVisible([{ type: 'unknown' as any }], baseState),

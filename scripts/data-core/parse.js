@@ -99,90 +99,121 @@ export function parseOnEnter(value, logPrefix = '[parse]') {
   return actions.length > 0 ? actions : undefined
 }
 
+/**
+ * Parse a single visibility clause (e.g. has_flag:pattern_discovered).
+ * Used by parseVisibility and by any_of alternatives.
+ */
+export function parseOneVisibilityClause(token, logPrefix = '[parse]') {
+  const trimmed = String(token ?? '').trim()
+  if (!trimmed) return null
+  const [type, ...parts] = trimmed.split(':').map((segment) => segment.trim())
+  if (!type) {
+    if (typeof console !== 'undefined' && console.warn) {
+      console.warn(`${logPrefix} parseOneVisibilityClause: missing type. Token:`, JSON.stringify(token))
+    }
+    return null
+  }
+  if (type === 'has_flag') {
+    const [key] = parts
+    if (!key) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`${logPrefix} parseOneVisibilityClause: has_flag missing key. Token:`, JSON.stringify(token))
+      }
+      return null
+    }
+    return { type: 'has_flag', key }
+  }
+  if (type === 'not_has_flag') {
+    const [key] = parts
+    if (!key) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`${logPrefix} parseOneVisibilityClause: not_has_flag missing key. Token:`, JSON.stringify(token))
+      }
+      return null
+    }
+    return { type: 'not_has_flag', key }
+  }
+  if (type === 'has_item') {
+    const [itemId] = parts
+    if (!itemId) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`${logPrefix} parseOneVisibilityClause: has_item missing itemId. Token:`, JSON.stringify(token))
+      }
+      return null
+    }
+    return { type: 'has_item', itemId }
+  }
+  if (type === 'not_has_item') {
+    const [itemId] = parts
+    if (!itemId) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`${logPrefix} parseOneVisibilityClause: not_has_item missing itemId. Token:`, JSON.stringify(token))
+      }
+      return null
+    }
+    return { type: 'not_has_item', itemId }
+  }
+  if (type === 'stat_check') {
+    const [stat, operator, rawValue] = parts
+    if (!stat || !operator || rawValue === undefined || rawValue === '') {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`${logPrefix} parseOneVisibilityClause: stat_check missing stat/operator/value. Token:`, JSON.stringify(token))
+      }
+      return null
+    }
+    return { type: 'stat_check', stat, operator, value: asNumber(rawValue, 0) }
+  }
+  if (type === 'world_check') {
+    const [stat, operator, rawValue] = parts
+    if (!stat || !operator || rawValue === undefined || rawValue === '') {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`${logPrefix} parseOneVisibilityClause: world_check missing stat/operator/value. Token:`, JSON.stringify(token))
+      }
+      return null
+    }
+    return { type: 'world_check', stat, operator, value: asNumber(rawValue, 0) }
+  }
+  if (type === 'reputation_check') {
+    const [stat, operator, rawValue] = parts
+    if (!stat || !operator || rawValue === undefined || rawValue === '') {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn(`${logPrefix} parseOneVisibilityClause: reputation_check missing stat/operator/value. Token:`, JSON.stringify(token))
+      }
+      return null
+    }
+    return { type: 'reputation_check', stat, operator, value: asNumber(rawValue, 0) }
+  }
+  if (typeof console !== 'undefined' && console.warn) {
+    console.warn(`${logPrefix} parseOneVisibilityClause: unknown type:`, type, 'Token:', JSON.stringify(token))
+  }
+  return null
+}
+
 export function parseVisibility(value, logPrefix = '[parse]') {
   const requirements = splitPipe(value)
     .map((token) => {
-      const [type, ...parts] = token.split(':').map((segment) => segment.trim())
-      if (!type) {
-        if (typeof console !== 'undefined' && console.warn) {
-          console.warn(`${logPrefix} parseVisibility: missing type. Token:`, JSON.stringify(token))
-        }
-        return null
-      }
-      if (type === 'has_flag') {
-        const [key] = parts
-        if (!key) {
+      const t = String(token ?? '').trim()
+      if (!t) return null
+      const colonIdx = t.indexOf(':')
+      const head = colonIdx >= 0 ? t.slice(0, colonIdx).trim() : t
+      if (head === 'any_of') {
+        const rest = colonIdx >= 0 ? t.slice(colonIdx + 1) : ''
+        const altTokens = rest
+          .split('+')
+          .map((s) => s.trim())
+          .filter(Boolean)
+        const alternatives = altTokens
+          .map((clause) => parseOneVisibilityClause(clause, logPrefix))
+          .filter(Boolean)
+        if (alternatives.length === 0) {
           if (typeof console !== 'undefined' && console.warn) {
-            console.warn(`${logPrefix} parseVisibility: has_flag missing key. Token:`, JSON.stringify(token))
+            console.warn(`${logPrefix} parseVisibility: any_of has no valid alternatives. Token:`, JSON.stringify(t))
           }
           return null
         }
-        return { type: 'has_flag', key }
+        return { type: 'any_of', alternatives }
       }
-      if (type === 'not_has_flag') {
-        const [key] = parts
-        if (!key) {
-          if (typeof console !== 'undefined' && console.warn) {
-            console.warn(`${logPrefix} parseVisibility: not_has_flag missing key. Token:`, JSON.stringify(token))
-          }
-          return null
-        }
-        return { type: 'not_has_flag', key }
-      }
-      if (type === 'has_item') {
-        const [itemId] = parts
-        if (!itemId) {
-          if (typeof console !== 'undefined' && console.warn) {
-            console.warn(`${logPrefix} parseVisibility: has_item missing itemId. Token:`, JSON.stringify(token))
-          }
-          return null
-        }
-        return { type: 'has_item', itemId }
-      }
-      if (type === 'not_has_item') {
-        const [itemId] = parts
-        if (!itemId) {
-          if (typeof console !== 'undefined' && console.warn) {
-            console.warn(`${logPrefix} parseVisibility: not_has_item missing itemId. Token:`, JSON.stringify(token))
-          }
-          return null
-        }
-        return { type: 'not_has_item', itemId }
-      }
-      if (type === 'stat_check') {
-        const [stat, operator, rawValue] = parts
-        if (!stat || !operator || rawValue === undefined || rawValue === '') {
-          if (typeof console !== 'undefined' && console.warn) {
-            console.warn(`${logPrefix} parseVisibility: stat_check missing stat/operator/value. Token:`, JSON.stringify(token))
-          }
-          return null
-        }
-        return { type: 'stat_check', stat, operator, value: asNumber(rawValue, 0) }
-      }
-      if (type === 'world_check') {
-        const [stat, operator, rawValue] = parts
-        if (!stat || !operator || rawValue === undefined || rawValue === '') {
-          if (typeof console !== 'undefined' && console.warn) {
-            console.warn(`${logPrefix} parseVisibility: world_check missing stat/operator/value. Token:`, JSON.stringify(token))
-          }
-          return null
-        }
-        return { type: 'world_check', stat, operator, value: asNumber(rawValue, 0) }
-      }
-      if (type === 'reputation_check') {
-        const [stat, operator, rawValue] = parts
-        if (!stat || !operator || rawValue === undefined || rawValue === '') {
-          if (typeof console !== 'undefined' && console.warn) {
-            console.warn(`${logPrefix} parseVisibility: reputation_check missing stat/operator/value. Token:`, JSON.stringify(token))
-          }
-          return null
-        }
-        return { type: 'reputation_check', stat, operator, value: asNumber(rawValue, 0) }
-      }
-      if (typeof console !== 'undefined' && console.warn) {
-        console.warn(`${logPrefix} parseVisibility: unknown type:`, type, 'Token:', JSON.stringify(token))
-      }
-      return null
+      return parseOneVisibilityClause(t, logPrefix)
     })
     .filter(Boolean)
   return requirements.length > 0 ? requirements : undefined

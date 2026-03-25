@@ -54,6 +54,14 @@ export function isChoiceVisible(
   const registry = getPluginRegistry()
 
   return requirements.every((requirement) => {
+    if (requirement.type === 'any_of') {
+      const alts = (requirement as unknown as { alternatives?: VisibilityRequirement[] })
+        .alternatives
+      if (Array.isArray(alts)) {
+        return alts.some((alt) => isChoiceVisible([alt], state))
+      }
+    }
+
     const coreResult = evaluateCore(requirement, state)
     if (coreResult !== null) return coreResult
 
