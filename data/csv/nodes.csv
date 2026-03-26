@@ -3,10 +3,12 @@ start,narrative,"The 0500 bell thrums through the dormitory stone—soft enough 
 
 You open your eyes to the grey ceiling, cracks memorized like harbor lines on a chart. Vael: Junior Field Evaluator, twenty-three, useful because you can chase a cost through math and metal. People are the elective nobody grades honestly; the curriculum still pretends the exam is only materials.
 
-Morning reaches you before the common hall does: mineral edge in the air, alchemical fuel burning somewhere in the converters that keep Orvish watered, heated, and structurally polite. Through the narrow window, upper spires take the first pale light; below, industrial haze holds the lower rings in a softer sleep. From this height the view almost earns the word pretty.
+Morning reaches you before the common hall does: mineral edge in the air, alchemical fuel burning somewhere in the converters that keep Orvish watered, heated, and structurally polite. Through the narrow window, upper spires take the first pale light; the frame meets the wall with that slight give cheaper annexes leave to habit and grey putty. Below, industrial haze holds the lower rings in a softer sleep. From this height the view almost earns the word pretty.
 
 Your kit is already staged—plates, chalk, calipers, sealed Tier 2 blocks—enough for real work if you ration like you mean it. The ledger waits with half-finished figures from yesterday, patient as a door left ajar. Same ceiling as last week; you're the variable.",,,c_start_1,See Mireth—briefing is how a good day starts.,,navigate:assignment_briefing,,c_start_2,Watch Orvish wake from the window first.,,navigate:morning_view,,c_start_3,Go back to sleep. The anomaly can wait.,,navigate:death_oversleep,,,,,,,,,,,,,,,,
-morning_view,narrative,"You stand at the narrow window. Below the Scholar's Quarter, Orvish stacks itself in rings.
+morning_view,narrative,"You stand at the narrow window. Your palms find grit along the sill where the stone lip and the frame have worn to an agreement neither side signed.
+
+Below the Scholar's Quarter, Orvish stacks itself in rings.
 
 The upper terraces read clean from here—white stone, polished brass, CEA towers and assembly halls holding true lines because someone steady feeds them good fuel and skilled circles. You can see the money in the joints: no apology patches, no polite sag.
 
@@ -144,10 +146,14 @@ meet_kaelen,narrative,"The foreman tracks you the way a man tracks a leak he can
 
 'Kaelen.' No hand. 'Crane runs. Better than runs—we're finally ahead of quota, which means this district gets to pretend it's allowed to breathe.'
 
-The work behind him has stopped anyway—six faces, one shared equation between your pen and their next meal. The youngest is all elbows and white knuckles on a wrench, watching a weight he can't steer.",,set_flag:kaelen_met:true,c_kaelen_1,I can see there's been work done on it. Show me what you did.,,navigate:kaelen_shows,,c_kaelen_2,"This crane is going to fail. I need to understand why, before someone gets hurt.",,navigate:kaelen_defensive,,c_kaelen_4,"Step back, drink your energy tonic, then re-approach while you can still feel your face.",has_item:energy_tonic|world_check:vaelEnergy:<=:62,navigate:meet_kaelen_tonic,remove_item:energy_tonic:1|adjust_energy:20|adjust_hp:8,c_kaelen_3,Flash your seal and order the crew to stand down immediately.,,navigate:death_bluff_crew,,,,,,,,,,,
+The work behind him has stopped anyway—six faces, one shared equation between your pen and their next meal. The youngest is all elbows and white knuckles on a wrench, watching a weight he can't steer.
+
+The brass at your collar is paperwork; the boom's tackle is what currently carries the exchange, and nobody who files disputes keeps a desk on this catwalk.",,set_flag:kaelen_met:true,c_kaelen_1,I can see there's been work done on it. Show me what you did.,,navigate:kaelen_shows,,c_kaelen_2,"This crane is going to fail. I need to understand why, before someone gets hurt.",,navigate:kaelen_defensive,,c_kaelen_4,"Step back, drink your energy tonic, then re-approach while you can still feel your face.",has_item:energy_tonic|world_check:vaelEnergy:<=:62,navigate:meet_kaelen_tonic,remove_item:energy_tonic:1|adjust_energy:20|adjust_hp:8,c_kaelen_3,Flash your seal and order the crew to stand down immediately.,,navigate:death_bluff_crew,,,,,,,,,,,
 meet_kaelen_tonic,narrative,"You turn away for sixty seconds—long enough to crack the tonic vial and swallow something that tastes like copper, stabilizers, and spite. The label warned you about opinions. It did not warn you about foremen.
 
-When you walk back to Kaelen, your hands steadier, he notices anyway. Dock workers always notice who came back different.",,,c_kt_1,I can see there's been work done on it. Show me what you did.,,navigate:kaelen_shows,,c_kt_2,This crane is going to fail. I need the full picture before someone gets hurt.,,navigate:kaelen_defensive,,c_kt_3,Flash your seal and order the crew to stand down immediately.,,navigate:death_bluff_crew,,,,,,,,,,,,,,,,
+When you walk back to Kaelen, your hands steadier, he notices anyway. Dock workers always notice who came back different.
+
+Paper still rides at your throat; iron and line still ride in their hands, and the tier that sorts precedence is not within hailing distance of the crane.",,,c_kt_1,I can see there's been work done on it. Show me what you did.,,navigate:kaelen_shows,,c_kt_2,This crane is going to fail. I need the full picture before someone gets hurt.,,navigate:kaelen_defensive,,c_kt_3,Flash your seal and order the crew to stand down immediately.,,navigate:death_bluff_crew,,,,,,,,,,,,,,,,
 kaelen_defensive,narrative,"'Nothing fails on my watch,' Kaelen says, too fast. 'I sleeved every joint. Six nights, after shift.'
 
 You're already sorry for your next sentence. It comes out anyway: he's not a certified structural alchemist.
@@ -163,7 +169,7 @@ kaelen_shows,narrative,"Kaelen hauls a canvas aside at the crane's base like he'
 
 Tier 1 paste, mixed from what a waterfront can actually buy, carries a reinforcement circle right on the main load joint. The geometry would make an instructor wince—slightly elliptical, lines that waver where a tired arm ran out of reach. It's still alchemy that does what it claims: spreads stress so the boom can cheat above its birth certificate.
 
-You kneel and let the plate touch the bond.
+You kneel and let the plate touch the bond. Ozone needles the margin of the air; your skin registers charge testing for a path looser than paste and iron.
 
 It works. That's the insult. Level 2 thinking in Tier 1 skin—six nights of his life fed into paste that wasn't built to hold this many activations. Micro-fractures are threading through the layer; each lift teaches the circle a new way to lie.
 
@@ -471,8 +477,8 @@ The device in the center of the room is remarkable work. A multi-stage purifier 
 
 'Twenty families have clean water because of this,' she says. 'Sixteen children who had the water-fever recovered. Old Tomas next door, who was close to the end—he recovered.' A small pause. 'I know there's a cost I couldn't see. There's always a cost I couldn't see. I built it anyway, because the cost of not building it was people dying of thirst in a city with a bay full of water.'
 
-She looks at you. 'What did I miss?'",,set_flag:elara_met:true,c_elara_1,Run a full analysis on the purifier first.,,navigate:purifier_analysis,,c_elara_2,Take a sip of the purified water to test it.,,navigate:death_drink_water,,,,,,,,,,,,,,,,,,,,,
-elara_basement_return,narrative,"The basement smells of copper and tea. Elara looks up from her workbench—not surprised to see you, exactly, but weighing how much time she can spare.
+She looks at you. Your plate tags a faint circle trace in the water she poured—clean by kitchen reckoning, on the wrong side of an academy calibration line. 'What did I miss?'",,set_flag:elara_met:true,c_elara_1,Run a full analysis on the purifier first.,,navigate:purifier_analysis,,c_elara_2,Take a sip of the purified water to test it.,,navigate:death_drink_water,,,,,,,,,,,,,,,,,,,,,
+elara_basement_return,narrative,"The basement smells of copper and tea; the purifier's outlet line beads condensate along bare copper the wall never quite concealed. Elara looks up from her workbench—not surprised to see you, exactly, but weighing how much time she can spare.
 
 'Back already,' she says. Her gaze skims the cellar walls and the bench, tallying a space that is still hers whether the machinery cooperates or not. 'Same workshop. Ask what you need.'",,,c_ereturn_1,Run a full analysis on the purifier first.,,navigate:purifier_analysis,,c_ereturn_2,Take a sip of the purified water to test it.,,navigate:death_drink_water,,,,,,,,,,,,,,,,,,,,,
 purifier_analysis,narrative,"You spend an hour with your diagnostic plate and measurement tools mapping the purifier's exchange ratios. Elara watches you work in silence—she understands enough to know that what you're doing matters, and has the discipline to let you finish without filling the time with her own uncertainty.
@@ -639,7 +645,9 @@ When you've laid out what the day actually yielded—the depletion figures where
 
 'Citizen Vael. Your data is thorough. I appreciate thoroughness.' He taps the Highpoint Transit Rail on the schematic. 'When complete, this project will generate a forty percent increase in trade throughput for all of Caldris—including the lower districts, including Karet Bay. Thornfeld Compact contracts worth a decade of infrastructure funding are conditional on this rail network being operational. Three Free Ports League cities have already renegotiated their material rates based on projected capacity.' He taps Karet Bay. 'To achieve that, we temporarily reallocated resources from lower-priority maintenance networks. The exchange is calculated. The net benefit outweighs the transitional cost.'
 
-He says it with the smoothness of something he's said before, and believed before, and possibly stopped believing at some point but has continued saying anyway. The portrait of the First Citizen watches from behind him.",,,c_toris_1,You're redirecting material from a district that already paid once in the Drowning?,,navigate:toris_reveal,,c_toris_2,Flip his desk over.,,navigate:death_flip_desk,,,,,,,,,,,,,,,,,,,,,
+He says it with the smoothness of something he's said before, and believed before, and possibly stopped believing at some point but has continued saying anyway. The portrait of the First Citizen watches from behind him.
+
+The desk is mortised to the floor runners; the room was arranged for furniture that does not slide when voices rise.",,,c_toris_1,You're redirecting material from a district that already paid once in the Drowning?,,navigate:toris_reveal,,c_toris_2,Flip his desk over.,,navigate:death_flip_desk,,,,,,,,,,,,,,,,,,,,,
 toris_reveal,narrative,"Toris doesn't flinch. 'Redirecting. Not removing. The formal authorization specifies that Karet Bay's allocation will be restored at project completion. This is a temporary measure.'
 
 The office air is too clean; it makes every word sound filed.
@@ -831,6 +839,8 @@ The seawall is at the district's eastern edge, a dark mass against the faintly l
 You press your diagnostic plate against the cold stone. The reading confirms everything: fuel chambers critical, maintenance circles dormant, structural integrity in the lower sections approaching cascade failure threshold. The high-tide surge is already building pressure against the outer face.
 
 You look back at the sleeping district behind you. Six thousand people who have been paying the cost of this for seven months without being told why they were paying it or what it was going toward. People who patched things with what they had and held the line with what remained and did not know—could not know—that the line would not hold.
+
+Stone answers force with density before it answers with sympathy.
 
 Three options. None of them clean. The cost falls somewhere regardless.",,adjust_worker_rep:5,c_race_1,Assess your options carefully.,,navigate:final_assessment,,c_race_2,Use your remaining preparation time well.,,navigate:final_preparation,,c_race_3,Find Elara before you decide.,has_flag:elara_met:true,navigate:elara_before_crisis,,c_race_4,Punch the seawall in frustration.,,navigate:death_punch_wall,,c_race_5,File the formal escalation. You have his orders—make them public record before you face the wall.,has_item:toris_orders,navigate:formal_escalation,,c_race_6,Coordinate the evacuation first—the district needs time before any solution.,has_item:freehands_token,navigate:evacuation_coordination,
 elara_before_crisis,narrative,"You find her basement workshop lit, as always—Elara doesn't sleep when her fuel chambers need checking, and she's been awake since your visit. She looks up when you come down the stairs, reads your face, and doesn't ask why you're there.
@@ -1190,7 +1200,9 @@ She hands you a second playbill. Dima's map is on the back. She's already writte
 
 'You know Dima,' you say.
 
-'He drew the map,' she says. 'He's been our audience data analyst. Very thorough kid.'",,add_item:seawall_analysis:1|set_flag:theater_seawall_briefing:true,c_rev_theater_1,Leave with the analysis. Get to the actual seawall.,,navigate:race_to_seawall,set_flag:declined_theater_chronicler_path:true,c_rev_theater_2,Ask Petra one more question first.,,navigate:theater_exit,set_flag:declined_theater_chronicler_path:true,c_rev_theater_4,This is unauthorized alchemical activity. Shut it down.,,navigate:death_petra_arrested,,c_rev_theater_5,Ask if the troupe needs a writer for Act III.,,navigate:death_join_troupe,,,,,,,,,,,
+'He drew the map,' she says. 'He's been our audience data analyst. Very thorough kid.'
+
+Above you, the house murmur filters through the floor until every borrowed official phrase sounds like rumor, and the people who could swear to what they saw are still upstairs with their playbills.",,add_item:seawall_analysis:1|set_flag:theater_seawall_briefing:true,c_rev_theater_1,Leave with the analysis. Get to the actual seawall.,,navigate:race_to_seawall,set_flag:declined_theater_chronicler_path:true,c_rev_theater_2,Ask Petra one more question first.,,navigate:theater_exit,set_flag:declined_theater_chronicler_path:true,c_rev_theater_4,This is unauthorized alchemical activity. Shut it down.,,navigate:death_petra_arrested,,c_rev_theater_5,Ask if the troupe needs a writer for Act III.,,navigate:death_join_troupe,,,,,,,,,,,
 theater_exit,narrative,"'Have you been aware,' you ask, 'that your drainage modifications have been partially offsetting the toxic compound buildup in the seawall's fuel chambers?'
 
 Petra considers this with the focus of someone absorbing a calculation.
@@ -1333,6 +1345,8 @@ You look at the document. You look at the district around you. You look at your 
 Your field writ is in procedural abeyance. The pavement under your boots and the readings on your plates are not.
 
 Mireth is going to have a remarkable amount to say about this.
+
+The portal's queue will timestamp the next routing events whether you are watching the screen or not.
 
 Exit opportunity: you could contact Mireth directly and explain the situation before the consultation review begins. Or you could go back and gather the documentation that would have made this unnecessary.",,set_flag:authority_escalation_filed:true|adjust_cea_rep:-10,c_ao_2_mireth,Contact Mireth immediately. Explain everything. Request emergency cosign.,,navigate:seek_answers,,c_ao_2_accept,There is nothing to be done now but return and face the review.,,navigate:death_authorization_revoked,,,,,,,,,,,,,,,,,,,,,
 death_authorization_revoked,narrative,"You return to the Scholar Quarter.
