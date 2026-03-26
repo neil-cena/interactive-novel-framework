@@ -11,7 +11,7 @@ const emit = defineEmits<{
 }>()
 
 const playerStore = usePlayerStore()
-const exitNodeId = computed(() => (props.modeData.exitNodeId as string) ?? 'cat_colony_treaty')
+const exitNodeId = computed(() => (props.modeData.exitNodeId as string) ?? 'start')
 
 const sceneIndex = ref(0)
 

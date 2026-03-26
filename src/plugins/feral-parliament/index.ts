@@ -7,7 +7,7 @@ export const feralParliamentPlugin: FrameworkPlugin = {
   mechanics: {
     feral_parliament_begin: (mechanic, ctx) => {
       ctx.startGameMode('feral_parliament', {
-        exitNodeId: (mechanic.exitNodeId as string) ?? 'cat_colony_treaty',
+        exitNodeId: (mechanic.exitNodeId as string) ?? 'start',
       })
     },
   },

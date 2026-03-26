@@ -11,42 +11,42 @@ const csvDir = path.resolve(__dirname, '../../data/csv')
 const ALLOWED_START_IDS = new Set(['n_start', 'start'])
 
 describe('story funnel (post-crane hub)', () => {
-  it('post_crane_pattern: plaque thread goes to mireth same day; other threads hit transition_end_day_one; gated visibility preserved', () => {
+  it('post_crane_pattern: plaque thread ends day at transition; sets mireth_warned; other threads hit transition_end_day_one; gated visibility preserved', () => {
     const nodesRows = readCsv(csvDir, 'nodes.csv')
     const nodes = parseNodes(nodesRows)
     const post = nodes.post_crane_pattern
-    expect(post.choices).toHaveLength(4)
-    expect(post.choices.map((c) => c.id)).toEqual(['c_post_1', 'c_post_2', 'c_post_3', 'c_post_4'])
+    expect(post.choices).toHaveLength(5)
+    expect(post.choices.map((c) => c.id)).toEqual(['c_post_1', 'c_post_2', 'c_post_3', 'c_post_4', 'c_post_5'])
     const toTransition = { type: 'navigate', nextNodeId: 'transition_end_day_one' }
     expect(post.choices[0].mechanic).toEqual(toTransition)
     expect(post.choices[1].mechanic).toEqual(toTransition)
     expect(post.choices[3].mechanic).toEqual(toTransition)
-    const mirethChoice = post.choices.find((c) => c.id === 'c_post_3')
-    expect(mirethChoice?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'mireth_field_visit' })
-    expect(mirethChoice?.visibilityRequirements).toEqual([{ type: 'has_flag', key: 'kaelen_crane_assessed' }])
+    const plaqueChoice = post.choices.find((c) => c.id === 'c_post_3')
+    expect(plaqueChoice?.mechanic).toEqual(toTransition)
+    expect(plaqueChoice?.visibilityRequirements).toEqual([{ type: 'has_flag', key: 'kaelen_crane_assessed' }])
+    expect(plaqueChoice?.onSelect).toEqual(
+      expect.arrayContaining([expect.objectContaining({ action: 'set_flag', key: 'mireth_warned', value: true })]),
+    )
     const dimaNb = post.choices.find((c) => c.id === 'c_post_4')
     expect(dimaNb?.visibilityRequirements).toEqual([
       { type: 'has_flag', key: 'kaelen_crane_assessed' },
       { type: 'has_flag', key: 'dima_met' },
       { type: 'has_flag', key: 'saw_the_city' },
     ])
+    const dimaTalk = post.choices.find((c) => c.id === 'c_post_5')
+    expect(dimaTalk?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'dima_encounter' })
+    expect(dimaTalk?.visibilityRequirements).toEqual([{ type: 'not_has_flag', key: 'dima_met' }])
   })
 
-  it('transition_end_day_one offers main spine (track + seawall), gated Mireth (kaelen_crane_assessed), and gated Dima notebook', () => {
+  it('transition_end_day_one offers main spine (track + seawall) and gated Dima notebook (no Mireth field node)', () => {
     const nodesRows = readCsv(csvDir, 'nodes.csv')
     const nodes = parseNodes(nodesRows)
     const td1 = nodes.transition_end_day_one
-    expect(td1.choices).toHaveLength(4)
-    expect(td1.choices.map((c) => c.id)).toEqual(['c_td1_1', 'c_td1_2', 'c_td1_3', 'c_td1_4'])
+    expect(td1.choices).toHaveLength(3)
+    expect(td1.choices.map((c) => c.id)).toEqual(['c_td1_1', 'c_td1_2', 'c_td1_3'])
     expect(td1.choices[0].mechanic).toEqual({ type: 'navigate', nextNodeId: 'track_disturbance' })
     expect(td1.choices[1].mechanic).toEqual({ type: 'navigate', nextNodeId: 'seawall_first_look' })
-    const mirethChoice = td1.choices.find((c) => c.id === 'c_td1_3')
-    expect(mirethChoice?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'mireth_field_visit' })
-    expect(mirethChoice?.visibilityRequirements).toEqual([
-      { type: 'has_flag', key: 'kaelen_crane_assessed' },
-      { type: 'not_has_flag', key: 'mireth_warned' },
-    ])
-    const dimaNb = td1.choices.find((c) => c.id === 'c_td1_4')
+    const dimaNb = td1.choices.find((c) => c.id === 'c_td1_3')
     expect(dimaNb?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'dima_notebook' })
     expect(dimaNb?.visibilityRequirements).toEqual([
       { type: 'has_flag', key: 'kaelen_crane_assessed' },
@@ -93,7 +93,7 @@ describe('story funnel (post-crane hub)', () => {
     expect(whOrphans).toEqual([])
   })
 
-  it('dock_overview reaches dima_edge_early; kaelen_shows can reach dima_encounter; post_crane_pattern does not', () => {
+  it('dock_overview reaches dima_edge_early; kaelen_shows does not sideline to dima; post_crane_pattern offers dima_encounter', () => {
     const nodesRows = readCsv(csvDir, 'nodes.csv')
     const nodes = parseNodes(nodesRows)
     const dockTargets = nodes.dock_overview.choices.map((c) =>
@@ -104,14 +104,14 @@ describe('story funnel (post-crane hub)', () => {
     const showsTargets = nodes.kaelen_shows.choices.map((c) =>
       c.mechanic?.type === 'navigate' ? c.mechanic.nextNodeId : null,
     )
-    expect(showsTargets).toContain('dima_encounter')
+    expect(showsTargets).not.toContain('dima_encounter')
     const postTargets = nodes.post_crane_pattern.choices.map((c) =>
       c.mechanic?.type === 'navigate' ? c.mechanic.nextNodeId : null,
     )
-    expect(postTargets).not.toContain('dima_encounter')
+    expect(postTargets).toContain('dima_encounter')
   })
 
-  it('dima_encounter cannot jump to Mireth before Kaelen; mireth reached from post_crane (same day) or transition_end_day_one (catch-up)', () => {
+  it('dima_encounter cannot jump to removed mireth_field_visit; no node navigates to mireth_field_visit', () => {
     const nodesRows = readCsv(csvDir, 'nodes.csv')
     const nodes = parseNodes(nodesRows)
     const dima = nodes.dima_encounter
@@ -125,12 +125,12 @@ describe('story funnel (post-crane hub)', () => {
         (c) => c.mechanic?.type === 'navigate' && c.mechanic.nextNodeId === 'mireth_field_visit',
       ),
     )
-    expect(mirethInbound.map(([id]) => id).sort()).toEqual(['post_crane_pattern', 'transition_end_day_one'].sort())
+    expect(mirethInbound.map(([id]) => id).sort()).toEqual([])
 
     const onEnter = nodes.dima_encounter.onEnter ?? []
     expect(onEnter.some((a) => a.action === 'set_flag' && a.key === 'dima_met' && a.value === true)).toBe(true)
 
-    const backToCrane = { type: 'navigate', nextNodeId: 'kaelen_decision_return' }
+    const backToCrane = { type: 'navigate', nextNodeId: 'post_crane_pattern' }
     expect(nodes.dima_encounter.choices.find((c) => c.id === 'c_dima_1')?.mechanic).toEqual(backToCrane)
     expect(nodes.dima_encounter.choices.find((c) => c.id === 'c_dima_1')?.visibilityRequirements).toBeUndefined()
     expect(nodes.dima_encounter.choices.find((c) => c.id === 'c_dima_4')?.visibilityRequirements).toEqual([
@@ -173,7 +173,7 @@ describe('story funnel (post-crane hub)', () => {
 })
 
 describe('story funnel (commitment thresholds)', () => {
-  it('chronicler_commitment offers a last-chance return to race_to_seawall', () => {
+  it('chronicler_commitment only advances to doc_planning after alt_chronicler_committed (no return to seawall)', () => {
     const nodesRows = readCsv(csvDir, 'nodes.csv')
     const nodes = parseNodes(nodesRows)
     const node = nodes.chronicler_commitment
@@ -181,10 +181,12 @@ describe('story funnel (commitment thresholds)', () => {
       c.mechanic?.type === 'navigate' ? c.mechanic.nextNodeId : null,
     )
     expect(targets).toContain('doc_planning')
-    expect(targets).toContain('race_to_seawall')
+    expect(targets).not.toContain('race_to_seawall')
+    const chron1 = node.choices.find((c) => c.id === 'c_chron_1')
+    expect(chron1?.visibilityRequirements).toEqual([{ type: 'has_flag', key: 'alt_chronicler_committed' }])
   })
 
-  it('line_crew_meeting offers a walk-away exit to seek_answers', () => {
+  it('line_crew_meeting offers a walk-away exit to seek_answers (hidden after alt_line_committed)', () => {
     const nodesRows = readCsv(csvDir, 'nodes.csv')
     const nodes = parseNodes(nodesRows)
     const node = nodes.line_crew_meeting
@@ -193,18 +195,64 @@ describe('story funnel (commitment thresholds)', () => {
       c.mechanic?.type === 'navigate' ? c.mechanic.nextNodeId : null,
     )
     expect(targets).toContain('seek_answers')
+    const lcm4 = node.choices.find((c) => c.id === 'c_lcm_4')
+    expect(lcm4?.visibilityRequirements).toEqual([{ type: 'not_has_flag', key: 'alt_line_committed' }])
   })
 
-  it('theater_revelation c_rev_theater_3 gates chronicler_commitment on fiction_day_2 (not fiction_day_3)', () => {
+  it('Red Balance alt-string: night_district routes to alt_red_entry; ash_proposition gates on alt_red_committed', () => {
     const nodesRows = readCsv(csvDir, 'nodes.csv')
     const nodes = parseNodes(nodesRows)
-    const rev3 = nodes.theater_revelation.choices.find((c) => c.id === 'c_rev_theater_3')
-    expect(rev3?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'chronicler_commitment' })
-    const keys = (rev3?.visibilityRequirements ?? []).map((r) =>
-      r.type === 'has_flag' ? r.key : JSON.stringify(r),
+    const night5 = nodes.night_district.choices.find((c) => c.id === 'c_night_5')
+    expect(night5?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'alt_red_entry' })
+    expect(night5?.visibilityRequirements.some((r) => r.type === 'not_has_flag' && r.key === 'alt_red_committed')).toBe(true)
+    const ap = nodes.ash_proposition
+    expect(ap.choices.find((c) => c.id === 'c_ap_1')?.visibilityRequirements).toEqual([
+      { type: 'has_flag', key: 'alt_red_committed' },
+    ])
+    expect(ap.choices.find((c) => c.id === 'c_ap_2')?.visibilityRequirements).toEqual([
+      { type: 'has_flag', key: 'alt_red_committed' },
+    ])
+    expect(ap.choices.find((c) => c.id === 'c_ap_3')?.visibilityRequirements).toEqual([
+      { type: 'not_has_flag', key: 'alt_red_committed' },
+    ])
+    const b2 = nodes.alt_red_bailout_2.choices.find((c) => c.id === 'c_altr_b2_commit')
+    expect(b2?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'ash_proposition' })
+    expect(b2?.onSelect?.some((a) => a.action === 'set_flag' && a.key === 'alt_red_committed' && a.value === true)).toBe(true)
+  })
+
+  it('Elara craft alt-string: seek_answers routes to alt_craft_entry; elara_offer gates on alt_craft_committed', () => {
+    const nodesRows = readCsv(csvDir, 'nodes.csv')
+    const nodes = parseNodes(nodesRows)
+    const seek4 = nodes.seek_answers.choices.find((c) => c.id === 'c_seek_4')
+    expect(seek4?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'alt_craft_entry' })
+    expect(seek4?.visibilityRequirements.some((r) => r.type === 'not_has_flag' && r.key === 'alt_craft_committed')).toBe(
+      true,
     )
-    expect(keys).toContain('fiction_day_2')
-    expect(keys).not.toContain('fiction_day_3')
+    const offer = nodes.elara_offer
+    const eo1 = offer.choices.find((c) => c.id === 'c_eo_1')
+    const eo2 = offer.choices.find((c) => c.id === 'c_eo_2')
+    const eo3 = offer.choices.find((c) => c.id === 'c_eo_3')
+    expect(eo1?.visibilityRequirements).toEqual([{ type: 'has_flag', key: 'alt_craft_committed' }])
+    expect(eo2?.visibilityRequirements).toEqual([{ type: 'has_flag', key: 'alt_craft_committed' }])
+    expect(eo3?.visibilityRequirements).toEqual([{ type: 'not_has_flag', key: 'alt_craft_committed' }])
+    const b2 = nodes.alt_craft_bailout_2.choices.find((c) => c.id === 'c_altcr_b2_commit')
+    expect(b2?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'elara_offer' })
+    expect(b2?.onSelect?.some((a) => a.action === 'set_flag' && a.key === 'alt_craft_committed' && a.value === true)).toBe(
+      true,
+    )
+  })
+
+  it('theater_revelation no longer offers in-scene jump to chronicler; sets theater_seawall_briefing for seek_answers cross-file', () => {
+    const nodesRows = readCsv(csvDir, 'nodes.csv')
+    const nodes = parseNodes(nodesRows)
+    const rev = nodes.theater_revelation
+    expect(rev.choices.some((c) => c.id === 'c_rev_theater_3')).toBe(false)
+    const onEnter = rev.onEnter ?? []
+    expect(onEnter.some((a) => a.action === 'set_flag' && a.key === 'theater_seawall_briefing' && a.value === true)).toBe(
+      true,
+    )
+    const seek6 = nodes.seek_answers.choices.find((c) => c.id === 'c_seek_6')
+    expect(seek6?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'alt_chronicler_entry' })
   })
 
   it('doc_planning onEnter sets committed_chronicler flag', () => {
@@ -415,16 +463,9 @@ describe('story funnel (purifier / authority loop guard)', () => {
     expect(c3?.visibilityRequirements).toEqual([{ type: 'has_flag', key: 'purifier_basement_done' }])
   })
 
-  it('cat_colony_treaty offers purifier knock or seek_answers depending on purifier_basement_done', () => {
+  it('cat colony treaty node removed with cull (feral parliament unused)', () => {
     const nodesRows = readCsv(csvDir, 'nodes.csv')
     const nodes = parseNodes(nodesRows)
-    const treaty = nodes.cat_colony_treaty
-    expect(treaty.choices).toHaveLength(2)
-    const knock = treaty.choices.find((c) => c.id === 'c_cat_tr_1')
-    const back = treaty.choices.find((c) => c.id === 'c_cat_tr_2')
-    expect(knock?.visibilityRequirements).toEqual([{ type: 'not_has_flag', key: 'purifier_basement_done' }])
-    expect(knock?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'purifier_entrance_open' })
-    expect(back?.visibilityRequirements).toEqual([{ type: 'has_flag', key: 'purifier_basement_done' }])
-    expect(back?.mechanic).toEqual({ type: 'navigate', nextNodeId: 'seek_answers' })
+    expect(nodes.cat_colony_treaty).toBeUndefined()
   })
 })

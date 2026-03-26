@@ -35,6 +35,8 @@ This document formalizes how we write: a **dark setting** with **optimistic traj
 - **Intimacy:** occasional **asides** and second-person or direct-address beats where the engine allows—tight, not chatty.
 - **Pacing contrast:** after tension, a breath—humor, humanity, or a small true thing—not a flat summary.
 - **Hope without spoiling:** orient toward what’s *possible* next; don’t flatten mystery or consequence.
+- **Describe less, mean more:** long runs of neutral inventory (objects, architecture, systems) read like a briefing. Prefer **fewer, sharper images**; let the reader infer the rest. When description stacks up, **break the texture**—often with **subtle humor** (dry, sideways, situational—see Humor playbook)—so the passage breathes.
+- **Vael’s lens:** where it fits the beat, let narration carry **what this costs or provokes in the PC**—irritation, professional itch, unease, respect they didn’t ask for—not every sentence, but enough that description isn’t disembodied camera work.
 
 ## Humor playbook
 
@@ -59,6 +61,12 @@ This document formalizes how we write: a **dark setting** with **optimistic traj
 - **Emotional micro-beats:** a beat of body, breath, or silence between information dumps.
 - **Drift detector:** watch for **passive stacks** and **nominalization** (“implementation of mitigation” → who does what, now?).
 - **Register exception:** bureaucratic or corporate diction is fine **in dialogue or in-world documents**, not as default narrator voice.
+
+## Dialogue and exposition priority
+
+- **Character over lecture:** dialogue should sound like **this person under pressure**—habits, bias, fear, pride—not a wiki article with quotation marks. If a line exists **only** to inform the player, reconsider: shorten it, **split across exchange**, turn it into **attitude**, move it to an **optional spoke / item flavor / choice label**, or cut it.
+- **When dialogue and lore fight, lore loses:** keep **personality consistent** even if that means delivering **less** world data in that beat. Trust the table: players learn from **who people are**, not from how much they say.
+- **Narrator vs. cast:** the DM-friend narrator can **trim** and **slant**; characters should **embody**. Avoid giving everyone the same “explainer” voice to move plot.
 
 ## Scene recipe (quick)
 
@@ -85,6 +93,8 @@ This document formalizes how we write: a **dark setting** with **optimistic traj
 - **Humor undercuts stakes:** jokes right after a death blow with no beat, or winking that the story doesn’t care.
 - **Toxic positivity:** bright language on horror reads dismissive.
 - **Inconsistent narrator:** asides vanish then return as random snark—two writers in one passage.
+- **Catalog narration:** neutral lists of stuff, settings, or procedures with no PC angle and no contrast—reads like homework.
+- **Talking heads exposition:** characters speak in blocks of world-data that flatten voice; everyone sounds like the same analyst.
 
 ## Revision checklist
 
@@ -94,6 +104,8 @@ This document formalizes how we write: a **dark setting** with **optimistic traj
 - Does humor **punch up or sideways**, not undercut the cost we just established?
 - Any **bathos**? If a joke lands wrong, restore **stakes** then retry subtler.
 - Scan for **passive voice / nominalization** and replace with actors and verbs.
+- **Description pass:** cut or merge purely decorative inventory; add **Vael’s reaction** where the object matters; mix in **one** understated humorous beat if the block is still long.
+- **Dialogue pass:** does each line **reveal character**? Flag any line that only **delivers lore**—trim or reassign.
 
 ## Glossary (short)
 
@@ -111,6 +123,8 @@ Use in critique or solo pass—not required in shipped game text.
 - What **true detail** shows hope without lying about the world?
 - After your darkest scene in a stretch, what is the **smallest** true detail that signals “we’re still in a world where X matters” without resolving the horror—and would one line of dry wit sit better **before** or **after** that beat, and why?
 - If you read three consecutive passages aloud, do they sound like the **same trusted guide**—or like alternating novelist, policy memo, and stand-up? What **one rule** would keep those voices from fighting?
+- In a dense description, what is **one** thing Vael **feels** about it—and what is **one** line that could be **funnier-truer** without stealing the cost?
+- If this speech were anonymized, would you still **hear the speaker**—or only the setting manual?
 
 ## Related documents
 

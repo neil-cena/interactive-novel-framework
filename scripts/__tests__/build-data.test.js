@@ -180,14 +180,14 @@ describe('parseVisibility', () => {
   })
   it('parses any_of alternatives joined with +', () => {
     const result = parseVisibility(
-      'any_of:has_flag:pattern_discovered+has_item:district_map+has_flag:chose_mireth_plaque',
+      'any_of:has_flag:pattern_discovered+has_item:district_map+has_flag:brin_met',
     )
     expect(result).toHaveLength(1)
     expect(result[0].type).toBe('any_of')
     expect(result[0].alternatives).toEqual([
       { type: 'has_flag', key: 'pattern_discovered' },
       { type: 'has_item', itemId: 'district_map' },
-      { type: 'has_flag', key: 'chose_mireth_plaque' },
+      { type: 'has_flag', key: 'brin_met' },
     ])
   })
 })

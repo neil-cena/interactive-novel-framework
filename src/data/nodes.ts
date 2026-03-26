@@ -5,11 +5,11 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "start": {
     "id": "start",
     "type": "narrative",
-    "text": "The 0500 bell sends a low vibration through the stone walls of the Measured Scholars' dormitory. You open your eyes to the familiar grey ceiling, its cracks mapped in your memory like the trade routes on your study charts.\r\n\r\nYour name is Vael. Junior Field Evaluator, Measured Scholars. Twenty-three years old and already trusted with district-level field assessments. You are good at what you do: observation, calculation, the patient art of finding where the cost actually went. The less patient art of finding truth in people has, so far, never featured in the formal curriculum.\r\n\r\nThe morning air carries the sharp mineral smell of alchemical fuel blocks burning in the city's infrastructure converters—the deep machinery that keeps Orvish's water, heat, and structural maintenance running. Through the narrow window, the spires of the upper city catch the first pale light while the lower districts still sleep beneath a blanket of industrial haze. It is, from this safe altitude, almost picturesque.\r\n\r\nYour field kit sits open on the desk: three pre-inscribed diagnostic plates, a pouch of chalk, calipers and stress gauges, and a sealed case holding your Tier 2 fuel blocks. Enough for several days of serious assessment if you ration honestly. Your ledger lies open beside it, unfinished calculations waiting patiently for the version of you that will inevitably be too tired to finish them.",
+    "text": "The 0500 bell thrums through the dormitory stone—soft enough to ignore if you were someone else, insistent enough to make lying still feel like a choice you're already losing.\r\n\r\nYou open your eyes to the grey ceiling, cracks memorized like harbor lines on a chart. Vael: Junior Field Evaluator, twenty-three, useful because you can chase a cost through math and metal. People are the elective nobody grades honestly; the curriculum still pretends the exam is only materials.\r\n\r\nMorning reaches you before the common hall does: mineral edge in the air, alchemical fuel burning somewhere in the converters that keep Orvish watered, heated, and structurally polite. Through the narrow window, upper spires take the first pale light; below, industrial haze holds the lower rings in a softer sleep. From this height the view almost earns the word pretty.\r\n\r\nYour kit is already staged—plates, chalk, calipers, sealed Tier 2 blocks—enough for real work if you ration like you mean it. The ledger waits with half-finished figures from yesterday, patient as a door left ajar. Same ceiling as last week; you're the variable.",
     "choices": [
       {
         "id": "c_start_1",
-        "label": "Review the assignment briefing.",
+        "label": "See Mireth—briefing is how a good day starts.",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "assignment_briefing"
@@ -17,7 +17,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
       },
       {
         "id": "c_start_2",
-        "label": "Look out the window at the waking city first.",
+        "label": "Watch Orvish wake from the window first.",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "morning_view"
@@ -36,7 +36,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "morning_view": {
     "id": "morning_view",
     "type": "narrative",
-    "text": "You stand at the narrow window. Below the Scholar's Quarter, the city of Orvish unfolds in layers.\r\n\r\nThe upper terraces gleam with white stone and polished brass—the Coordinated Exchange Authority's administrative towers, the academies, the stone assembly halls where the Revolutionary Council holds its public sessions. Their buildings hold their shape because they are properly maintained with high-quality fuel and skilled circle work. You can see, even from here, the difference: clean joints, true lines, no visible patching.\r\n\r\nEven from up here, things are not equal. There are those in the upper terrace who trained in the Valdmere Realm before its political troubles, who return now with credentials the republic struggles to officially recognize and unofficial connections it cannot ignore. You have never had occasion to think about them. Today is probably not the day either.\r\n\r\nOrvish is the republic's largest port city — not the capital (that's Caldren, far to the northeast, where the Revolutionary Council holds court over problems it can barely see from this distance), but the city where trade actually happens. Where materials flow in and decisions about those materials flow out. Where the distance between an infrastructure commission memo and a collapsing seawall is exactly as long as it takes for a requisition to get lost in transit.\r\n\r\nBelow that, the working districts descend in concentric rings toward the waterfront. Then the industrial zone, then the lower docks. The buildings get rougher as you go down—timber reinforced with cheaper bonding paste, walls shored up with improvised circle work, the subtle sag of structures running on inadequate fuel.\r\n\r\nAt the very bottom, pressed against the grey water of the bay, lies Karet Bay. Its skyline is irregular in the way of places that have been repaired many times without the materials to do it properly.\r\n\r\nKaret Bay has a particular history. Three generations ago, a trade consortium redirected the bay's freshwater inlet using large-scale alchemical flow manipulation. The port access improved. Then, over the following decade, the freshwater supply failed, the fisheries died, the drinking water collapsed, and tens of thousands of people were displaced.\r\n\r\nThe consortium's position was that the economic gains outweighed the cost.\r\n\r\nThe courts disagreed.\r\n\r\nThe legal principle that followed—environmental harm classified as harm to people—is cited in every environmental assessment you've been trained to file. You have cited it three times. You have never stood in the district it describes.\r\n\r\nYou will stand in it on this deployment—not as a single afternoon's errand, but as field work that may take more than one day to earn its answers.",
+    "text": "You stand at the narrow window. Below the Scholar's Quarter, Orvish stacks itself in rings.\r\n\r\nThe upper terraces read clean from here—white stone, polished brass, CEA towers and assembly halls holding true lines because someone steady feeds them good fuel and skilled circles. You can see the money in the joints: no apology patches, no polite sag.\r\n\r\nNot everyone up there earned their seat the same way. You know the rumor-class about Valdmere-trained credentials the republic cannot fully bless or ignore. You have never needed that thought for your work. Today probably still does not.\r\n\r\nCaldren—capital, northeast—writes problems at a distance. Orvish loads ships, moves ore, and lives in the gap between a commission memo and a wall that stops listening. Below the bright ring, the city roughens: cheaper paste, more timber, more weight carried by habit and improvisation. The industrial belt grinds toward grey water.\r\n\r\nKaret Bay sits at the bottom like a mouth closed many times with the wrong teeth—skyline irregular, repairs stacked on repairs. You know its name from assessments filed by people who left the same day. You have never stood inside the file.\r\n\r\nWhatever you sign today, the work below will not resolve in a single polite afternoon—that much leaks through even the tidy versions. The dread is not ignorance of the law—you could cite the principle in your sleep—but ignorance of what the street does with the footnotes when you are the one holding the chalk.",
     "onEnter": [
       {
         "action": "set_flag",
@@ -47,7 +47,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
     "choices": [
       {
         "id": "c_morning_1",
-        "label": "Get dressed and check your assignment.",
+        "label": "Dress, then take the briefing—Mireth's already on the numbers.",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "assignment_briefing"
@@ -66,11 +66,11 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "assignment_briefing": {
     "id": "assignment_briefing",
     "type": "narrative",
-    "text": "In the common hall, Senior Scholar Mireth is already seated behind a desk stacked with incident reports. She is a thin woman with ink-stained fingers and the expression of someone who has been awake since before the bell and intends to make that everyone else's problem.\r\n\r\n'Vael,' she says without looking up. 'Field assignment. Karet Bay lower docks, loading district. A harbor crane is operating at twenty-three percent above its rated structural load capacity. The maintenance circle logs show no authorized reinforcement work in the past four months. The fuel allocation records show normal consumption. Nothing explains the numbers.'\r\n\r\nShe slides a folder across the desk.\r\n\r\n'Either the instruments are wrong, or someone has bonded an unauthorized circle to critical load-bearing infrastructure without proper materials or training.' She finally looks at you. 'You know what the Hollow Tower looked like before it fell? Performing fine. Nothing visible wrong. Passed two inspections. Right up until it didn't.'\r\n\r\nShe pauses. 'This is routine. Observe, calculate, file what the evidence supports.'\r\n\r\nAnother pause, shorter, harder to read.\r\n\r\n'Preliminary findings within a few days. A full report when the numbers justify one—not when the calendar does.'\r\n\r\n'And Vael—don't get creative down there.'\r\n\r\nShe glances at a second folder on the stack. 'Scholar Nev is doing a material audit for the harbor authority three streets from your assessment site. You may run into each other. Nev has been in the field longer than you have. Try not to learn the wrong lessons.'",
+    "text": "In the common hall, Senior Scholar Mireth is already seated behind a desk stacked with incident reports. She is a thin woman with ink-stained fingers and the expression of someone who has been awake since before the bell and intends to make that everyone else's problem.\r\n\r\n'Vael,' she says without looking up. 'Field assignment. Karet Bay lower docks, loading district. A harbor crane is operating at twenty-three percent above its rated structural load capacity. The maintenance circle logs show no authorized reinforcement work in the past four months. The fuel allocation records show normal consumption. Nothing explains the numbers.'\r\n\r\nShe slides a folder across the desk.\r\n\r\n'Either the instruments are wrong, or someone has bonded an unauthorized circle to critical load-bearing infrastructure without proper materials or training.' She finally looks at you. 'You know what the Hollow Tower looked like before it fell? Performing fine. Nothing visible wrong. Passed two inspections. Right up until it didn't.'\r\n\r\nShe pauses. 'This is routine. Observe, calculate, file what the evidence supports.'\r\n\r\nAnother pause, shorter, harder to read.\r\n\r\n'The harbor office will ask for a closing date before you have one. Send them to me. Your job is the reading—not filling a box on someone's chart.'\r\n\r\n'And Vael—don't get creative down there.'\r\n\r\nShe glances at a second folder on the stack. 'Scholar Nev is doing a material audit for the harbor authority three streets from your assessment site. You may run into each other. Nev has been in the field longer than you have. Try not to learn the wrong lessons.'",
     "choices": [
       {
         "id": "c_brief_1",
-        "label": "Understood. Preliminary findings in a few days; full report when justified.",
+        "label": "Understood—file what the evidence supports; I'll send deadline noise to you.",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "leave_quarter"
@@ -104,7 +104,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "leave_quarter": {
     "id": "leave_quarter",
     "type": "narrative",
-    "text": "You collect your field kit and run through the checklist before heading out.\r\n\r\nThree pre-inscribed plates: a diagnostic circle for reading ambient energy distribution, a structural stress assessment circle for mapping load patterns, and a basic reinforcement circle for stabilization work. The plates are Tier 2 copper-alloy, properly maintained. They'll hold for a dozen activations each before the inscribed patterns begin to degrade. Your chalk is for single-use circles when the plates aren't suited to a specific task.\r\n\r\nThe sealed fuel block case holds three standard Tier 2 blocks—enough for six to eight serious alchemical operations. Clean-burning, reliable, the industrial standard. Down in Karet Bay, you're guessing they'll be working with Tier 0 and Tier 1 materials. The kind that burns wasteful and fails delayed, the way cheap things always fail: not dramatically, not immediately, but later, and worse.\r\n\r\nThe CEA inspector's authorization—the small brass seal that marks you as a Measured Scholar on official business—goes into your inner pocket. It opens certain doors. It closes others.\r\n\r\nThe Scholar's Quarter sits on the second terrace, halfway between the gleaming upper city and the industrial sprawl below. The walk to Karet Bay takes you through progressively grimmer streets, each ring down another step away from the world you understand and into the world you've only ever assessed from a distance.",
+    "text": "You run the checklist out of habit. The field kit closes with a click that sounds too neat for where you're going.\r\n\r\nThree inscribed plates—diagnostic, stress, stabilization—Tier 2 alloy, maintained well enough to survive a dozen serious pulls before the patterns start to slip. Chalk for the corners a plate won't fit. The fuel case holds three Tier 2 blocks: enough for six or eight real operations if you're careful. Down in Karet Bay they'll be living on Tier 0 and Tier 1—stuff that burns messy and fails late, when no one's watching the right gauge.\r\n\r\nThe CEA brass seal goes in your inner pocket. It opens doors. It also makes you a line item in someone else's morning.\r\n\r\nThe Scholar's Quarter sits on the second terrace—neither the bright upper city nor the sprawl below. The walk down is familiar pavement turning stranger with every ring, as if gravity had opinions about class.",
     "onEnter": [
       {
         "action": "add_item",
@@ -125,7 +125,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
     "choices": [
       {
         "id": "c_leave_1",
-        "label": "Descend toward the lower docks directly.",
+        "label": "Head down toward the docks—the crane won't assess itself.",
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "descent_lower"
@@ -152,7 +152,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "scholar_loadout": {
     "id": "scholar_loadout",
     "type": "narrative",
-    "text": "You pause in the courtyard and open your plate case, running through the function of each component. Old habit, drilled by your first assessment mentor: you don't enter a field site without knowing exactly what tools you're carrying and what they cost to use.\r\n\r\nA circle doesn't provide energy—that's the first thing they teach you, and the first thing most people forget. A circle is a blueprint, a set of instructions. It defines what transformation is allowed and how energy flows through the material. Without fuel, a circle is a drawing. Without you—your own energy to initiate and guide the reaction—the fuel just sits inert. Every alchemical act requires all three: the circle, the fuel, and the person holding it together.\r\n\r\nYour diagnostic plate activates with a half-block of fuel and moderate personal output. It reads ambient energy distribution in structures and materials, tells you where work has been done and whether it's degrading. The stress assessment plate costs more—a full block and significant personal energy—but it maps internal load patterns precisely. Worth the cost for structural assessments. This is the tool that catches Hollow Tower failures before they happen.\r\n\r\nYour reinforcement plate is the practical one: strengthen an existing joint, stabilize a failing circle, buy time for proper repair. Two blocks and real personal effort. Your structural specialization makes you efficient here—a medical alchemist doing this same work would waste more and get dirtier results.\r\n\r\nYou close the case. Three blocks. Six to eight operations before you're running on your own reserves.\r\n\r\nYou have never needed more than that. You think about Mireth's expression when she handed you the folder, and hope that remains true today.",
+    "text": "In the courtyard you open the plate case because your first mentor trained the reflex into bone: know what you are carrying before the street decides to test you.\r\n\r\nPlain rule, the kind academics love to embroider: a circle is only instructions scratched in metal. Fuel pays the burn. You pay the steering. Lose any leg of that tripod and nothing happens worth a stamp—just expensive jewelry and a body pretending it did work.\r\n\r\nYour thumb finds the diagnostic plate—copper-alloy cool, inscription edges grit-fine. Stress plate sits heavier in its felt slot. Reinforcement last, the one that buys minutes when minutes are the budget. The sealed case holds three Tier 2 blocks; six to eight honest operations, then the invoice starts writing itself into your veins.\r\n\r\nYou latch the lid and think of Mireth's face when she slid the folder across the desk. You hope the count stays generous today.",
     "choices": [
       {
         "id": "c_loadout_1",
@@ -167,7 +167,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "market_terrace": {
     "id": "market_terrace",
     "type": "narrative",
-    "text": "The market terrace sits at the boundary between the comfortable middle districts and the industrial zone below. Vendors sell everything from alchemical components to breakfast pastries, and the air smells of frying oil and copper dust. It's lively in the specific way that places are lively when they exist specifically for people passing through.\r\n\r\nA weathered woman selling tonics catches your eye. Her stall displays rows of small glass bottles filled with amber liquid—energy tonics, the kind that dock workers use to push through double shifts. They have the general aesthetic of something you'd find in a drain, which does not appear to be deterring anyone.\r\n\r\n'Scholar, eh?' she says, noting your ledger. 'Heading down to the docks? You'll want one of these. The air down there eats at you.' She pauses. 'Not figuratively. Well. Also figuratively.'\r\n\r\nShe quotes a price. It's cheap. The tonics are crude but functional—a chemical preparation that stabilizes and slightly boosts the body's own reserves, delaying the fatigue that comes from extended self-fueled alchemical work. The label says: DO NOT INGEST IF EXPERIENCING DISTORTION, PREGNANCY, OR OPINIONS.\r\n\r\nFurther along the terrace, a heavyset woman with Freehands circle-marks on both wrists is selling salvaged construction material from a folding table: reclaimed Tier 1 bolts, repurposed bonding paste, copper tubing straightened and cleaned. The sign on the table reads: BRIN'S BITS. FAIR EXCHANGE OR LEAVE. She is in the middle of explaining to a teenage boy why his offer is—her exact word—'mathematically offensive.' She makes the explanation sound less like a refusal and more like an education. The boy leaves with the copper tubing at a better price and the expression of someone who has just been outmaneuvered and possibly improved.",
+    "text": "The terrace smells like hot oil and copper dust—people passing through, buying time and parts on their way to worse air.\r\n\r\nA tonic seller clocks your ledger. 'Scholar,' she says. 'Docks?' She taps a bottle. 'The air down there doesn't ask permission.' Her price is almost insultingly low. The label's small print ends with a line that pretends to be a joke and isn't, quite.\r\n\r\nFarther along, a Freehand with circle-marks on both wrists guards a folding table of salvaged bolts and straightened tubing. The sign says BRIN'S BITS. FAIR EXCHANGE OR LEAVE. She's telling a boy his offer is 'mathematically offensive' in the same tone she'd use for a bent nail. He leaves with the tubing, looking like he lost a game he didn't know they were playing.",
     "choices": [
       {
         "id": "c_market_1",
@@ -197,7 +197,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "descent_lower": {
     "id": "descent_lower",
     "type": "narrative",
-    "text": "The descent into Karet Bay is a lesson in erosion—both geological and moral. The white stone of the upper terraces gives way to grey brick, then patched concrete, then raw timber and corrugated metal sheeting. The streets narrow. The infrastructure hum deepens, grating the way rope does when it runs through a block filmed with grit.\r\n\r\nYou pass workers bound for the morning shift—calloused hands, eyes flat with quota arithmetic. Some glance at your ledger and look away. Others never register you at all. Given what their mornings cost, that is fair enough.\r\n\r\nHalfway down, a stone plaque: IN RECOGNITION OF THE DROWNING OF KARET BAY. Beneath it, three sentences in the tongue of historical reckoning—the consortium, the redirected river, the freshwater lost. You know the case from study and have cited it in reports. The street knows it from breath and metered cups.\r\n\r\nOn the same wall, smaller cut: EIGHTY YEARS SINCE THE SUNDERING. EIGHTY YEARS OF BUILDING WHAT MAGIC DESTROYED. Civic pride on stone, until you look at what you are walking toward.\r\n\r\nThe district boundary wears a faded sign: KARET BAY LOWER DOCKS — CEA OPERATIONAL ZONE 7.\r\n\r\nBeside it, a narrow doorway marked HARBOR LOGISTICS — COORDINATOR SENNA. Through the glass, a woman shuttles between stacks of manifests with the brittle speed of someone holding a schedule that stopped fitting the work months ago. She catches your eye once and snaps her gaze off—a reflex learned where Scholar attention becomes delay, then paperwork.\r\n\r\nChalk below: SOMEONE ALWAYS PAYS.\r\n\r\nBelow that, another hand, dock-rough: THE UPPER BERTHS STAY DRY.\r\n\r\nPinned between a labor quota sheet and a water ration, a pamphlet on rough stock, careful ink. Header: YEAR EIGHTY. *Year Zero, we buried the nobility for making others pay for their ease. Eighty years later, the council class keeps warm offices and revolutionary portraits. Someone tell me what changed.* No signature.\r\n\r\nThe smell reaches you—brine, machine oil, sour venting where improvised circles burn cheap fuel wrong. The pavement shivers under overtaxed lines. The hum here is not melody; it is a structure that has been mended so often it no longer recalls its first true note.\r\n\r\nTwo men shout by the entrance—who eats the cost of a botched reinforcement. Upstairs that becomes a registry complaint. Down here it becomes lung capacity and witnesses. Three workers watch. In Caldris, arguing in the street passes for civic virtue. Here it is ordinary weather.",
+    "text": "The way down into Karet Bay teaches erosion without a syllabus. White terrace stone thins to grey brick, then patched concrete, then timber and corrugated metal squeezed into lanes too narrow for excuses. The infrastructure hum deepens until it feels like rope through a dirty block—constant, grinding, weather everyone else stopped flinching at.\r\n\r\nWorkers pass toward shift, quota already behind their eyes. A few clock your ledger and peel away; others never spare you the glance. Fair.\r\n\r\nHistory here wears competing hands on the same plaster—official letters too high to read without stopping, chalk beneath arguing back in fragments: someone always pays; upper berths stay dry. Two slogans, two audiences, one dry throat.\r\n\r\nThe boundary sign fades against mortar: KARET BAY LOWER DOCKS — CEA OPERATIONAL ZONE 7. Beside it, narrow glass—HARBOR LOGISTICS, coordinator name you have seen on forms. Inside, a woman threads between manifest stacks at brittle speed, schedule and workload out of negotiation. She catches your eye once and snaps away—Scholar attention has its own weather down here.\r\n\r\nA pamphlet corner flaps under a quota sheet: YEAR EIGHTY, and a single jeer about warm offices and the bill—ink careful, message clipped, the rest left to rumor.\r\n\r\nBrine, machine oil, sour venting where cheap fuel meets bad circles—the smell maps the district faster than your plates will. The pavement shivers along lines someone mended twice already. Two men shout by the entrance over who eats the cost of a botched reinforcement; upstairs that becomes a registry line. Down here it is lungs and witnesses. Three onlookers hold their silence like a tool.\r\n\r\nThe street is doing orientation today—rude, thorough, and billing nobody.",
     "choices": [
       {
         "id": "c_descent_1",
@@ -214,13 +214,44 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "type": "navigate",
           "nextNodeId": "district_survey"
         }
+      },
+      {
+        "id": "c_descent_3",
+        "label": "Let the wall argue a little—then keep walking.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "descent_wall_ephemeral"
+        }
+      }
+    ]
+  },
+  "descent_wall_ephemeral": {
+    "id": "descent_wall_ephemeral",
+    "type": "narrative",
+    "text": "You let your shoulder rest against the plaster long enough to feel the hum through it—layers of ink, chalk, argument. Official stone says one thing in measured letters; dock hands answer in strokes that overlap half-erased predecessors. No single voice wins; they stack like bad repairs, each claiming the last word.\r\n\r\nPinned where wind worries paper, the pamphlet offers only a headline—YEAR EIGHTY—and one sharp line about council warmth and who pays. The rest tears away into gossip before your brain can treat it like evidence.\r\n\r\nA child darts past chanting a fragment someone taught her; an older worker hisses her quiet, not cruel, just practiced. Truth down here arrives in shards on purpose—easier to carry, harder to subpoena.\r\n\r\nYour ledger pulls at your hand. Not because the wall fed you new facts—because it reminded you what field work always costs: choosing which noises earn ink.\r\n\r\nEnough. The crane does not care how long you listen.",
+    "choices": [
+      {
+        "id": "c_wall_eph_1",
+        "label": "Cut toward the loading crane and the apron.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "dock_overview"
+        }
+      },
+      {
+        "id": "c_wall_eph_2",
+        "label": "Press a baseline reading in at the boundary.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "district_survey"
+        }
       }
     ]
   },
   "district_survey": {
     "id": "district_survey",
     "type": "narrative",
-    "text": "You press your diagnostic plate to a load-bearing wall at the district entrance and feed it a half-block of fuel from your own reserves. The metal warms; the scan runs; the plate pulses, reads, dims. Old habit: you read the baseline before you chase a single spike, so you know whether what you're looking at is an isolated incident or part of a larger pattern.\r\n\r\nThe numbers are wrong. Not instrument-wrong—the plate is functioning correctly. The district's embedded maintenance circles are running at roughly forty percent of their designed operating capacity.\r\n\r\nNot because they've failed. Because they've been starved. The fuel reserves that should be feeding them have been depleted. Without fuel, the circles are dormant. Without the circles doing their maintenance work, the structural integrity of every building in this district relies on the raw materials alone. And the raw materials in Karet Bay are Tier 1 at best.\r\n\r\nYou make careful notes. The buildings around you show the signs: hairline fractures in load-bearing walls, slight warping in metal fixtures, a persistent low groan from foundations under invisible stress. Someone has been using improvised patch work—Tier 0 and Tier 1 bonding paste, single-use circles drawn in chalk on untreated surfaces by people who know enough to help and not enough to know when to stop. It holds for now. It always holds for now.\r\n\r\nThe problem is always later.\r\n\r\nEveryone in Caldris knows what later looks like. They have a name for it. You learned the name in your second year of training. It was called the Hollow Tower, and it killed three hundred people who had been assured that everything was fine.",
+    "text": "You press the diagnostic plate to the district's entry pier and feed it half a block from your own reserves. Old habit: baseline first, spike second.\r\n\r\nThe plate doesn't lie. The embedded maintenance circles are running at about forty percent of what they were built for—not because they've failed, but because nobody's feeding them. Without fuel they sleep; without them, the district leans on stone and iron that was never meant to carry the load alone. And what's in these walls is Tier 1 at best.\r\n\r\nYou note it anyway. Hairline cracks don't confess, but they accumulate. So does patchwork—chalk on bad surfaces, paste that buys weeks and invoices years.\r\n\r\nEveryone in Caldris knows what that kind of math ends as. They even gave it a name when you were still in second year: the Hollow Tower—three hundred people who were told the numbers were fine.",
     "onEnter": [
       {
         "action": "add_item",
@@ -246,7 +277,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "dock_overview": {
     "id": "dock_overview",
     "type": "narrative",
-    "text": "The lower docks stretch before you: a chaotic sprawl of warehouses, loading platforms, and heavy machinery pressed against the grey water of the bay. Massive cranes line the waterfront like iron sentinels, their arms swinging loads of raw material from cargo ships to waiting transport carts. The noise is extraordinary—chains, pulleys, the deep thrum of alchemically reinforced machinery doing what it was designed for—and everyone moves within it like they can't hear it at all.\r\n\r\nYour target is Crane Seven, a forty-year-old loading crane that handles ore shipments from the mining barges. Even from a distance, you can see something is different about it. While the other cranes groan and shudder under their loads—operating near stress limits, using their structural capacity the way you'd use muscles you haven't stretched properly—Crane Seven moves with an almost fluid grace, swinging three-ton ore crates as though its rated capacity had been quietly renegotiated upward.\r\n\r\nA crew of dock workers operates the crane's base controls. Their foreman—a broad-shouldered man with burn scars on both forearms—watches the operation with the focused tension of someone who has been waiting for something to go wrong long enough that waiting has become a kind of job in itself.",
+    "text": "The lower docks are noise stacked on noise—chains, winches, the dull animal groan of machinery doing what it was bought to do. People move through it like fish through pressure.\r\n\r\nCrane Seven handles ore off the mining barges. Forty years on the ledgers; from here it still looks wrong in a specific way—while the others complain under their loads, Seven swings three-ton crates like the rating was a suggestion someone crossed out.\r\n\r\nThe crew at the base works in a knot. Their foreman—broad shoulders, burn-scored forearms—watches the boom the way you watch a patient who insists they're fine.",
     "choices": [
       {
         "id": "c_dock_1",
@@ -300,7 +331,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "dock_workers_morning": {
     "id": "dock_workers_morning",
     "type": "narrative",
-    "text": "The dock workers pause for their mid-morning water break, settled on crates and coils of rope in the brief window before the quota clock starts running again. You approach and sit nearby—Scholar's ledger visible, but not open. No one wants to talk to a ledger.\r\n\r\nThe woman closest to you has a Freehand circle-mark tattooed on her forearm—a small reinforcement pattern, rough but genuine work. She glances at you, then back at the bay.\r\n\r\n'You're here about Crane Seven,' she says. Not a question.\r\n\r\n'The readings were anomalous.'\r\n\r\n'Everything here is anomalous.' She takes a long drink of water. 'We've been running Crane Seven past its rated load for six months. Everyone knows. Nobody acts. The quota gets met, so the quota gets met.' She sets down the cup. 'You know why we can't get it properly maintained? The maintenance budget—the Tier 2 fuel blocks that used to keep this whole waterfront in good order—got redirected seven months ago. Someone in the upper city needed something built. We were the somewhere it came from.'\r\n\r\n'That's a serious allegation.'\r\n\r\nShe looks at you with the patience of someone who has said a true thing to a doubtful person many times before. 'Go ask the crane what it thinks about allegations.' She stands as the break ends. 'You're a Scholar. If you find where the cost actually went, tell someone who has the power to care about it.'\r\n\r\nShe doesn't say it with bitterness. Just with the steady exhaustion of someone still doing the work anyway.",
+    "text": "They've claimed crates and rope coils for a water break, the narrow hush before the quota clock starts eating again. You sit close enough to be seen, ledger shut. Nobody wants to talk to a book.\r\n\r\nThe woman nearest you has a Freehand mark on her forearm—rough ink, honest work. She doesn't look at you long. 'Crane Seven,' she says. Not a question.\r\n\r\nYou offer the neutral truth: the readings were off.\r\n\r\n'Everything here's off.' She drinks. 'We've been past rated load on Seven for six months. Quota smiles. Teeth don't.' She sets the cup down. 'You want why it's crooked? Maintenance fuel—Tier 2 blocks for the waterfront circles—got yanked seven months ago. Upper city needed a showpiece. We found out the way we always find out: when something stopped humming.'\r\n\r\nYou start the Scholar line about allegations.\r\n\r\nShe meets it with tired patience. 'Ask the crane if it cares about your word choice.' As the break breaks, she stands. 'You're the one with ink. If you trace where the cost went, tell somebody who can pretend it matters.'\r\n\r\nShe doesn't say it bitterly. That's almost worse.",
     "onEnter": [
       {
         "action": "adjust_worker_rep",
@@ -321,7 +352,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "crane_readings": {
     "id": "crane_readings",
     "type": "narrative",
-    "text": "You find a spot behind a stack of cargo crates where you can observe without being noticed. Opening your field kit, you activate your stress assessment plate, feeding a full Tier 2 block into it and drawing from your personal reserves to guide the reading.\r\n\r\nThe crane's structural profile is immediately wrong in a way that takes you a moment to parse.\r\n\r\nStandard cranes are designed for specific load limits—the engineering accounts for material fatigue, joint stress accumulation, the physics of repeated heavy lifting over decades. Crane Seven's readings show reinforced joint structures where there shouldn't be any. Someone has bonded additional structural support to the crane's primary load-bearing assembly. The reinforcement is real and technically competent—Level 2 reinforcement work—and it explains how the crane is handling 123% of its rated load without visible distress.\r\n\r\nBut your plate reads something else too. The bonding material used is Tier 1—basic, improvised, the kind that dock workers can mix from common hardware materials. Tier 1 paste works. It degrades. Under repeated heavy stress, the reinforcement circle drawn into that paste will develop micro-fractures that don't show on the surface but compound with every load cycle.\r\n\r\nYou sketch the analysis in your ledger. The reinforcement is degrading. Your calculations show the pivot joint's structural integrity is already at sixty-three percent of rated capacity. At the current load rate, it will reach critical failure threshold sometime this afternoon.\r\n\r\nWhen it fails, three tons of ore will drop on whoever is standing below.\r\n\r\nYou look at the workers moving underneath the crane arm like they have four hundred times this week, like they will four hundred more times before the month is out. They have no idea.",
+    "text": "From behind a stack of crates you can watch without becoming part of the rhythm. The stress plate wakes on a full Tier 2 block; your own reserves do the fine steering.\r\n\r\nThe profile takes a beat to parse—then it clicks wrong. Extra reinforcement where the drawings say there shouldn't be any: real Level 2 work, bonded into the primary assembly. That is how Seven is living at a hundred twenty-three percent of rated load and still looking smug.\r\n\r\nThe bond isn't Tier 2. It's Tier 1 paste—accessible, workable, and honest about its limits. Under this many cycles the circle in it is quietly coming apart where the eye can't follow.\r\n\r\nYou put numbers to it because that's what keeps people alive. Pivot joint integrity: about sixty-three percent of what the joint is supposed to hold. At today's pace, critical threshold lands this afternoon.\r\n\r\nWhen it goes, three tons of ore pick a landing spot.\r\n\r\nBelow, the crew walks the same path they walked yesterday. They don't know they're borrowing luck on credit.",
     "onEnter": [
       {
         "action": "add_item",
@@ -372,7 +403,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "crane_readings_deep": {
     "id": "crane_readings_deep",
     "type": "narrative",
-    "text": "You shouldn't. You do anyway. A second Tier 2 block feeds the plate; your ledger fills with curves that agree with the first pass down to the third decimal wherever physics allows.\r\n\r\nOverkill is sometimes kindness to future you—the version who will swear to these readings in rooms that smell like incense and budgets.\r\n\r\nThe joint degradation looks uglier at higher resolution. You almost wish it didn't.\r\n\r\nYou pack the kit away lighter in fuel and heavier in certainty.",
+    "text": "You shouldn't burn another Tier 2 block on a question you already answered.\r\n\r\nYou do. The curves agree with the first pass down to the third decimal anywhere physics allows—which is either integrity or vanity, and you're not in a mood to split the difference.\r\n\r\nHigher resolution just makes the crack pattern ruder. You almost resent the plate for being thorough.\r\n\r\nThe kit goes away lighter on fuel and heavier on the kind of certainty that gets you summoned to rooms that smell like incense and budgets.",
     "choices": [
       {
         "id": "c_read_deep_1",
@@ -387,7 +418,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "meet_kaelen": {
     "id": "meet_kaelen",
     "type": "narrative",
-    "text": "The foreman sees you coming. His eyes drop to your ledger, then to the brass authorization seal at your collar, and his jaw tightens in the specific way that means he's already calculating what this is going to cost him.\r\n\r\n'Scholar,' he says flatly. Not a greeting. A warning to the crew behind him.\r\n\r\n'I'm Vael, Measured Scholars. I'm here about anomalous readings from Crane Seven.' You keep your voice neutral, professional.\r\n\r\n'Name's Kaelen.' He doesn't offer his hand. 'The crane works fine. Better than fine. We're ahead of quota for the first time in three months, which is the first time in three months anyone in this district has had anything to be ahead of.'\r\n\r\nBehind him, his crew has stopped working. Six men and women, watching you with the particular attention of people whose livelihoods are standing in the gap between your ledger and your pen. You notice the youngest—barely fifteen, lanky in the way of someone who hasn't finished growing into their shoulders—gripping a wrench so hard his knuckles are white. He has the eyes of someone watching something he can't stop.",
+    "text": "The foreman tracks you the way a man tracks a leak he can't afford. Ledger. Brass at your collar. His jaw sets like he's already paying for a conversation he didn't schedule.\r\n\r\n'Scholar,' he says. Not hello—a flag for the crew behind him.\r\n\r\n'Vael. Measured Scholars. Anomalous stress on Crane Seven.' You keep it flat on purpose.\r\n\r\n'Kaelen.' No hand. 'Crane runs. Better than runs—we're finally ahead of quota, which means this district gets to pretend it's allowed to breathe.'\r\n\r\nThe work behind him has stopped anyway—six faces, one shared equation between your pen and their next meal. The youngest is all elbows and white knuckles on a wrench, watching a weight he can't steer.",
     "onEnter": [
       {
         "action": "set_flag",
@@ -491,7 +522,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "kaelen_defensive": {
     "id": "kaelen_defensive",
     "type": "narrative",
-    "text": "Kaelen's face hardens. 'Nothing is going to fail. I reinforced every joint myself. Spent six nights on it after shift.'\r\n\r\n'You're not a trained structural alchemist.'\r\n\r\n'And you've never held quota with half your equipment decommissioned.' He steps closer, dropping his voice. 'You want to know what happened to our maintenance allocation? Ask the CEA. The Tier 2 fuel blocks that used to keep this crane's maintenance circles running got officially redirected seven months ago. Not our decision. Not something we were even told until a month after the fact. That material came from Grenvor—the Highland refineries. Took two years to secure the supply contract. Gone in a memo.' His tone is flat. Controlled. The tone of someone who made peace with a bad exchange a long time ago and is just living in what it left behind.\r\n\r\nHe glances back at his people. 'When the maintenance fails, dock workers don't get to redirect the cost to someone else. We patch it ourselves or we fall behind quota.' A pause. 'That's Dima. Fifteen years old. Supporting his mother and two sisters since his father died in a refinery collapse last year. If this crew loses quota, he goes back to scavenging wharves. You want to tell him that the crane doesn't meet your calculations?' You notice the boy has a small notebook in his front pocket. He's been writing in it since you arrived.\r\n\r\nThe accusation hangs in the salt air. Your ledger is open to the stress numbers. The numbers are unambiguous.\r\n\r\nThe system that redirected this district's maintenance fuel is the same system your report will activate. That's worth knowing.",
+    "text": "'Nothing fails on my watch,' Kaelen says, too fast. 'I sleeved every joint. Six nights, after shift.'\r\n\r\nYou're already sorry for your next sentence. It comes out anyway: he's not a certified structural alchemist.\r\n\r\nHe laughs once—no humor. 'And you've never kept quota with half your tools legally dead.' He steps in, voice low. 'You want where the maintenance blocks went? Ask your own seal. Tier 2 for this crane's circles—Grenvor stock, Highland contract, two years to lock—redirected seven months ago on paper we didn't see until it was already gone. A memo ate two years of work.'\r\n\r\nHis eyes flick to the crew. 'When the system shorts us, we don't get to bill the pain upward. We patch, or we miss numbers.' He jerks his chin. 'That's Dima. Fifteen. Mother, two sisters—father went down in a refinery collapse last year. We slip quota, he's back on the wharves picking scrap. You want to explain your clean math to him?' The boy's pocket bulges with a small notebook; he's been scratching in it since you arrived.\r\n\r\nYour ledger still says what it said. The air says something else.\r\n\r\nThe redirect that starved this place is the same machinery your report will wake. Remember that when they thank you for being thorough.",
     "choices": [
       {
         "id": "c_def_1",
@@ -506,7 +537,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
   "kaelen_shows": {
     "id": "kaelen_shows",
     "type": "narrative",
-    "text": "Kaelen leads you around to the crane's base and pulls back a heavy canvas panel to reveal his work.\r\n\r\nIt's crude. It's also real alchemy. He's used Tier 1 bonding paste—the improvised kind, mixed from accessible materials—to draw a reinforcement circle directly onto the crane's primary load-bearing joint. The circle is rough by academy standards, the lines not perfectly even, the radius slightly elliptical where his arm was at an awkward angle. But the structure is sound: a continuous reinforcement pattern that distributes load stress across a wider surface area, allowing the crane to handle tonnage above its original design parameters.\r\n\r\nYou kneel and activate your stress assessment plate against the bonded circle.\r\n\r\nThe reinforcement is working. That's the tragedy of it. Kaelen did exactly the right kind of work with exactly the wrong materials. The reinforcement pattern is degrading under repeated stress loads—Tier 1 paste isn't designed to sustain a circle under this kind of repeated activation. Your readings show micro-fractures propagating through the paste layer, disrupting the circle's integrity. The joint is losing structural capacity with every lift.\r\n\r\n'It's brilliant,' you say honestly. 'Level 2 reinforcement work with improvised materials and no formal training.' You look up at him. 'That cost you something. Six nights of your own energy.'\r\n\r\n'I know what it cost me.'\r\n\r\n'The paste is failing. At the current load rate, the joint will reach critical threshold sometime this afternoon.'\r\n\r\nKaelen's face goes grey. Not with surprise. With the expression of someone who suspected this and was hoping to be wrong.",
+    "text": "Kaelen hauls a canvas aside at the crane's base like he's showing you a wound he's proud of.\r\n\r\nTier 1 paste, mixed from what a waterfront can actually buy, carries a reinforcement circle right on the main load joint. The geometry would make an instructor wince—slightly elliptical, lines that waver where a tired arm ran out of reach. It's still alchemy that does what it claims: spreads stress so the boom can cheat above its birth certificate.\r\n\r\nYou kneel and let the plate touch the bond.\r\n\r\nIt works. That's the insult. Level 2 thinking in Tier 1 skin—six nights of his life fed into paste that wasn't built to hold this many activations. Micro-fractures are threading through the layer; each lift teaches the circle a new way to lie.\r\n\r\n'It's good work,' you tell him, meaning it. 'Dangerous good.'\r\n\r\n'I know what it cost,' he says.\r\n\r\n'It's still dying. At this load, you hit threshold this afternoon.'\r\n\r\nThe color leaves his face—not shock. Recognition.",
     "onEnter": [
       {
         "action": "add_item",
@@ -546,59 +577,6 @@ export const STORY_NODES: Record<string, StoryNode> = {
       },
       {
         "id": "c_shows_4",
-        "label": "Reach toward the active line with a bare hand—the plate says the field is live; your nerves want to disagree.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "death_touch_warn"
-        }
-      },
-      {
-        "id": "c_shows_5",
-        "label": "Step back out to the barrier—the youngest crew member is still at the lip, notebook open.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "dima_encounter"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "not_has_flag",
-            "key": "dima_met"
-          }
-        ]
-      }
-    ]
-  },
-  "kaelen_decision_return": {
-    "id": "kaelen_decision_return",
-    "type": "narrative",
-    "text": "The canvas is still hooked aside. The reinforcement circle on the iron hasn't become less true because you stepped away.\r\n\r\nKaelen hasn't gone far; the crew is still trading glances—ledger, joint, you. Your readings are what they were. The only variable left is what you do with them.",
-    "choices": [
-      {
-        "id": "c_kdr_1",
-        "label": "I have to report this to the CEA. The crane needs to be shut down.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "choice_report"
-        }
-      },
-      {
-        "id": "c_kdr_2",
-        "label": "Try to stabilize the joint.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "kaelen_stabilize_gate"
-        }
-      },
-      {
-        "id": "c_kdr_3",
-        "label": "Close your ledger and walk away.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "choice_ignore"
-        }
-      },
-      {
-        "id": "c_kdr_4",
         "label": "Reach toward the active line with a bare hand—the plate says the field is live; your nerves want to disagree.",
         "mechanic": {
           "type": "navigate",
@@ -1215,10 +1193,10 @@ export const STORY_NODES: Record<string, StoryNode> = {
       },
       {
         "id": "c_post_3",
-        "label": "At the Drowning plaque, a lone figure holds the still, attentive posture of field method—reading stone the way you read a datum line, not like someone passing through.",
+        "label": "Note the plaque thread for tomorrow—end the day with your ledger in order.",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "mireth_field_visit"
+          "nextNodeId": "transition_end_day_one"
         },
         "visibilityRequirements": [
           {
@@ -1229,7 +1207,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "onSelect": [
           {
             "action": "set_flag",
-            "key": "chose_mireth_plaque",
+            "key": "mireth_warned",
             "value": true
           }
         ]
@@ -1253,6 +1231,20 @@ export const STORY_NODES: Record<string, StoryNode> = {
           {
             "type": "has_flag",
             "key": "saw_the_city"
+          }
+        ]
+      },
+      {
+        "id": "c_post_5",
+        "label": "Find Dima at the barrier—quiet enough now for the question.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "dima_encounter"
+        },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "dima_met"
           }
         ]
       }
@@ -1295,36 +1287,6 @@ export const STORY_NODES: Record<string, StoryNode> = {
       },
       {
         "id": "c_td1_3",
-        "label": "Next day: follow Mireth's plaque thread with daylight on your side.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "mireth_field_visit"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "has_flag",
-            "key": "kaelen_crane_assessed"
-          },
-          {
-            "type": "not_has_flag",
-            "key": "mireth_warned"
-          }
-        ],
-        "onSelect": [
-          {
-            "action": "set_flag",
-            "key": "fiction_day_2",
-            "value": true
-          },
-          {
-            "action": "set_flag",
-            "key": "chose_mireth_plaque",
-            "value": true
-          }
-        ]
-      },
-      {
-        "id": "c_td1_4",
         "label": "Next day: follow Dima's notebook to the circled building.",
         "mechanic": {
           "type": "navigate",
@@ -1368,10 +1330,10 @@ export const STORY_NODES: Record<string, StoryNode> = {
     "choices": [
       {
         "id": "c_dima_1",
-        "label": "Return to Crane Seven. The joint is still there; the decision you walked away from is still open.",
+        "label": "Return to the investigation—the district pattern is still unfinished.",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "kaelen_decision_return"
+          "nextNodeId": "post_crane_pattern"
         }
       },
       {
@@ -1584,33 +1546,6 @@ export const STORY_NODES: Record<string, StoryNode> = {
       },
       {
         "id": "c_track_5",
-        "label": "Verify drainage appendix K-B-11 (cistern ring—secondary).",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "cat_colony_approach"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "any_of",
-            "alternatives": [
-              {
-                "type": "has_flag",
-                "key": "pattern_discovered"
-              },
-              {
-                "type": "has_item",
-                "itemId": "district_map"
-              },
-              {
-                "type": "has_flag",
-                "key": "chose_mireth_plaque"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "c_track_6",
         "label": "Follow stenciled routing marks that do not match the dock manifests.",
         "mechanic": {
           "type": "navigate",
@@ -1624,7 +1559,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
         ]
       },
       {
-        "id": "c_track_cea_from_slum",
+        "id": "c_track_6",
         "label": "Go directly to the CEA—continue your assessment.",
         "mechanic": {
           "type": "navigate",
@@ -1692,33 +1627,6 @@ export const STORY_NODES: Record<string, StoryNode> = {
       },
       {
         "id": "c_tdr_5",
-        "label": "Verify drainage appendix K-B-11 (cistern ring—secondary).",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "cat_colony_approach"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "any_of",
-            "alternatives": [
-              {
-                "type": "has_flag",
-                "key": "pattern_discovered"
-              },
-              {
-                "type": "has_item",
-                "itemId": "district_map"
-              },
-              {
-                "type": "has_flag",
-                "key": "chose_mireth_plaque"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "c_tdr_6",
         "label": "Follow stenciled routing marks that do not match the dock manifests.",
         "mechanic": {
           "type": "navigate",
@@ -1732,7 +1640,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
         ]
       },
       {
-        "id": "c_tdr_cea_from_slum",
+        "id": "c_tdr_6",
         "label": "Go directly to the CEA—continue your assessment.",
         "mechanic": {
           "type": "navigate",
@@ -2410,7 +2318,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "label": "Meet Elara by the bronze—she holds the district's unspent answer.",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "elara_offer"
+          "nextNodeId": "alt_craft_entry"
         },
         "visibilityRequirements": [
           {
@@ -2450,6 +2358,10 @@ export const STORY_NODES: Record<string, StoryNode> = {
             "stat": "communityCost",
             "operator": ">=",
             "value": 15
+          },
+          {
+            "type": "not_has_flag",
+            "key": "alt_craft_committed"
           }
         ]
       },
@@ -2464,6 +2376,32 @@ export const STORY_NODES: Record<string, StoryNode> = {
           {
             "type": "has_flag",
             "key": "purifier_basement_done"
+          }
+        ]
+      },
+      {
+        "id": "c_seek_6",
+        "label": "Cross-file: theater basement notes (administrative appendix).",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "alt_chronicler_entry"
+        },
+        "visibilityRequirements": [
+          {
+            "type": "has_flag",
+            "key": "theater_seawall_briefing"
+          },
+          {
+            "type": "not_has_flag",
+            "key": "declined_theater_chronicler_path"
+          },
+          {
+            "type": "not_has_flag",
+            "key": "alt_chronicler_committed"
+          },
+          {
+            "type": "not_has_flag",
+            "key": "committed_chronicler"
           }
         ]
       }
@@ -3616,21 +3554,6 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
-  "death_dark_alley": {
-    "id": "death_dark_alley",
-    "type": "narrative",
-    "text": "The basement entrance is right there, but the alley to the left offers a shorter approach. You know this because it's on the district map. What the map does not indicate—because maps are generally disinterested in such details—is that the alley serves as the established territory of a feral cat colony.\r\n\r\nNot ordinary cats. Karet Bay cats. Cats that have been subsisting in a fuel-depleted district for over a year and have responded by becoming larger, more strategic, and possessed of an unsettling collective sense of grievance.\r\n\r\nYou are halfway through the alley when twenty-seven pairs of luminous eyes open in the darkness. The alpha cat—a scarred, one-eared animal the size of a small dog—drops from a fire escape onto your shoulder with the precision of a trained operative.\r\n\r\nWhat follows is, by objective measure, the most one-sided conflict in Karet Bay's recorded history. The cats don't want your food. They don't want your ledger. They want to make a specific point about territorial sovereignty and what happens when Scholars fail to read maps properly.\r\n\r\nYou emerge forty minutes later, shredded, comprehensively humbled, and missing your authorization seal. The alpha cat appears to have taken it. You suspect you have been issued a citation.\r\n\r\n**[GAME OVER — THE FERAL EXCHANGE]**",
-    "choices": [
-      {
-        "id": "c_death_alley",
-        "label": "Restart.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "start"
-        }
-      }
-    ]
-  },
   "death_drink_water": {
     "id": "death_drink_water",
     "type": "narrative",
@@ -3789,6 +3712,11 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "action": "add_item",
         "itemId": "seawall_analysis",
         "qty": 1
+      },
+      {
+        "action": "set_flag",
+        "key": "theater_seawall_briefing",
+        "value": true
       }
     ],
     "choices": [
@@ -3819,40 +3747,6 @@ export const STORY_NODES: Record<string, StoryNode> = {
             "action": "set_flag",
             "key": "declined_theater_chronicler_path",
             "value": true
-          }
-        ]
-      },
-      {
-        "id": "c_rev_theater_3",
-        "label": "Remain in the basement with Petra and Dima.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "chronicler_commitment"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "world_check",
-            "stat": "communityCost",
-            "operator": ">=",
-            "value": 45
-          },
-          {
-            "type": "has_flag",
-            "key": "fiction_day_2"
-          },
-          {
-            "type": "reputation_check",
-            "stat": "freehandsRep",
-            "operator": ">=",
-            "value": 25
-          },
-          {
-            "type": "has_flag",
-            "key": "brin_met"
-          },
-          {
-            "type": "not_has_flag",
-            "key": "declined_theater_chronicler_path"
           }
         ]
       },
@@ -3895,6 +3789,74 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
+  "alt_chronicler_entry": {
+    "id": "alt_chronicler_entry",
+    "type": "narrative",
+    "text": "The appendix line is dry: cross-reference theater drainage filings against your field appendix. It does not sound like a decision. It sounds like paperwork that became a door.",
+    "choices": [
+      {
+        "id": "c_altc_e1",
+        "label": "Continue—open the appendix routing.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "alt_chronicler_bailout_1"
+        }
+      }
+    ]
+  },
+  "alt_chronicler_bailout_1": {
+    "id": "alt_chronicler_bailout_1",
+    "type": "narrative",
+    "text": "You can still treat this as a filing exercise—one more note in the margin of the CEA thread—and walk away before it becomes a second assignment.",
+    "choices": [
+      {
+        "id": "c_altc_b1_back",
+        "label": "Return to the CEA assessment thread.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "seek_answers"
+        }
+      },
+      {
+        "id": "c_altc_b1_on",
+        "label": "Stay with the chronicle routing.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "alt_chronicler_bailout_2"
+        }
+      }
+    ]
+  },
+  "alt_chronicler_bailout_2": {
+    "id": "alt_chronicler_bailout_2",
+    "type": "narrative",
+    "text": "If you go downstairs again, you are not crossing back to the same clock. The seawall will keep shortening itself with or without you—but the record you are about to help finish will not.",
+    "choices": [
+      {
+        "id": "c_altc_b2_back",
+        "label": "Return to the CEA assessment thread.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "seek_answers"
+        }
+      },
+      {
+        "id": "c_altc_b2_commit",
+        "label": "Commit—return to the theater basement now.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "chronicler_commitment"
+        },
+        "onSelect": [
+          {
+            "action": "set_flag",
+            "key": "alt_chronicler_committed",
+            "value": true
+          }
+        ]
+      }
+    ]
+  },
   "chronicler_commitment": {
     "id": "chronicler_commitment",
     "type": "narrative",
@@ -3907,6 +3869,12 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "type": "navigate",
           "nextNodeId": "doc_planning"
         },
+        "visibilityRequirements": [
+          {
+            "type": "has_flag",
+            "key": "alt_chronicler_committed"
+          }
+        ],
         "onSelect": [
           {
             "action": "set_flag",
@@ -3920,21 +3888,6 @@ export const STORY_NODES: Record<string, StoryNode> = {
           {
             "action": "adjust_state_chaos",
             "amount": 15
-          }
-        ]
-      },
-      {
-        "id": "c_chron_2",
-        "label": "Race to the seawall — you can still make it.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "race_to_seawall"
-        },
-        "onSelect": [
-          {
-            "action": "set_flag",
-            "key": "declined_theater_chronicler_path",
-            "value": true
           }
         ]
       }
@@ -4071,332 +4024,6 @@ export const STORY_NODES: Record<string, StoryNode> = {
     "choices": [
       {
         "id": "c_ao_death",
-        "label": "Restart.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "start"
-        }
-      }
-    ]
-  },
-  "mireth_field_visit": {
-    "id": "mireth_field_visit",
-    "type": "narrative",
-    "text": "She's standing at the base of the Drowning of Karet Bay plaque when you see her. Not examining it—she has clearly read it before, many times—just standing near it with the stillness of someone who came here with a purpose and is taking a moment before completing it.\r\n\r\n'Mireth,' you say.\r\n\r\n'Vael.' She turns. She looks the same as she does in the Scholar Quarter, except that here she looks slightly wrong—the way someone's familiar face looks unexpected when you see them in a context that doesn't belong to them. 'Don't make that face. I do come to the field sometimes.'\r\n\r\n'I've never seen you come to the field.'\r\n\r\n'I come when I think it's necessary.' She looks at the plaque for a moment. 'I sent you here because you're good at the technical work. I came because I wanted to see what you were finding before you decided what to do with it.'\r\n\r\nShe has your briefing in her hand. She has clearly read it twice.\r\n\r\n'Your assessment is accurate,' she says. 'The crane, the material redirection, the seawall projections—all sound.' A pause. 'You've also been talking to people.'\r\n\r\n'That's part of field assessment.'\r\n\r\n'Not the way you've been doing it.' She looks at you with the precision of someone who is being very careful about what she says next. 'There are three previous assessments of this district in our files. Two of them have identical recommendations: continue monitoring, flag for review, defer to Authority decision. The third one—mine, from nine years ago—says the same thing but with different wording.'\r\n\r\nShe is quiet for a moment.\r\n\r\n'I sent three previous Scholars here. They all filed correct reports. They all recommended proper channels. They are all still waiting for the proper channels to respond.' She tucks the briefing under her arm. 'I wanted to see if you would do the same. I wanted to see if you would—' She stops. 'I am going to give you a piece of information that is not in any official document. You will not find it in your briefing materials or in your training or in nineteen years of my field reports, because I have never known how to file it.'\r\n\r\nShe looks at the plaque again.\r\n\r\n'The Drowning of Karet Bay happened because a trade consortium moved a river with paperwork that cleared every desk—and nobody with a stamp asked early enough who would pay when the freshwater failed. The courts made that cost visible afterward. Different century, same shape: what looks correct in the file can still be a bad exchange for the people under it.' A pause. 'I've been asking myself how close we are to that shape for nineteen years. I still don't have a clean answer.'\r\n\r\nShe hands you the briefing. 'Whatever you decide—decide it. Don't defer it. This district does not have time for deferred.'\r\n\r\nShe leaves the way she came, without looking back at the plaque.",
-    "onEnter": [
-      {
-        "action": "set_flag",
-        "key": "mireth_warned",
-        "value": true
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_mfv_1",
-        "label": "Continue your investigation with what she's given you.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "transition_end_day_one"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "not_has_flag",
-            "key": "fiction_day_2"
-          }
-        ]
-      },
-      {
-        "id": "c_mfv_2",
-        "label": "Hold. Ask—quietly, like it embarrasses you—whether \"dock nonsense\" about scavengers and chalk by the decommissioned cistern annex ever showed up in her unofficial margins.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "transition_end_day_one"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "has_flag",
-            "key": "saw_the_city"
-          },
-          {
-            "type": "has_flag",
-            "key": "pattern_discovered"
-          },
-          {
-            "type": "has_item",
-            "itemId": "district_map"
-          },
-          {
-            "type": "has_flag",
-            "key": "chose_mireth_plaque"
-          },
-          {
-            "type": "not_has_flag",
-            "key": "cat_whisper_heard"
-          },
-          {
-            "type": "not_has_flag",
-            "key": "fiction_day_2"
-          }
-        ],
-        "onSelect": [
-          {
-            "action": "set_flag",
-            "key": "cat_whisper_heard",
-            "value": true
-          }
-        ]
-      },
-      {
-        "id": "c_mfv_3",
-        "label": "Continue your investigation with what she's given you.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "track_disturbance"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "has_flag",
-            "key": "fiction_day_2"
-          }
-        ]
-      },
-      {
-        "id": "c_mfv_4",
-        "label": "Hold. Ask—quietly, like it embarrasses you—whether \"dock nonsense\" about scavengers and chalk by the decommissioned cistern annex ever showed up in her unofficial margins.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "track_disturbance"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "has_flag",
-            "key": "saw_the_city"
-          },
-          {
-            "type": "has_flag",
-            "key": "pattern_discovered"
-          },
-          {
-            "type": "has_item",
-            "itemId": "district_map"
-          },
-          {
-            "type": "has_flag",
-            "key": "chose_mireth_plaque"
-          },
-          {
-            "type": "not_has_flag",
-            "key": "cat_whisper_heard"
-          },
-          {
-            "type": "has_flag",
-            "key": "fiction_day_2"
-          }
-        ],
-        "onSelect": [
-          {
-            "action": "set_flag",
-            "key": "cat_whisper_heard",
-            "value": true
-          }
-        ]
-      }
-    ]
-  },
-  "cat_colony_approach": {
-    "id": "cat_colony_approach",
-    "type": "narrative",
-    "text": "There is no internal memo K-B-11. You invented it on the spot because sounding like paperwork is the only camouflage your brain could find.\r\n\r\nThe cistern annex is what happens when civil engineering loses an argument with gravity and wins anyway out of spite. The floor is a lasagna of incompatible patches, each generation convinced *this* layer will be the adult in the room.\r\n\r\nThe walls wear chalk stripes—human load marks, until you notice the second alphabet: claw-grooves at knee height, grouped in threes and fives like a tally of sins only cats can count.\r\n\r\nYour diagnostic plate makes a noise you have never heard it make before. It is the acoustic equivalent of \"I refuse.\"\r\n\r\nAmbient readings: near-zero district fuel, maximum attitude. Copper dust in the mortar as if someone has been buffing the building with pennies and resentment. Fish oil older than your ethics seminar. Fur. So much fur. The fur appears to be doing *governance*.\r\n\r\nEyes open in the dark. More eyes. The number is somewhere between \"enough\" and \"prime minister.\"\r\n\r\nYou are not in the alley shortcut. You are in their lobby. There is no reception desk. There is a rock that is absolutely a reception desk if you value your ankles.",
-    "choices": [
-      {
-        "id": "c_cat_ap_1",
-        "label": "Enter like you're attending a budget hearing. (You are. You just don't know the currency.)",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "cat_colony_sigils"
-        }
-      },
-      {
-        "id": "c_cat_ap_2",
-        "label": "Try the alley shortcut anyway. Surely mammals respect precedent.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "death_dark_alley"
-        }
-      },
-      {
-        "id": "c_cat_ap_3",
-        "label": "Flee to professionalism. Knock on Elara's door like a person who has never invented a memo.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "purifier_entrance_open"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "not_has_flag",
-            "key": "purifier_basement_done"
-          }
-        ]
-      }
-    ]
-  },
-  "cat_colony_sigils": {
-    "id": "cat_colony_sigils",
-    "type": "narrative",
-    "text": "You kneel with the solemnity of someone about to misfile reality.\r\n\r\nUp close, the scratches resolve into notation that should not work but does: a spiral with a deliberate break at the seventh turn—drainage bleed-off grammar—married to vertical ticks that look like a ledger of meals, shipments, or vendettas. Possibly all three. Possibly the cats use the same column for all of them.\r\n\r\nAn orange tomcat with one ear and the moral authority of a dock foreman drops onto your knee without asking permission. Permission is a human concept. He is reviewing your soul.\r\n\r\nYou understand, with the clarity of a nightmare, that this colony has spent months performing *unauthorized structural grooming*: fur and oil and copper dust packed into stone grooves until the stone behaves slightly differently—just enough to nudge the nastiest seepage away from the worst crack, like a crowd parting for someone carrying hot soup.\r\n\r\nIt is a circle. It is also a hobby. It is also, technically, tax evasion if taxes are made of physics.\r\n\r\nThe tomcat stares at your chalk. You get the distinct impression he is waiting for you to embarrass yourself scientifically.",
-    "choices": [
-      {
-        "id": "c_cat_sig_1",
-        "label": "Try to document the phenomenon using dignified academic language.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "cat_colony_parley"
-        }
-      },
-      {
-        "id": "c_cat_sig_2",
-        "label": "Bribe the legislature with dock fish. Democracy runs on salt.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "cat_colony_snack"
-        }
-      },
-      {
-        "id": "c_cat_sig_3",
-        "label": "Announce a full census and assign each cat a provisional ledger line.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "death_cat_census"
-        }
-      }
-    ]
-  },
-  "cat_colony_snack": {
-    "id": "cat_colony_snack",
-    "type": "narrative",
-    "text": "You unwrap dock rations. The fish is so salty it could serve as a Tier 0 desiccant in a pinch.\r\n\r\nThe orange tomcat performs a sniff so judgmental it should count as adversarial examination. Then—protocol collapses—he accepts tribute.\r\n\r\nOther cats teleport in. You did not see them move. You are no longer sure they obey Euclidean rules. They arrange themselves around a flat stone that is obviously the Prime Minister of stones. Stains on it are older than the Republic.\r\n\r\nFor several minutes, the annex sounds like a wet percussion section. Nobody removes your face. You mark this as a diplomatic win in your ledger next to a question mark shaped like a cat.\r\n\r\nThe tomcat returns, tail high, and stamps your notes with his nose. Wet ink. Binding precedent.",
-    "choices": [
-      {
-        "id": "c_cat_sn_1",
-        "label": "Initial the nose-print as \"\"witnessed.\"\"",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "cat_colony_parley"
-        }
-      }
-    ]
-  },
-  "cat_colony_parley": {
-    "id": "cat_colony_parley",
-    "type": "narrative",
-    "text": "You write: *Non-human maintenance behavior observed. Possible passive circle analog via organic deposition. Political status: unclear. Theological status: worse.*\r\n\r\nThe tomcat watches you write the word \"theological\" and seems offended on behalf of science.\r\n\r\nYou whisper to the assembly like a lunatic: 'There is a woman downstairs running clean water through actual alchemy. Your weird fur-math is nudging sludge so her intake doesn't drown in spite. I need to reach that door without becoming a folk tale.'\r\n\r\nThe cats do not clap. Cats do not clap. They *align*, which is clapping for people who think in conspiracy.\r\n\r\nThe orange tom walks toward the back of the annex like he is leading you to committee. You follow. You have followed worse directions today. Those directions had letterhead.\r\n\r\nAhead: a lintel, a hollow, and the distinct sensation that democracy is about to occur in a laundry pile.",
-    "choices": [
-      {
-        "id": "c_cat_pl_1",
-        "label": "Take your seat on the upturned bucket marked VISITOR (NON-VOTING).",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "cat_colony_parliament_gate"
-        }
-      },
-      {
-        "id": "c_cat_pl_2",
-        "label": "Attempt to knight the tomcat under \"\"autonomous borough\"\" precedent and present your seal.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "death_cat_coronation"
-        }
-      }
-    ]
-  },
-  "cat_colony_parliament_gate": {
-    "id": "cat_colony_parliament_gate",
-    "type": "narrative",
-    "text": "The chamber is socks and string and bottle caps and one brass CEA button that absolutely fell off someone's coat and absolutely became a religious object.\r\n\r\nThe orange tom knocks a cap off a crate. It rings like a gavel. Twelve cats and you achieve quorum, assuming \"quorum\" means \"enough glaring to bend light.\"\r\n\r\nA kitten tries to steal your fuel block. You negotiate it back with eye contact and shame.\r\n\r\nThis is not in your field manual. Your field manual is weeping in another room.\r\n\r\nThe Clerk of the Hairball—this is not a title you assigned; it is a title that *happened*—stares at you until you accept that you are about to sit through formal procedure.",
-    "choices": [
-      {
-        "id": "c_cat_pg_1",
-        "label": "Enter the Feral Parliament session.",
-        "mechanic": {
-          "type": "feral_parliament_begin",
-          "exitNodeId": "cat_colony_treaty"
-        }
-      }
-    ]
-  },
-  "cat_colony_treaty": {
-    "id": "cat_colony_treaty",
-    "type": "narrative",
-    "text": "When the parliament adjourns, reality rushes back in like a tide of paperwork that forgot to knock.\r\n\r\nYou are kneeling on wet stone with a strip of ration cloth, three fish scales, and a chalk spiral that is not activated but is definitely *sincere*. The tomcat nose-bumps each scale. Other cats witness by whisker. One abstains on grounds of being a sock.\r\n\r\nYou have signed something. You are not sure which jurisdiction it belongs to. You're fairly sure it's not Caldris. You're fairly sure it's older.\r\n\r\nThe colony escorts you through a gap labeled UNSAFE on the map. The map is correct: it is unsafe for dignity. It is very safe for ankles if you walk like you mean it.\r\n\r\nElara's door waits ahead, chalk binding humming like a polite threat.\r\n\r\nYou look back. Eyes gleam. Not judgment. *Onboarding.*\r\n\r\nYou have joined a parallel government whose cabinet meetings involve yarn.\r\n\r\nIt files no reports. It has better quorum than the Revolutionary Council.",
-    "onEnter": [
-      {
-        "action": "add_item",
-        "itemId": "feral_accord",
-        "qty": 1
-      },
-      {
-        "action": "set_flag",
-        "key": "cat_borough",
-        "value": true
-      },
-      {
-        "action": "adjust_community_cost",
-        "amount": -5
-      }
-    ],
-    "choices": [
-      {
-        "id": "c_cat_tr_1",
-        "label": "Knock on the basement door. Pretend you didn't just pass a bill.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "purifier_entrance_open"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "not_has_flag",
-            "key": "purifier_basement_done"
-          }
-        ]
-      },
-      {
-        "id": "c_cat_tr_2",
-        "label": "Step back into the district pattern—Elara's basement is already behind you.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "seek_answers"
-        },
-        "visibilityRequirements": [
-          {
-            "type": "has_flag",
-            "key": "purifier_basement_done"
-          }
-        ]
-      }
-    ]
-  },
-  "death_cat_census": {
-    "id": "death_cat_census",
-    "type": "narrative",
-    "text": "You announce, in ringing tones, that each animal will receive a provisional index line in the colony ledger.\r\n\r\nThe cats do not boo. Booing is inefficient. They open an adversarial examination in triplicate, using claws.\r\n\r\nWhat follows is the dark alley encounter's director's cut: now with thematic coherence. You have *opted in*. The colony treats this as enthusiastic consent to become a training exercise.\r\n\r\nForty minutes later you possess: no spare chalk, one fewer glove, a new understanding that filing gloss can draw blood, and the distinct memory of being used as a training prop for a kitten learning the word \"no.\"\r\n\r\nThe alpha returns your authorization seal. Not out of mercy. Brass upsets the stomach.\r\n\r\n**[GAME OVER — ADVERSARIAL AUDIT (FERAL, DOUBLE-BLIND, CLAWED)]**",
-    "choices": [
-      {
-        "id": "c_death_cat_census",
-        "label": "Restart.",
-        "mechanic": {
-          "type": "navigate",
-          "nextNodeId": "start"
-        }
-      }
-    ]
-  },
-  "death_cat_coronation": {
-    "id": "death_cat_coronation",
-    "type": "narrative",
-    "text": "You kneel. You lift your Scholar's seal. You attempt to crown the tomcat as First Citizen of the Cistern Autonomous Zone.\r\n\r\nThe tomcat interprets this as: (1) a dominance challenge, (2) a dinner bell, and (3) an unsolicited performance review. He responds in triplicate.\r\n\r\nThe Revolutionary Council's founding documents are famously silent on cats. The cats are not silent on you. Their silence was strategic. Their noise is educational.\r\n\r\nYou discover that the Right of Exchange applies even when the other party trades exclusively in indignity.\r\n\r\n**[GAME OVER — THE CROWNING: STRUCK FROM THE MINUTES]**",
-    "choices": [
-      {
-        "id": "c_death_cat_crown",
         "label": "Restart.",
         "mechanic": {
           "type": "navigate",
@@ -5238,10 +4865,10 @@ export const STORY_NODES: Record<string, StoryNode> = {
       },
       {
         "id": "c_fhs_5",
-        "label": "Kaelen is waiting in the back room.",
+        "label": "Back room: confirm the unofficial roster note.",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "kaelen_proposition"
+          "nextNodeId": "alt_line_entry"
         },
         "visibilityRequirements": [
           {
@@ -5265,6 +4892,10 @@ export const STORY_NODES: Record<string, StoryNode> = {
           {
             "type": "has_flag",
             "key": "pattern_discovered"
+          },
+          {
+            "type": "not_has_flag",
+            "key": "alt_line_committed"
           }
         ]
       },
@@ -5895,7 +5526,7 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "label": "A familiar figure falls into step beside you.",
         "mechanic": {
           "type": "navigate",
-          "nextNodeId": "ash_proposition"
+          "nextNodeId": "alt_red_entry"
         },
         "visibilityRequirements": [
           {
@@ -5911,6 +5542,10 @@ export const STORY_NODES: Record<string, StoryNode> = {
             "stat": "workerRep",
             "operator": ">=",
             "value": 25
+          },
+          {
+            "type": "not_has_flag",
+            "key": "alt_red_committed"
           }
         ]
       }
@@ -7443,6 +7078,74 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
+  "alt_craft_entry": {
+    "id": "alt_craft_entry",
+    "type": "narrative",
+    "text": "The bronze at the Drowning Memorial already carries the weight of official sympathy; the carved names hold the light the way metal always does—flat and patient. Elara stands a little off-center from the flowers—not staging grief—simply sharing air with the plaque as if it were another coordinate on an internal map. You arrived from the assessment thread with its vocabulary still in your mouth. Her posture does not corner you. The silence between you has the bland politeness of a corridor before anyone opens the door.",
+    "choices": [
+      {
+        "id": "c_altcr_e1",
+        "label": "Step into the conversation.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "alt_craft_bailout_1"
+        }
+      }
+    ]
+  },
+  "alt_craft_bailout_1": {
+    "id": "alt_craft_bailout_1",
+    "type": "narrative",
+    "text": "You can still treat this as memorial small-talk—one more civility between colleagues—and walk back toward the CEA file trail before it starts asking for your hands instead of your signature.",
+    "choices": [
+      {
+        "id": "c_altcr_b1_back",
+        "label": "Return to the CEA assessment thread.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "seek_answers"
+        }
+      },
+      {
+        "id": "c_altcr_b1_on",
+        "label": "Stay with the offer.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "alt_craft_bailout_2"
+        }
+      }
+    ]
+  },
+  "alt_craft_bailout_2": {
+    "id": "alt_craft_bailout_2",
+    "type": "narrative",
+    "text": "If you stay, you are not choosing another margin note. You are choosing field work without the stamp that makes field work insurable. The cost will not arrive as a single tidy line item; it will spread across time you cannot reclaim, visibility you cannot roll back, and the quiet fraying of credentials when they brush against what the ledger prefers not to count.",
+    "choices": [
+      {
+        "id": "c_altcr_b2_back",
+        "label": "Return to the assessment thread.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "seek_answers"
+        }
+      },
+      {
+        "id": "c_altcr_b2_commit",
+        "label": "Commit—hear the offer at the bronze.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "elara_offer"
+        },
+        "onSelect": [
+          {
+            "action": "set_flag",
+            "key": "alt_craft_committed",
+            "value": true
+          }
+        ]
+      }
+    ]
+  },
   "elara_offer": {
     "id": "elara_offer",
     "type": "narrative",
@@ -7454,7 +7157,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "elara_workshop"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "has_flag",
+            "key": "alt_craft_committed"
+          }
+        ]
       },
       {
         "id": "c_eo_2",
@@ -7462,7 +7171,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "elara_explains"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "has_flag",
+            "key": "alt_craft_committed"
+          }
+        ]
       },
       {
         "id": "c_eo_3",
@@ -7471,6 +7186,12 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "type": "navigate",
           "nextNodeId": "cea_building_exterior"
         },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "alt_craft_committed"
+          }
+        ],
         "onSelect": [
           {
             "action": "set_flag",
@@ -7492,7 +7213,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "elara_workshop"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "has_flag",
+            "key": "alt_craft_committed"
+          }
+        ]
       },
       {
         "id": "c_ee_2",
@@ -7501,6 +7228,12 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "type": "navigate",
           "nextNodeId": "cea_building_exterior"
         },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "alt_craft_committed"
+          }
+        ],
         "onSelect": [
           {
             "action": "set_flag",
@@ -7808,6 +7541,12 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "type": "navigate",
           "nextNodeId": "seek_answers"
         },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "alt_craft_committed"
+          }
+        ],
         "onSelect": [
           {
             "action": "set_flag",
@@ -8015,6 +7754,74 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
+  "alt_line_entry": {
+    "id": "alt_line_entry",
+    "type": "narrative",
+    "text": "You follow the corridor you were pointed toward: stock tallies, rope coiling, nothing that belongs on a ballad. The back room smells of lamp oil and dried tar. Kaelen is already there, shoulders to a crate, still in the way foremen look when they're tired of performing calm. Plaster eats the edges off the noise from the floor. Nobody has opened the conversation yet; the silence already has the shape of a filled-in form.",
+    "choices": [
+      {
+        "id": "c_altl_e1",
+        "label": "Confirm the roster slot and continue.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "alt_line_bailout_1"
+        }
+      }
+    ]
+  },
+  "alt_line_bailout_1": {
+    "id": "alt_line_bailout_1",
+    "type": "narrative",
+    "text": "You hear dock talk through the wall: tide windows, paste counts, who's covering whose shift. You can still treat it as waterfront noise from the safehouse floor and step back before it becomes a file entry. The thread stays optional until you stay in the room.",
+    "choices": [
+      {
+        "id": "c_altl_b1_back",
+        "label": "Return to the front room and the supply list.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "freehands_safehouse"
+        }
+      },
+      {
+        "id": "c_altl_b1_on",
+        "label": "Stay with the thread.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "alt_line_bailout_2"
+        }
+      }
+    ]
+  },
+  "alt_line_bailout_2": {
+    "id": "alt_line_bailout_2",
+    "type": "narrative",
+    "text": "Same door, same hinge whisper. If you go through again, the cost is crew weight—not a clerk's errand. Whatever clock they're running on the wall doesn't pause for second thoughts.",
+    "choices": [
+      {
+        "id": "c_altl_b2_back",
+        "label": "Return to the safehouse floor.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "freehands_safehouse"
+        }
+      },
+      {
+        "id": "c_altl_b2_commit",
+        "label": "Go through—meet Kaelen in the back room.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "kaelen_proposition"
+        },
+        "onSelect": [
+          {
+            "action": "set_flag",
+            "key": "alt_line_committed",
+            "value": true
+          }
+        ]
+      }
+    ]
+  },
   "kaelen_proposition": {
     "id": "kaelen_proposition",
     "type": "narrative",
@@ -8032,7 +7839,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "line_crew_meeting"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "has_flag",
+            "key": "alt_line_committed"
+          }
+        ]
       },
       {
         "id": "c_kp_2",
@@ -8040,7 +7853,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "line_risks"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "has_flag",
+            "key": "alt_line_committed"
+          }
+        ]
       },
       {
         "id": "c_kp_3",
@@ -8049,6 +7868,12 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "type": "navigate",
           "nextNodeId": "freehands_safehouse"
         },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "alt_line_committed"
+          }
+        ],
         "onSelect": [
           {
             "action": "set_flag",
@@ -8079,6 +7904,12 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "type": "navigate",
           "nextNodeId": "freehands_safehouse"
         },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "alt_line_committed"
+          }
+        ],
         "onSelect": [
           {
             "action": "set_flag",
@@ -8131,6 +7962,12 @@ export const STORY_NODES: Record<string, StoryNode> = {
           "type": "navigate",
           "nextNodeId": "seek_answers"
         },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "alt_line_committed"
+          }
+        ],
         "onSelect": [
           {
             "action": "set_flag",
@@ -8412,7 +8249,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "seek_answers"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "alt_line_committed"
+          }
+        ]
       }
     ]
   },
@@ -8580,6 +8423,74 @@ export const STORY_NODES: Record<string, StoryNode> = {
       }
     ]
   },
+  "alt_red_entry": {
+    "id": "alt_red_entry",
+    "type": "narrative",
+    "text": "The night market keeps doing what it always does: lamps, overlapping bargains, fine soot threading the lamplight. Ash falls into step beside you without a speech attached. You can still file the matched stride under ambient night noise until you decide this is an opener; the heavy pitch does not have to land here.",
+    "choices": [
+      {
+        "id": "c_altr_e1",
+        "label": "Let them walk with you—hear the opener.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "alt_red_bailout_1"
+        }
+      }
+    ]
+  },
+  "alt_red_bailout_1": {
+    "id": "alt_red_bailout_1",
+    "type": "narrative",
+    "text": "You can still melt back into the market and keep your evening unofficial.",
+    "choices": [
+      {
+        "id": "c_altr_b1_back",
+        "label": "Return to the night district.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "night_district"
+        }
+      },
+      {
+        "id": "c_altr_b1_on",
+        "label": "Stay with the thread.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "alt_red_bailout_2"
+        }
+      }
+    ]
+  },
+  "alt_red_bailout_2": {
+    "id": "alt_red_bailout_2",
+    "type": "narrative",
+    "text": "If you stay, you are choosing to stand in the market while Ash names sabotage—not rumor, not theory, a plan with targets. The crowd keeps sliding past; you can still pretend you are only catching stall talk until you admit you are standing still for a reason.",
+    "choices": [
+      {
+        "id": "c_altr_b2_back",
+        "label": "Step back into the crowd.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "night_district"
+        }
+      },
+      {
+        "id": "c_altr_b2_commit",
+        "label": "Commit—hear the full proposition.",
+        "mechanic": {
+          "type": "navigate",
+          "nextNodeId": "ash_proposition"
+        },
+        "onSelect": [
+          {
+            "action": "set_flag",
+            "key": "alt_red_committed",
+            "value": true
+          }
+        ]
+      }
+    ]
+  },
   "ash_proposition": {
     "id": "ash_proposition",
     "type": "narrative",
@@ -8598,7 +8509,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "red_plan_detail"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "has_flag",
+            "key": "alt_red_committed"
+          }
+        ]
       },
       {
         "id": "c_ap_2",
@@ -8606,7 +8523,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "red_target"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "has_flag",
+            "key": "alt_red_committed"
+          }
+        ]
       },
       {
         "id": "c_ap_3",
@@ -8614,7 +8537,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "night_district"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "alt_red_committed"
+          }
+        ]
       }
     ]
   },
@@ -8686,7 +8615,14 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "red_gather_intel"
-        }
+        },
+        "onSelect": [
+          {
+            "action": "set_flag",
+            "key": "alt_red_committed",
+            "value": true
+          }
+        ]
       },
       {
         "id": "c_ab_2",
@@ -9203,7 +9139,13 @@ export const STORY_NODES: Record<string, StoryNode> = {
         "mechanic": {
           "type": "navigate",
           "nextNodeId": "seek_answers"
-        }
+        },
+        "visibilityRequirements": [
+          {
+            "type": "not_has_flag",
+            "key": "alt_craft_committed"
+          }
+        ]
       }
     ]
   }

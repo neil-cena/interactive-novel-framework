@@ -118,12 +118,6 @@ export const ITEM_DICTIONARY: Record<string, ItemTemplate> = {
     "type": "tool",
     "description": "Your attempt to document the Acceptable Loss Revue as an official field report. The resulting document is eleven pages long. The official section is one paragraph. The remaining ten pages contain detailed notes on theatrical alchemy theory, a sketch of Petra's modified drainage circle, and the lyrics to Act II transcribed in full scholarly notation. You are not sure Mireth will accept this as billable hours."
   },
-  "feral_accord": {
-    "id": "feral_accord",
-    "name": "Treaty of the Cistern (Informal)",
-    "type": "tool",
-    "description": "A strip of oiled cloth, three fish scales, and a chalk spiral that is legally inert and spiritually binding. Smells faintly of laundry and minor insurrection. Appendix note: \"Subject claims to have attended a legislature composed of laundry and predators. Recommend sleep.\" Mireth will underline \"predators\" twice."
-  },
   "warehouse_manifest": {
     "id": "warehouse_manifest",
     "name": "Warehouse Shipping Manifests",

@@ -59,8 +59,7 @@ Optional early beats that change tone, stats, or items without replacing the spi
 - **Warehouse / Senna / staging / supply chain:** proof of redirection scale; items like manifests and ledgers; feeds Toris confrontation and chaos.
 - **Freehands safehouse (Brin):** mutual aid geography, repair briefings, pipe and wall assists, reputation and **freehands_token** for collective ending paths.
 - **Night district:** night market, **Ash** trail, Red Balance proposition, worker tavern loops.
-- **Mireth field visit:** backstory on prior Scholars’ correct reports that changed nothing; optional **cat whisper** hook.
-- **Cat colony (cistern annex):** absurdist long spoke with **feral parliament**; can yield **feral_accord** and route toward Elara; multiple joke **game overs**.
+- **Supervisor texture (no dedicated field beat):** Choosing the plaque-related option on `post_crane_pattern` ends the day at `transition_end_day_one` and sets **`mireth_warned`**—a compact acknowledgment that Mireth’s “good work ≠ right work” warning still applies, without a separate Mireth scene.
 
 ### Loss branches (game over / “bad ends”)
 
@@ -72,7 +71,6 @@ Early or mid-run failures, often with dark humor:
 | **death_window** | Lean out of degraded dorm window. |
 | **death_bluff_crew** | Threaten dock crew with bogus authority. |
 | **death_touch_mod** | Touch live reinforcement against warning. |
-| **death_dark_alley** | Cat colony alley shortcut. |
 | **death_drink_water** | Purifier water vs Scholar tolerance. |
 | **death_flip_desk** | Catharsis in Toris’s office. |
 | **death_punch_wall** | Impulse at the seawall. |
@@ -89,9 +87,9 @@ These are **full divergences** or **replacement life paths** (Layer 4 in design 
 
 #### A — **The Chronicler** (Dima / theater commitment)
 
-**Entry:** From `theater_revelation`, with high **community** / **Freehands** reputation and other gates, Vael may choose **chronicler_commitment** instead of racing to the seawall.
+**Entry (single deliberate thread):** After `theater_revelation`, the build sets **`theater_seawall_briefing`**. From **`seek_answers`**, a gated cross-file choice leads to **`alt_chronicler_entry`** → **`alt_chronicler_bailout_1`** → **`alt_chronicler_bailout_2`**, each offering a return to **`seek_answers`** before the final step sets **`alt_chronicler_committed`** and enters **`chronicler_commitment`**. The in-theater shortcut into the chronicle path has been removed so the Chronicler string has one dull procedural entry and explicit bailouts.
 
-**Arc:** `doc_planning` → testimony pillars (workers, elders, CEA records) → **chronicle_assembly** → **chronicle_distribution** (Academy/Council, press, or Ash’s network).
+**Arc:** `chronicler_commitment` ( **`c_chron_1`** visible only with **`alt_chronicler_committed`**) → `doc_planning` → testimony pillars (workers, elders, CEA records) → **chronicle_assembly** → **chronicle_distribution** (Academy/Council, press, or Ash’s network). There is no longer a last-chance jump from **`chronicler_commitment`** back to the seawall race—committing through the bailout chain is the point of no return for that string.
 
 **Outcome (`ending_chronicler_v2`):** Chronicle ships; **seawall crisis resolves without Vael present**—partial failure, injuries, displacement, but no deaths; institutional fallout (Toris suspended, Academy review, **Karet Bay Record Office**). Theme: record vs rescue; cost of choosing documentation.
 
@@ -142,7 +140,7 @@ These are **full divergences** or **replacement life paths** (Layer 4 in design 
 | **The River Runs Uphill** | Transit / conduit reversal radical route |
 | **The Costly Good Deed** | Living fuel / sacrifice |
 | **The Distributed Cost** | Collective / evacuation / many-hands |
-| **The Chronicler** | Theater + Dima chronicle commitment |
+| **The Chronicler** | Theater briefing flag → `seek_answers` → alt-chronicler bailouts → Dima chronicle arc |
 | **The Craft** | Elara unauthorized craft path (soft) |
 | **The Line** | Kaelen crew seawall operation (full / partial) |
 | **The Red Exchange** | Ash / Red Balance sabotage arc |
@@ -150,4 +148,4 @@ These are **full divergences** or **replacement life paths** (Layer 4 in design 
 
 ---
 
-*Generated for navigation and writers’ room use. For engine behavior and exact choice gates, refer to `data/csv/nodes.csv` and `src/engine`.*
+*Generated for navigation and writers’ room use. For engine behavior and exact choice gates, refer to `data/csv/nodes.csv` and `src/engine`. Cistern cat-colony and **feral parliament** content has been removed from the data build; this file reflects that cull.*

@@ -1,32 +1,22 @@
 id,type,text,image,onEnter,choice1_id,choice1_label,choice1_visibility,choice1_mechanic,choice1_onselect,choice2_id,choice2_label,choice2_visibility,choice2_mechanic,choice2_onselect,choice3_id,choice3_label,choice3_visibility,choice3_mechanic,choice3_onselect,choice4_id,choice4_label,choice4_visibility,choice4_mechanic,choice4_onselect,choice5_id,choice5_label,choice5_visibility,choice5_mechanic,choice5_onselect,choice6_id,choice6_label,choice6_visibility,choice6_mechanic,choice6_onselect
-start,narrative,"The 0500 bell sends a low vibration through the stone walls of the Measured Scholars' dormitory. You open your eyes to the familiar grey ceiling, its cracks mapped in your memory like the trade routes on your study charts.
+start,narrative,"The 0500 bell thrums through the dormitory stone—soft enough to ignore if you were someone else, insistent enough to make lying still feel like a choice you're already losing.
 
-Your name is Vael. Junior Field Evaluator, Measured Scholars. Twenty-three years old and already trusted with district-level field assessments. You are good at what you do: observation, calculation, the patient art of finding where the cost actually went. The less patient art of finding truth in people has, so far, never featured in the formal curriculum.
+You open your eyes to the grey ceiling, cracks memorized like harbor lines on a chart. Vael: Junior Field Evaluator, twenty-three, useful because you can chase a cost through math and metal. People are the elective nobody grades honestly; the curriculum still pretends the exam is only materials.
 
-The morning air carries the sharp mineral smell of alchemical fuel blocks burning in the city's infrastructure converters—the deep machinery that keeps Orvish's water, heat, and structural maintenance running. Through the narrow window, the spires of the upper city catch the first pale light while the lower districts still sleep beneath a blanket of industrial haze. It is, from this safe altitude, almost picturesque.
+Morning reaches you before the common hall does: mineral edge in the air, alchemical fuel burning somewhere in the converters that keep Orvish watered, heated, and structurally polite. Through the narrow window, upper spires take the first pale light; below, industrial haze holds the lower rings in a softer sleep. From this height the view almost earns the word pretty.
 
-Your field kit sits open on the desk: three pre-inscribed diagnostic plates, a pouch of chalk, calipers and stress gauges, and a sealed case holding your Tier 2 fuel blocks. Enough for several days of serious assessment if you ration honestly. Your ledger lies open beside it, unfinished calculations waiting patiently for the version of you that will inevitably be too tired to finish them.",,,c_start_1,Review the assignment briefing.,,navigate:assignment_briefing,,c_start_2,Look out the window at the waking city first.,,navigate:morning_view,,c_start_3,Go back to sleep. The anomaly can wait.,,navigate:death_oversleep,,,,,,,,,,,,,,,,
-morning_view,narrative,"You stand at the narrow window. Below the Scholar's Quarter, the city of Orvish unfolds in layers.
+Your kit is already staged—plates, chalk, calipers, sealed Tier 2 blocks—enough for real work if you ration like you mean it. The ledger waits with half-finished figures from yesterday, patient as a door left ajar. Same ceiling as last week; you're the variable.",,,c_start_1,See Mireth—briefing is how a good day starts.,,navigate:assignment_briefing,,c_start_2,Watch Orvish wake from the window first.,,navigate:morning_view,,c_start_3,Go back to sleep. The anomaly can wait.,,navigate:death_oversleep,,,,,,,,,,,,,,,,
+morning_view,narrative,"You stand at the narrow window. Below the Scholar's Quarter, Orvish stacks itself in rings.
 
-The upper terraces gleam with white stone and polished brass—the Coordinated Exchange Authority's administrative towers, the academies, the stone assembly halls where the Revolutionary Council holds its public sessions. Their buildings hold their shape because they are properly maintained with high-quality fuel and skilled circle work. You can see, even from here, the difference: clean joints, true lines, no visible patching.
+The upper terraces read clean from here—white stone, polished brass, CEA towers and assembly halls holding true lines because someone steady feeds them good fuel and skilled circles. You can see the money in the joints: no apology patches, no polite sag.
 
-Even from up here, things are not equal. There are those in the upper terrace who trained in the Valdmere Realm before its political troubles, who return now with credentials the republic struggles to officially recognize and unofficial connections it cannot ignore. You have never had occasion to think about them. Today is probably not the day either.
+Not everyone up there earned their seat the same way. You know the rumor-class about Valdmere-trained credentials the republic cannot fully bless or ignore. You have never needed that thought for your work. Today probably still does not.
 
-Orvish is the republic's largest port city — not the capital (that's Caldren, far to the northeast, where the Revolutionary Council holds court over problems it can barely see from this distance), but the city where trade actually happens. Where materials flow in and decisions about those materials flow out. Where the distance between an infrastructure commission memo and a collapsing seawall is exactly as long as it takes for a requisition to get lost in transit.
+Caldren—capital, northeast—writes problems at a distance. Orvish loads ships, moves ore, and lives in the gap between a commission memo and a wall that stops listening. Below the bright ring, the city roughens: cheaper paste, more timber, more weight carried by habit and improvisation. The industrial belt grinds toward grey water.
 
-Below that, the working districts descend in concentric rings toward the waterfront. Then the industrial zone, then the lower docks. The buildings get rougher as you go down—timber reinforced with cheaper bonding paste, walls shored up with improvised circle work, the subtle sag of structures running on inadequate fuel.
+Karet Bay sits at the bottom like a mouth closed many times with the wrong teeth—skyline irregular, repairs stacked on repairs. You know its name from assessments filed by people who left the same day. You have never stood inside the file.
 
-At the very bottom, pressed against the grey water of the bay, lies Karet Bay. Its skyline is irregular in the way of places that have been repaired many times without the materials to do it properly.
-
-Karet Bay has a particular history. Three generations ago, a trade consortium redirected the bay's freshwater inlet using large-scale alchemical flow manipulation. The port access improved. Then, over the following decade, the freshwater supply failed, the fisheries died, the drinking water collapsed, and tens of thousands of people were displaced.
-
-The consortium's position was that the economic gains outweighed the cost.
-
-The courts disagreed.
-
-The legal principle that followed—environmental harm classified as harm to people—is cited in every environmental assessment you've been trained to file. You have cited it three times. You have never stood in the district it describes.
-
-You will stand in it on this deployment—not as a single afternoon's errand, but as field work that may take more than one day to earn its answers.",,set_flag:saw_the_city:true,c_morning_1,Get dressed and check your assignment.,,navigate:assignment_briefing,,c_morning_2,Lean out for a closer look at the lower docks.,,navigate:death_window,,,,,,,,,,,,,,,,,,,,,
+Whatever you sign today, the work below will not resolve in a single polite afternoon—that much leaks through even the tidy versions. The dread is not ignorance of the law—you could cite the principle in your sleep—but ignorance of what the street does with the footnotes when you are the one holding the chalk.",,set_flag:saw_the_city:true,c_morning_1,"Dress, then take the briefing—Mireth's already on the numbers.",,navigate:assignment_briefing,,c_morning_2,Lean out for a closer look at the lower docks.,,navigate:death_window,,,,,,,,,,,,,,,,,,,,,
 assignment_briefing,narrative,"In the common hall, Senior Scholar Mireth is already seated behind a desk stacked with incident reports. She is a thin woman with ink-stained fingers and the expression of someone who has been awake since before the bell and intends to make that everyone else's problem.
 
 'Vael,' she says without looking up. 'Field assignment. Karet Bay lower docks, loading district. A harbor crane is operating at twenty-three percent above its rated structural load capacity. The maintenance circle logs show no authorized reinforcement work in the past four months. The fuel allocation records show normal consumption. Nothing explains the numbers.'
@@ -39,11 +29,11 @@ She pauses. 'This is routine. Observe, calculate, file what the evidence support
 
 Another pause, shorter, harder to read.
 
-'Preliminary findings within a few days. A full report when the numbers justify one—not when the calendar does.'
+'The harbor office will ask for a closing date before you have one. Send them to me. Your job is the reading—not filling a box on someone's chart.'
 
 'And Vael—don't get creative down there.'
 
-She glances at a second folder on the stack. 'Scholar Nev is doing a material audit for the harbor authority three streets from your assessment site. You may run into each other. Nev has been in the field longer than you have. Try not to learn the wrong lessons.'",,,c_brief_1,Understood. Preliminary findings in a few days; full report when justified.,,navigate:leave_quarter,,c_brief_2,Is there anything else I should know about the district?,,navigate:mireth_context,,,,,,,,,,,,,,,,,,,,,
+She glances at a second folder on the stack. 'Scholar Nev is doing a material audit for the harbor authority three streets from your assessment site. You may run into each other. Nev has been in the field longer than you have. Try not to learn the wrong lessons.'",,,c_brief_1,Understood—file what the evidence supports; I'll send deadline noise to you.,,navigate:leave_quarter,,c_brief_2,Is there anything else I should know about the district?,,navigate:mireth_context,,,,,,,,,,,,,,,,,,,,,
 mireth_context,narrative,"Mireth is quiet for a moment. She sets down her pen.
 
 'I've been doing this work for nineteen years,' she says. 'Karet Bay is the third time I've seen this pattern. A district's material allocation gets quietly adjusted—officially, with paperwork—and six months later we're getting anomaly reports from the field. There's always a justification. The justification always sounds reasonable. The field reports never do.'
@@ -57,153 +47,133 @@ She passed her senior field evaluator assessment on her second attempt—she men
 She looks at you for a beat too long. 'You're good at this work, Vael. That's why I'm sending you. Just—don't forget that good work isn't the same as right work. Those are different things.'
 
 You're not entirely sure what she means by that. You're also not sure she is. The examination system teaches you to see clearly. What to do with what you see—that part, apparently, is self-study.",,,c_mireth_1,Take the folder and head out.,,navigate:leave_quarter,,,,,,,,,,,,,,,,,,,,,,,,,,
-leave_quarter,narrative,"You collect your field kit and run through the checklist before heading out.
+leave_quarter,narrative,"You run the checklist out of habit. The field kit closes with a click that sounds too neat for where you're going.
 
-Three pre-inscribed plates: a diagnostic circle for reading ambient energy distribution, a structural stress assessment circle for mapping load patterns, and a basic reinforcement circle for stabilization work. The plates are Tier 2 copper-alloy, properly maintained. They'll hold for a dozen activations each before the inscribed patterns begin to degrade. Your chalk is for single-use circles when the plates aren't suited to a specific task.
+Three inscribed plates—diagnostic, stress, stabilization—Tier 2 alloy, maintained well enough to survive a dozen serious pulls before the patterns start to slip. Chalk for the corners a plate won't fit. The fuel case holds three Tier 2 blocks: enough for six or eight real operations if you're careful. Down in Karet Bay they'll be living on Tier 0 and Tier 1—stuff that burns messy and fails late, when no one's watching the right gauge.
 
-The sealed fuel block case holds three standard Tier 2 blocks—enough for six to eight serious alchemical operations. Clean-burning, reliable, the industrial standard. Down in Karet Bay, you're guessing they'll be working with Tier 0 and Tier 1 materials. The kind that burns wasteful and fails delayed, the way cheap things always fail: not dramatically, not immediately, but later, and worse.
+The CEA brass seal goes in your inner pocket. It opens doors. It also makes you a line item in someone else's morning.
 
-The CEA inspector's authorization—the small brass seal that marks you as a Measured Scholar on official business—goes into your inner pocket. It opens certain doors. It closes others.
+The Scholar's Quarter sits on the second terrace—neither the bright upper city nor the sprawl below. The walk down is familiar pavement turning stranger with every ring, as if gravity had opinions about class.",,add_item:alchemical_chalk:1|add_item:cea_authorization:1|add_item:fuel_blocks:1,c_leave_1,Head down toward the docks—the crane won't assess itself.,,navigate:descent_lower,,c_leave_2,Stop at the market terrace for supplies.,,navigate:market_terrace,,c_leave_3,Review your field plates before setting out.,,navigate:scholar_loadout,,,,,,,,,,,,,,,,
+scholar_loadout,narrative,"In the courtyard you open the plate case because your first mentor trained the reflex into bone: know what you are carrying before the street decides to test you.
 
-The Scholar's Quarter sits on the second terrace, halfway between the gleaming upper city and the industrial sprawl below. The walk to Karet Bay takes you through progressively grimmer streets, each ring down another step away from the world you understand and into the world you've only ever assessed from a distance.",,add_item:alchemical_chalk:1|add_item:cea_authorization:1|add_item:fuel_blocks:1,c_leave_1,Descend toward the lower docks directly.,,navigate:descent_lower,,c_leave_2,Stop at the market terrace for supplies.,,navigate:market_terrace,,c_leave_3,Review your field plates before setting out.,,navigate:scholar_loadout,,,,,,,,,,,,,,,,
-scholar_loadout,narrative,"You pause in the courtyard and open your plate case, running through the function of each component. Old habit, drilled by your first assessment mentor: you don't enter a field site without knowing exactly what tools you're carrying and what they cost to use.
+Plain rule, the kind academics love to embroider: a circle is only instructions scratched in metal. Fuel pays the burn. You pay the steering. Lose any leg of that tripod and nothing happens worth a stamp—just expensive jewelry and a body pretending it did work.
 
-A circle doesn't provide energy—that's the first thing they teach you, and the first thing most people forget. A circle is a blueprint, a set of instructions. It defines what transformation is allowed and how energy flows through the material. Without fuel, a circle is a drawing. Without you—your own energy to initiate and guide the reaction—the fuel just sits inert. Every alchemical act requires all three: the circle, the fuel, and the person holding it together.
+Your thumb finds the diagnostic plate—copper-alloy cool, inscription edges grit-fine. Stress plate sits heavier in its felt slot. Reinforcement last, the one that buys minutes when minutes are the budget. The sealed case holds three Tier 2 blocks; six to eight honest operations, then the invoice starts writing itself into your veins.
 
-Your diagnostic plate activates with a half-block of fuel and moderate personal output. It reads ambient energy distribution in structures and materials, tells you where work has been done and whether it's degrading. The stress assessment plate costs more—a full block and significant personal energy—but it maps internal load patterns precisely. Worth the cost for structural assessments. This is the tool that catches Hollow Tower failures before they happen.
+You latch the lid and think of Mireth's face when she slid the folder across the desk. You hope the count stays generous today.",,,c_loadout_1,Head out to the docks.,,navigate:descent_lower,,,,,,,,,,,,,,,,,,,,,,,,,,
+market_terrace,narrative,"The terrace smells like hot oil and copper dust—people passing through, buying time and parts on their way to worse air.
 
-Your reinforcement plate is the practical one: strengthen an existing joint, stabilize a failing circle, buy time for proper repair. Two blocks and real personal effort. Your structural specialization makes you efficient here—a medical alchemist doing this same work would waste more and get dirtier results.
+A tonic seller clocks your ledger. 'Scholar,' she says. 'Docks?' She taps a bottle. 'The air down there doesn't ask permission.' Her price is almost insultingly low. The label's small print ends with a line that pretends to be a joke and isn't, quite.
 
-You close the case. Three blocks. Six to eight operations before you're running on your own reserves.
+Farther along, a Freehand with circle-marks on both wrists guards a folding table of salvaged bolts and straightened tubing. The sign says BRIN'S BITS. FAIR EXCHANGE OR LEAVE. She's telling a boy his offer is 'mathematically offensive' in the same tone she'd use for a bent nail. He leaves with the tubing, looking like he lost a game he didn't know they were playing.",,,c_market_1,Buy an energy tonic and continue.,,navigate:descent_lower,add_item:energy_tonic:1,c_market_2,Decline politely and continue.,,navigate:descent_lower,,,,,,,,,,,,,,,,,,,,,
+descent_lower,narrative,"The way down into Karet Bay teaches erosion without a syllabus. White terrace stone thins to grey brick, then patched concrete, then timber and corrugated metal squeezed into lanes too narrow for excuses. The infrastructure hum deepens until it feels like rope through a dirty block—constant, grinding, weather everyone else stopped flinching at.
 
-You have never needed more than that. You think about Mireth's expression when she handed you the folder, and hope that remains true today.",,,c_loadout_1,Head out to the docks.,,navigate:descent_lower,,,,,,,,,,,,,,,,,,,,,,,,,,
-market_terrace,narrative,"The market terrace sits at the boundary between the comfortable middle districts and the industrial zone below. Vendors sell everything from alchemical components to breakfast pastries, and the air smells of frying oil and copper dust. It's lively in the specific way that places are lively when they exist specifically for people passing through.
+Workers pass toward shift, quota already behind their eyes. A few clock your ledger and peel away; others never spare you the glance. Fair.
 
-A weathered woman selling tonics catches your eye. Her stall displays rows of small glass bottles filled with amber liquid—energy tonics, the kind that dock workers use to push through double shifts. They have the general aesthetic of something you'd find in a drain, which does not appear to be deterring anyone.
+History here wears competing hands on the same plaster—official letters too high to read without stopping, chalk beneath arguing back in fragments: someone always pays; upper berths stay dry. Two slogans, two audiences, one dry throat.
 
-'Scholar, eh?' she says, noting your ledger. 'Heading down to the docks? You'll want one of these. The air down there eats at you.' She pauses. 'Not figuratively. Well. Also figuratively.'
+The boundary sign fades against mortar: KARET BAY LOWER DOCKS — CEA OPERATIONAL ZONE 7. Beside it, narrow glass—HARBOR LOGISTICS, coordinator name you have seen on forms. Inside, a woman threads between manifest stacks at brittle speed, schedule and workload out of negotiation. She catches your eye once and snaps away—Scholar attention has its own weather down here.
 
-She quotes a price. It's cheap. The tonics are crude but functional—a chemical preparation that stabilizes and slightly boosts the body's own reserves, delaying the fatigue that comes from extended self-fueled alchemical work. The label says: DO NOT INGEST IF EXPERIENCING DISTORTION, PREGNANCY, OR OPINIONS.
+A pamphlet corner flaps under a quota sheet: YEAR EIGHTY, and a single jeer about warm offices and the bill—ink careful, message clipped, the rest left to rumor.
 
-Further along the terrace, a heavyset woman with Freehands circle-marks on both wrists is selling salvaged construction material from a folding table: reclaimed Tier 1 bolts, repurposed bonding paste, copper tubing straightened and cleaned. The sign on the table reads: BRIN'S BITS. FAIR EXCHANGE OR LEAVE. She is in the middle of explaining to a teenage boy why his offer is—her exact word—'mathematically offensive.' She makes the explanation sound less like a refusal and more like an education. The boy leaves with the copper tubing at a better price and the expression of someone who has just been outmaneuvered and possibly improved.",,,c_market_1,Buy an energy tonic and continue.,,navigate:descent_lower,add_item:energy_tonic:1,c_market_2,Decline politely and continue.,,navigate:descent_lower,,,,,,,,,,,,,,,,,,,,,
-descent_lower,narrative,"The descent into Karet Bay is a lesson in erosion—both geological and moral. The white stone of the upper terraces gives way to grey brick, then patched concrete, then raw timber and corrugated metal sheeting. The streets narrow. The infrastructure hum deepens, grating the way rope does when it runs through a block filmed with grit.
+Brine, machine oil, sour venting where cheap fuel meets bad circles—the smell maps the district faster than your plates will. The pavement shivers along lines someone mended twice already. Two men shout by the entrance over who eats the cost of a botched reinforcement; upstairs that becomes a registry line. Down here it is lungs and witnesses. Three onlookers hold their silence like a tool.
 
-You pass workers bound for the morning shift—calloused hands, eyes flat with quota arithmetic. Some glance at your ledger and look away. Others never register you at all. Given what their mornings cost, that is fair enough.
+The street is doing orientation today—rude, thorough, and billing nobody.",,,c_descent_1,Head directly to the loading crane.,,navigate:dock_overview,,c_descent_2,Stop and take ambient readings before going further.,,navigate:district_survey,,c_descent_3,Let the wall argue a little—then keep walking.,,navigate:descent_wall_ephemeral,,,,,,,,,,,,,,,,
+descent_wall_ephemeral,narrative,"You let your shoulder rest against the plaster long enough to feel the hum through it—layers of ink, chalk, argument. Official stone says one thing in measured letters; dock hands answer in strokes that overlap half-erased predecessors. No single voice wins; they stack like bad repairs, each claiming the last word.
 
-Halfway down, a stone plaque: IN RECOGNITION OF THE DROWNING OF KARET BAY. Beneath it, three sentences in the tongue of historical reckoning—the consortium, the redirected river, the freshwater lost. You know the case from study and have cited it in reports. The street knows it from breath and metered cups.
+Pinned where wind worries paper, the pamphlet offers only a headline—YEAR EIGHTY—and one sharp line about council warmth and who pays. The rest tears away into gossip before your brain can treat it like evidence.
 
-On the same wall, smaller cut: EIGHTY YEARS SINCE THE SUNDERING. EIGHTY YEARS OF BUILDING WHAT MAGIC DESTROYED. Civic pride on stone, until you look at what you are walking toward.
+A child darts past chanting a fragment someone taught her; an older worker hisses her quiet, not cruel, just practiced. Truth down here arrives in shards on purpose—easier to carry, harder to subpoena.
 
-The district boundary wears a faded sign: KARET BAY LOWER DOCKS — CEA OPERATIONAL ZONE 7.
+Your ledger pulls at your hand. Not because the wall fed you new facts—because it reminded you what field work always costs: choosing which noises earn ink.
 
-Beside it, a narrow doorway marked HARBOR LOGISTICS — COORDINATOR SENNA. Through the glass, a woman shuttles between stacks of manifests with the brittle speed of someone holding a schedule that stopped fitting the work months ago. She catches your eye once and snaps her gaze off—a reflex learned where Scholar attention becomes delay, then paperwork.
+Enough. The crane does not care how long you listen.",,,c_wall_eph_1,Cut toward the loading crane and the apron.,,navigate:dock_overview,,c_wall_eph_2,Press a baseline reading in at the boundary.,,navigate:district_survey,,,,,,,,,,,,,,,,,,,,,
+district_survey,narrative,"You press the diagnostic plate to the district's entry pier and feed it half a block from your own reserves. Old habit: baseline first, spike second.
 
-Chalk below: SOMEONE ALWAYS PAYS.
+The plate doesn't lie. The embedded maintenance circles are running at about forty percent of what they were built for—not because they've failed, but because nobody's feeding them. Without fuel they sleep; without them, the district leans on stone and iron that was never meant to carry the load alone. And what's in these walls is Tier 1 at best.
 
-Below that, another hand, dock-rough: THE UPPER BERTHS STAY DRY.
+You note it anyway. Hairline cracks don't confess, but they accumulate. So does patchwork—chalk on bad surfaces, paste that buys weeks and invoices years.
 
-Pinned between a labor quota sheet and a water ration, a pamphlet on rough stock, careful ink. Header: YEAR EIGHTY. *Year Zero, we buried the nobility for making others pay for their ease. Eighty years later, the council class keeps warm offices and revolutionary portraits. Someone tell me what changed.* No signature.
+Everyone in Caldris knows what that kind of math ends as. They even gave it a name when you were still in second year: the Hollow Tower—three hundred people who were told the numbers were fine.",,add_item:energy_readings:1|adjust_stability:-5,c_survey_1,Proceed to the loading crane.,,navigate:dock_overview,,,,,,,,,,,,,,,,,,,,,,,,,,
+dock_overview,narrative,"The lower docks are noise stacked on noise—chains, winches, the dull animal groan of machinery doing what it was bought to do. People move through it like fish through pressure.
 
-The smell reaches you—brine, machine oil, sour venting where improvised circles burn cheap fuel wrong. The pavement shivers under overtaxed lines. The hum here is not melody; it is a structure that has been mended so often it no longer recalls its first true note.
+Crane Seven handles ore off the mining barges. Forty years on the ledgers; from here it still looks wrong in a specific way—while the others complain under their loads, Seven swings three-ton crates like the rating was a suggestion someone crossed out.
 
-Two men shout by the entrance—who eats the cost of a botched reinforcement. Upstairs that becomes a registry complaint. Down here it becomes lung capacity and witnesses. Three workers watch. In Caldris, arguing in the street passes for civic virtue. Here it is ordinary weather.",,,c_descent_1,Head directly to the loading crane.,,navigate:dock_overview,,c_descent_2,Stop and take ambient readings before going further.,,navigate:district_survey,,,,,,,,,,,,,,,,,,,,,
-district_survey,narrative,"You press your diagnostic plate to a load-bearing wall at the district entrance and feed it a half-block of fuel from your own reserves. The metal warms; the scan runs; the plate pulses, reads, dims. Old habit: you read the baseline before you chase a single spike, so you know whether what you're looking at is an isolated incident or part of a larger pattern.
-
-The numbers are wrong. Not instrument-wrong—the plate is functioning correctly. The district's embedded maintenance circles are running at roughly forty percent of their designed operating capacity.
-
-Not because they've failed. Because they've been starved. The fuel reserves that should be feeding them have been depleted. Without fuel, the circles are dormant. Without the circles doing their maintenance work, the structural integrity of every building in this district relies on the raw materials alone. And the raw materials in Karet Bay are Tier 1 at best.
-
-You make careful notes. The buildings around you show the signs: hairline fractures in load-bearing walls, slight warping in metal fixtures, a persistent low groan from foundations under invisible stress. Someone has been using improvised patch work—Tier 0 and Tier 1 bonding paste, single-use circles drawn in chalk on untreated surfaces by people who know enough to help and not enough to know when to stop. It holds for now. It always holds for now.
-
-The problem is always later.
-
-Everyone in Caldris knows what later looks like. They have a name for it. You learned the name in your second year of training. It was called the Hollow Tower, and it killed three hundred people who had been assured that everything was fine.",,add_item:energy_readings:1|adjust_stability:-5,c_survey_1,Proceed to the loading crane.,,navigate:dock_overview,,,,,,,,,,,,,,,,,,,,,,,,,,
-dock_overview,narrative,"The lower docks stretch before you: a chaotic sprawl of warehouses, loading platforms, and heavy machinery pressed against the grey water of the bay. Massive cranes line the waterfront like iron sentinels, their arms swinging loads of raw material from cargo ships to waiting transport carts. The noise is extraordinary—chains, pulleys, the deep thrum of alchemically reinforced machinery doing what it was designed for—and everyone moves within it like they can't hear it at all.
-
-Your target is Crane Seven, a forty-year-old loading crane that handles ore shipments from the mining barges. Even from a distance, you can see something is different about it. While the other cranes groan and shudder under their loads—operating near stress limits, using their structural capacity the way you'd use muscles you haven't stretched properly—Crane Seven moves with an almost fluid grace, swinging three-ton ore crates as though its rated capacity had been quietly renegotiated upward.
-
-A crew of dock workers operates the crane's base controls. Their foreman—a broad-shouldered man with burn scars on both forearms—watches the operation with the focused tension of someone who has been waiting for something to go wrong long enough that waiting has become a kind of job in itself.",,,c_dock_1,Approach the foreman directly and show your authorization.,,navigate:meet_kaelen,,c_dock_2,Observe the crane from a distance first and take readings.,,navigate:crane_readings,,c_dock_3,Talk to some of the other workers before approaching.,,navigate:dock_workers_morning,,c_dock_4,A younger worker at the crew's edge is writing in a pocket notebook. Step over before you speak to the foreman.,,navigate:dima_edge_early,,,,,,,,,,,
+The crew at the base works in a knot. Their foreman—broad shoulders, burn-scored forearms—watches the boom the way you watch a patient who insists they're fine.",,,c_dock_1,Approach the foreman directly and show your authorization.,,navigate:meet_kaelen,,c_dock_2,Observe the crane from a distance first and take readings.,,navigate:crane_readings,,c_dock_3,Talk to some of the other workers before approaching.,,navigate:dock_workers_morning,,c_dock_4,A younger worker at the crew's edge is writing in a pocket notebook. Step over before you speak to the foreman.,,navigate:dima_edge_early,,,,,,,,,,,
 dima_edge_early,narrative,"The concrete barrier at the dock's lip shivers when a loaded cart rolls past—chains snapping tight, a winch coughing above the grey water. A young worker sits on it anyway, wrench loose in one hand, a pocket notebook braced on his knee like something he has to touch to believe it's still there. He doesn't look up when you stop at the edge. The bay keeps moving. Behind you, the crane crew is all motion and shouted numbers—weight, clearance, the next load—noise so steady it almost feels like weather.
 
 He notices you but doesn't leave. Courage or exhaustion. Maybe both.
 
 You could stay at the lip with the wind and the drop—or cross back toward the knot at Crane Seven while the apron still has room for you.",,,c_dim_edge_1,Cross toward Crane Seven—the foreman there signs the access your brief needs.,,navigate:meet_kaelen,,,,,,,,,,,,,,,,,,,,,,,,,,
-dock_workers_morning,narrative,"The dock workers pause for their mid-morning water break, settled on crates and coils of rope in the brief window before the quota clock starts running again. You approach and sit nearby—Scholar's ledger visible, but not open. No one wants to talk to a ledger.
+dock_workers_morning,narrative,"They've claimed crates and rope coils for a water break, the narrow hush before the quota clock starts eating again. You sit close enough to be seen, ledger shut. Nobody wants to talk to a book.
 
-The woman closest to you has a Freehand circle-mark tattooed on her forearm—a small reinforcement pattern, rough but genuine work. She glances at you, then back at the bay.
+The woman nearest you has a Freehand mark on her forearm—rough ink, honest work. She doesn't look at you long. 'Crane Seven,' she says. Not a question.
 
-'You're here about Crane Seven,' she says. Not a question.
+You offer the neutral truth: the readings were off.
 
-'The readings were anomalous.'
+'Everything here's off.' She drinks. 'We've been past rated load on Seven for six months. Quota smiles. Teeth don't.' She sets the cup down. 'You want why it's crooked? Maintenance fuel—Tier 2 blocks for the waterfront circles—got yanked seven months ago. Upper city needed a showpiece. We found out the way we always find out: when something stopped humming.'
 
-'Everything here is anomalous.' She takes a long drink of water. 'We've been running Crane Seven past its rated load for six months. Everyone knows. Nobody acts. The quota gets met, so the quota gets met.' She sets down the cup. 'You know why we can't get it properly maintained? The maintenance budget—the Tier 2 fuel blocks that used to keep this whole waterfront in good order—got redirected seven months ago. Someone in the upper city needed something built. We were the somewhere it came from.'
+You start the Scholar line about allegations.
 
-'That's a serious allegation.'
+She meets it with tired patience. 'Ask the crane if it cares about your word choice.' As the break breaks, she stands. 'You're the one with ink. If you trace where the cost went, tell somebody who can pretend it matters.'
 
-She looks at you with the patience of someone who has said a true thing to a doubtful person many times before. 'Go ask the crane what it thinks about allegations.' She stands as the break ends. 'You're a Scholar. If you find where the cost actually went, tell someone who has the power to care about it.'
+She doesn't say it bitterly. That's almost worse.",,adjust_worker_rep:3,c_dkw_1,Continue to Crane Seven.,,navigate:meet_kaelen,,,,,,,,,,,,,,,,,,,,,,,,,,
+crane_readings,narrative,"From behind a stack of crates you can watch without becoming part of the rhythm. The stress plate wakes on a full Tier 2 block; your own reserves do the fine steering.
 
-She doesn't say it with bitterness. Just with the steady exhaustion of someone still doing the work anyway.",,adjust_worker_rep:3,c_dkw_1,Continue to Crane Seven.,,navigate:meet_kaelen,,,,,,,,,,,,,,,,,,,,,,,,,,
-crane_readings,narrative,"You find a spot behind a stack of cargo crates where you can observe without being noticed. Opening your field kit, you activate your stress assessment plate, feeding a full Tier 2 block into it and drawing from your personal reserves to guide the reading.
+The profile takes a beat to parse—then it clicks wrong. Extra reinforcement where the drawings say there shouldn't be any: real Level 2 work, bonded into the primary assembly. That is how Seven is living at a hundred twenty-three percent of rated load and still looking smug.
 
-The crane's structural profile is immediately wrong in a way that takes you a moment to parse.
+The bond isn't Tier 2. It's Tier 1 paste—accessible, workable, and honest about its limits. Under this many cycles the circle in it is quietly coming apart where the eye can't follow.
 
-Standard cranes are designed for specific load limits—the engineering accounts for material fatigue, joint stress accumulation, the physics of repeated heavy lifting over decades. Crane Seven's readings show reinforced joint structures where there shouldn't be any. Someone has bonded additional structural support to the crane's primary load-bearing assembly. The reinforcement is real and technically competent—Level 2 reinforcement work—and it explains how the crane is handling 123% of its rated load without visible distress.
+You put numbers to it because that's what keeps people alive. Pivot joint integrity: about sixty-three percent of what the joint is supposed to hold. At today's pace, critical threshold lands this afternoon.
 
-But your plate reads something else too. The bonding material used is Tier 1—basic, improvised, the kind that dock workers can mix from common hardware materials. Tier 1 paste works. It degrades. Under repeated heavy stress, the reinforcement circle drawn into that paste will develop micro-fractures that don't show on the surface but compound with every load cycle.
+When it goes, three tons of ore pick a landing spot.
 
-You sketch the analysis in your ledger. The reinforcement is degrading. Your calculations show the pivot joint's structural integrity is already at sixty-three percent of rated capacity. At the current load rate, it will reach critical failure threshold sometime this afternoon.
+Below, the crew walks the same path they walked yesterday. They don't know they're borrowing luck on credit.",,add_item:crane_report:1,c_readings_1,Approach the foreman with your findings.,,navigate:meet_kaelen,,c_readings_2,"Burn another spare fuel block on a redundant confirmatory scan—extravagant, but the numbers will survive Toris.",has_item:fuel_blocks,navigate:crane_readings_deep,remove_item:fuel_blocks:1|adjust_energy:-8|adjust_stability:4,,,,,,,,,,,,,,,,,,,,
+crane_readings_deep,narrative,"You shouldn't burn another Tier 2 block on a question you already answered.
 
-When it fails, three tons of ore will drop on whoever is standing below.
+You do. The curves agree with the first pass down to the third decimal anywhere physics allows—which is either integrity or vanity, and you're not in a mood to split the difference.
 
-You look at the workers moving underneath the crane arm like they have four hundred times this week, like they will four hundred more times before the month is out. They have no idea.",,add_item:crane_report:1,c_readings_1,Approach the foreman with your findings.,,navigate:meet_kaelen,,c_readings_2,"Burn another spare fuel block on a redundant confirmatory scan—extravagant, but the numbers will survive Toris.",has_item:fuel_blocks,navigate:crane_readings_deep,remove_item:fuel_blocks:1|adjust_energy:-8|adjust_stability:4,,,,,,,,,,,,,,,,,,,,
-crane_readings_deep,narrative,"You shouldn't. You do anyway. A second Tier 2 block feeds the plate; your ledger fills with curves that agree with the first pass down to the third decimal wherever physics allows.
+Higher resolution just makes the crack pattern ruder. You almost resent the plate for being thorough.
 
-Overkill is sometimes kindness to future you—the version who will swear to these readings in rooms that smell like incense and budgets.
+The kit goes away lighter on fuel and heavier on the kind of certainty that gets you summoned to rooms that smell like incense and budgets.",,,c_read_deep_1,Approach Kaelen with the reinforced file.,,navigate:meet_kaelen,,,,,,,,,,,,,,,,,,,,,,,,,,
+meet_kaelen,narrative,"The foreman tracks you the way a man tracks a leak he can't afford. Ledger. Brass at your collar. His jaw sets like he's already paying for a conversation he didn't schedule.
 
-The joint degradation looks uglier at higher resolution. You almost wish it didn't.
+'Scholar,' he says. Not hello—a flag for the crew behind him.
 
-You pack the kit away lighter in fuel and heavier in certainty.",,,c_read_deep_1,Approach Kaelen with the reinforced file.,,navigate:meet_kaelen,,,,,,,,,,,,,,,,,,,,,,,,,,
-meet_kaelen,narrative,"The foreman sees you coming. His eyes drop to your ledger, then to the brass authorization seal at your collar, and his jaw tightens in the specific way that means he's already calculating what this is going to cost him.
+'Vael. Measured Scholars. Anomalous stress on Crane Seven.' You keep it flat on purpose.
 
-'Scholar,' he says flatly. Not a greeting. A warning to the crew behind him.
+'Kaelen.' No hand. 'Crane runs. Better than runs—we're finally ahead of quota, which means this district gets to pretend it's allowed to breathe.'
 
-'I'm Vael, Measured Scholars. I'm here about anomalous readings from Crane Seven.' You keep your voice neutral, professional.
-
-'Name's Kaelen.' He doesn't offer his hand. 'The crane works fine. Better than fine. We're ahead of quota for the first time in three months, which is the first time in three months anyone in this district has had anything to be ahead of.'
-
-Behind him, his crew has stopped working. Six men and women, watching you with the particular attention of people whose livelihoods are standing in the gap between your ledger and your pen. You notice the youngest—barely fifteen, lanky in the way of someone who hasn't finished growing into their shoulders—gripping a wrench so hard his knuckles are white. He has the eyes of someone watching something he can't stop.",,set_flag:kaelen_met:true,c_kaelen_1,I can see there's been work done on it. Show me what you did.,,navigate:kaelen_shows,,c_kaelen_2,"This crane is going to fail. I need to understand why, before someone gets hurt.",,navigate:kaelen_defensive,,c_kaelen_4,"Step back, drink your energy tonic, then re-approach while you can still feel your face.",has_item:energy_tonic|world_check:vaelEnergy:<=:62,navigate:meet_kaelen_tonic,remove_item:energy_tonic:1|adjust_energy:20|adjust_hp:8,c_kaelen_3,Flash your seal and order the crew to stand down immediately.,,navigate:death_bluff_crew,,,,,,,,,,,
+The work behind him has stopped anyway—six faces, one shared equation between your pen and their next meal. The youngest is all elbows and white knuckles on a wrench, watching a weight he can't steer.",,set_flag:kaelen_met:true,c_kaelen_1,I can see there's been work done on it. Show me what you did.,,navigate:kaelen_shows,,c_kaelen_2,"This crane is going to fail. I need to understand why, before someone gets hurt.",,navigate:kaelen_defensive,,c_kaelen_4,"Step back, drink your energy tonic, then re-approach while you can still feel your face.",has_item:energy_tonic|world_check:vaelEnergy:<=:62,navigate:meet_kaelen_tonic,remove_item:energy_tonic:1|adjust_energy:20|adjust_hp:8,c_kaelen_3,Flash your seal and order the crew to stand down immediately.,,navigate:death_bluff_crew,,,,,,,,,,,
 meet_kaelen_tonic,narrative,"You turn away for sixty seconds—long enough to crack the tonic vial and swallow something that tastes like copper, stabilizers, and spite. The label warned you about opinions. It did not warn you about foremen.
 
 When you walk back to Kaelen, your hands steadier, he notices anyway. Dock workers always notice who came back different.",,,c_kt_1,I can see there's been work done on it. Show me what you did.,,navigate:kaelen_shows,,c_kt_2,This crane is going to fail. I need the full picture before someone gets hurt.,,navigate:kaelen_defensive,,c_kt_3,Flash your seal and order the crew to stand down immediately.,,navigate:death_bluff_crew,,,,,,,,,,,,,,,,
-kaelen_defensive,narrative,"Kaelen's face hardens. 'Nothing is going to fail. I reinforced every joint myself. Spent six nights on it after shift.'
+kaelen_defensive,narrative,"'Nothing fails on my watch,' Kaelen says, too fast. 'I sleeved every joint. Six nights, after shift.'
 
-'You're not a trained structural alchemist.'
+You're already sorry for your next sentence. It comes out anyway: he's not a certified structural alchemist.
 
-'And you've never held quota with half your equipment decommissioned.' He steps closer, dropping his voice. 'You want to know what happened to our maintenance allocation? Ask the CEA. The Tier 2 fuel blocks that used to keep this crane's maintenance circles running got officially redirected seven months ago. Not our decision. Not something we were even told until a month after the fact. That material came from Grenvor—the Highland refineries. Took two years to secure the supply contract. Gone in a memo.' His tone is flat. Controlled. The tone of someone who made peace with a bad exchange a long time ago and is just living in what it left behind.
+He laughs once—no humor. 'And you've never kept quota with half your tools legally dead.' He steps in, voice low. 'You want where the maintenance blocks went? Ask your own seal. Tier 2 for this crane's circles—Grenvor stock, Highland contract, two years to lock—redirected seven months ago on paper we didn't see until it was already gone. A memo ate two years of work.'
 
-He glances back at his people. 'When the maintenance fails, dock workers don't get to redirect the cost to someone else. We patch it ourselves or we fall behind quota.' A pause. 'That's Dima. Fifteen years old. Supporting his mother and two sisters since his father died in a refinery collapse last year. If this crew loses quota, he goes back to scavenging wharves. You want to tell him that the crane doesn't meet your calculations?' You notice the boy has a small notebook in his front pocket. He's been writing in it since you arrived.
+His eyes flick to the crew. 'When the system shorts us, we don't get to bill the pain upward. We patch, or we miss numbers.' He jerks his chin. 'That's Dima. Fifteen. Mother, two sisters—father went down in a refinery collapse last year. We slip quota, he's back on the wharves picking scrap. You want to explain your clean math to him?' The boy's pocket bulges with a small notebook; he's been scratching in it since you arrived.
 
-The accusation hangs in the salt air. Your ledger is open to the stress numbers. The numbers are unambiguous.
+Your ledger still says what it said. The air says something else.
 
-The system that redirected this district's maintenance fuel is the same system your report will activate. That's worth knowing.",,,c_def_1,Show me the modification. Let me assess it properly.,,navigate:kaelen_shows,,,,,,,,,,,,,,,,,,,,,,,,,,
-kaelen_shows,narrative,"Kaelen leads you around to the crane's base and pulls back a heavy canvas panel to reveal his work.
+The redirect that starved this place is the same machinery your report will wake. Remember that when they thank you for being thorough.",,,c_def_1,Show me the modification. Let me assess it properly.,,navigate:kaelen_shows,,,,,,,,,,,,,,,,,,,,,,,,,,
+kaelen_shows,narrative,"Kaelen hauls a canvas aside at the crane's base like he's showing you a wound he's proud of.
 
-It's crude. It's also real alchemy. He's used Tier 1 bonding paste—the improvised kind, mixed from accessible materials—to draw a reinforcement circle directly onto the crane's primary load-bearing joint. The circle is rough by academy standards, the lines not perfectly even, the radius slightly elliptical where his arm was at an awkward angle. But the structure is sound: a continuous reinforcement pattern that distributes load stress across a wider surface area, allowing the crane to handle tonnage above its original design parameters.
+Tier 1 paste, mixed from what a waterfront can actually buy, carries a reinforcement circle right on the main load joint. The geometry would make an instructor wince—slightly elliptical, lines that waver where a tired arm ran out of reach. It's still alchemy that does what it claims: spreads stress so the boom can cheat above its birth certificate.
 
-You kneel and activate your stress assessment plate against the bonded circle.
+You kneel and let the plate touch the bond.
 
-The reinforcement is working. That's the tragedy of it. Kaelen did exactly the right kind of work with exactly the wrong materials. The reinforcement pattern is degrading under repeated stress loads—Tier 1 paste isn't designed to sustain a circle under this kind of repeated activation. Your readings show micro-fractures propagating through the paste layer, disrupting the circle's integrity. The joint is losing structural capacity with every lift.
+It works. That's the insult. Level 2 thinking in Tier 1 skin—six nights of his life fed into paste that wasn't built to hold this many activations. Micro-fractures are threading through the layer; each lift teaches the circle a new way to lie.
 
-'It's brilliant,' you say honestly. 'Level 2 reinforcement work with improvised materials and no formal training.' You look up at him. 'That cost you something. Six nights of your own energy.'
+'It's good work,' you tell him, meaning it. 'Dangerous good.'
 
-'I know what it cost me.'
+'I know what it cost,' he says.
 
-'The paste is failing. At the current load rate, the joint will reach critical threshold sometime this afternoon.'
+'It's still dying. At this load, you hit threshold this afternoon.'
 
-Kaelen's face goes grey. Not with surprise. With the expression of someone who suspected this and was hoping to be wrong.",,add_item:worker_testimony:1|set_flag:kaelen_crane_assessed:true,c_shows_1,I have to report this to the CEA. The crane needs to be shut down.,,navigate:choice_report,,c_shows_2,Try to stabilize the joint.,,navigate:kaelen_stabilize_gate,,c_shows_3,Close your ledger and walk away.,,navigate:choice_ignore,,c_shows_4,Reach toward the active line with a bare hand—the plate says the field is live; your nerves want to disagree.,,navigate:death_touch_warn,,c_shows_5,"Step back out to the barrier—the youngest crew member is still at the lip, notebook open.",not_has_flag:dima_met,navigate:dima_encounter,,,,,,
-kaelen_decision_return,narrative,"The canvas is still hooked aside. The reinforcement circle on the iron hasn't become less true because you stepped away.
-
-Kaelen hasn't gone far; the crew is still trading glances—ledger, joint, you. Your readings are what they were. The only variable left is what you do with them.",,,c_kdr_1,I have to report this to the CEA. The crane needs to be shut down.,,navigate:choice_report,,c_kdr_2,Try to stabilize the joint.,,navigate:kaelen_stabilize_gate,,c_kdr_3,Close your ledger and walk away.,,navigate:choice_ignore,,c_kdr_4,Reach toward the active line with a bare hand—the plate says the field is live; your nerves want to disagree.,,navigate:death_touch_warn,,,,,,,,,,,
+The color leaves his face—not shock. Recognition.",,add_item:worker_testimony:1|set_flag:kaelen_crane_assessed:true,c_shows_1,I have to report this to the CEA. The crane needs to be shut down.,,navigate:choice_report,,c_shows_2,Try to stabilize the joint.,,navigate:kaelen_stabilize_gate,,c_shows_3,Close your ledger and walk away.,,navigate:choice_ignore,,c_shows_4,Reach toward the active line with a bare hand—the plate says the field is live; your nerves want to disagree.,,navigate:death_touch_warn,,,,,,,,,,,
 kaelen_stabilize_gate,narrative,"You read the joint the way you were trained: stress vectors, paste decay, the ugly honesty of a circle doing work it was never rated for. The quota clock does not pause while you think. Neither does arithmetic.
 
 A sanctioned Tier 2 block would arrest the slide—clean, documented, the kind of exchange the Exchange likes on paper. Your own reserves would do it too, slower and meaner, with no receipt but the tremor in your hands afterward.
@@ -344,7 +314,7 @@ This is a place where people live. You write that down. You're not sure why.
 
 Then you walk back toward the dock infrastructure and open your diagnostic plate again—and the district becomes, once more, a problem.
 
-The pattern is everywhere once you know to look: improvised reinforcement circles in Tier 0 paste on load-bearing structures, water pipes bonded with materials already developing micro-fractures, the steady background noise of a system running on patch work because the materials for proper maintenance aren't available. The root problem isn't skill. It's the material allocation. Someone has been steering the requisitions so the flow on paper and the flow through the district are not the same exchange.",,set_flag:pattern_discovered:true,c_post_1,Pursue the inland drainage signature—the same network tied to the seawall stress.,,navigate:transition_end_day_one,,c_post_2,Complete structural readings at the seawall while you are still on the waterfront.,,navigate:transition_end_day_one,,c_post_3,"At the Drowning plaque, a lone figure holds the still, attentive posture of field method—reading stone the way you read a datum line, not like someone passing through.",has_flag:kaelen_crane_assessed,navigate:mireth_field_visit,set_flag:chose_mireth_plaque:true,c_post_4,Dima's notebook still circles a building with music and odd emissions—you shelve the hunt tonight.,has_flag:kaelen_crane_assessed|has_flag:dima_met|has_flag:saw_the_city,navigate:transition_end_day_one,,,,,,,,,,,
+The pattern is everywhere once you know to look: improvised reinforcement circles in Tier 0 paste on load-bearing structures, water pipes bonded with materials already developing micro-fractures, the steady background noise of a system running on patch work because the materials for proper maintenance aren't available. The root problem isn't skill. It's the material allocation. Someone has been steering the requisitions so the flow on paper and the flow through the district are not the same exchange.",,set_flag:pattern_discovered:true,c_post_1,Pursue the inland drainage signature—the same network tied to the seawall stress.,,navigate:transition_end_day_one,,c_post_2,Complete structural readings at the seawall while you are still on the waterfront.,,navigate:transition_end_day_one,,c_post_3,Note the plaque thread for tomorrow—end the day with your ledger in order.,has_flag:kaelen_crane_assessed,navigate:transition_end_day_one,set_flag:mireth_warned:true,c_post_4,Dima's notebook still circles a building with music and odd emissions—you shelve the hunt tonight.,has_flag:kaelen_crane_assessed|has_flag:dima_met|has_flag:saw_the_city,navigate:transition_end_day_one,,c_post_5,Find Dima at the barrier—quiet enough now for the question.,not_has_flag:dima_met,navigate:dima_encounter,,,,,,
 transition_end_day_one,narrative,"The climb back to the Scholar's Quarter costs more than steps. Your legs know the docks now; your ledger knows them better—ink smudged where sweat met chalk dust, margins crowded with numbers you will not trust until you have slept on them.
 
 The dormitory corridor is quiet in the particular way of places where everyone is pretending not to listen for the next bell. You wash the bay off your hands. The water runs clean here, a small insult you do not comment on.
@@ -353,7 +323,7 @@ Supper is thin soup and bread, the measured ration of people who are not expecte
 
 Your bunk accepts you like a debt settled for a few hours. Before you blow out the candle, you open the ledger one more time—not to add, only to underline three sentences you refuse to misremember by morning. The seawall and the drainage network and the crane are not three separate stories. They are one ledger written in different handwritings.
 
-Sleep comes with the dull certainty that tomorrow you will pick up whichever thread you choose—and that the waterfront will still be there, still asking, whether you closed the book or not.",,,c_td1_1,Next day: resume inland drainage where the signature leads.,,navigate:track_disturbance,set_flag:fiction_day_2:true,c_td1_2,Next day: take the seawall pass and finish waterfront readings.,,navigate:seawall_first_look,set_flag:fiction_day_2:true,c_td1_3,Next day: follow Mireth's plaque thread with daylight on your side.,has_flag:kaelen_crane_assessed|not_has_flag:mireth_warned,navigate:mireth_field_visit,set_flag:fiction_day_2:true|set_flag:chose_mireth_plaque:true,c_td1_4,Next day: follow Dima's notebook to the circled building.,has_flag:kaelen_crane_assessed|has_flag:dima_met|has_flag:saw_the_city,navigate:dima_notebook,set_flag:fiction_day_2:true,,,,,,,,,,
+Sleep comes with the dull certainty that tomorrow you will pick up whichever thread you choose—and that the waterfront will still be there, still asking, whether you closed the book or not.",,,c_td1_1,Next day: resume inland drainage where the signature leads.,,navigate:track_disturbance,set_flag:fiction_day_2:true,c_td1_2,Next day: take the seawall pass and finish waterfront readings.,,navigate:seawall_first_look,set_flag:fiction_day_2:true,c_td1_3,Next day: follow Dima's notebook to the circled building.,has_flag:kaelen_crane_assessed|has_flag:dima_met|has_flag:saw_the_city,navigate:dima_notebook,set_flag:fiction_day_2:true,,,,,,,,,,,,,,,
 dima_encounter,narrative,"You find him sitting on a concrete barrier at the edge of the dock, watching the water. He still has the wrench in his hands, though he's not gripping it anymore—just holding it, the way you might hold onto something when you're not sure what to do with your hands. The notebook is in his lap. He was writing something in it when you approached; he didn't close it when he saw you coming.
 
 He notices you but doesn't leave. That's either courage or exhaustion. Possibly both.
@@ -380,7 +350,7 @@ He nods slowly, in the way of someone receiving an answer they already suspected
 
 He writes something in the notebook. You don't ask what.
 
-You leave him there, watching the water.",,set_flag:dima_met:true,c_dima_1,Return to Crane Seven. The joint is still there; the decision you walked away from is still open.,,navigate:kaelen_decision_return,,,,,,,,,,,,c_dima_4,Look at what he's writing in the notebook.,has_flag:saw_the_city|not_has_flag:declined_theater_chronicler_path|has_flag:fiction_day_2,navigate:dima_notebook,,,,,,,,,,,
+You leave him there, watching the water.",,set_flag:dima_met:true,c_dima_1,Return to the investigation—the district pattern is still unfinished.,,navigate:post_crane_pattern,,,,,,,,,,,,c_dima_4,Look at what he's writing in the notebook.,has_flag:saw_the_city|not_has_flag:declined_theater_chronicler_path|has_flag:fiction_day_2,navigate:dima_notebook,,,,,,,,,,,
 infrastructure_investigation,narrative,"The CEA substation is a blocky concrete structure about two meters on each side, sitting on a raised pad at the intersection of the district's underground maintenance conduit network. Standard construction, unremarkable. Your diagnostic plate disagrees.
 
 You run a full scan, spending a Tier 2 block to get precise readings. The substation is actively running—processing and distributing something through the conduit network. But the fuel consumption your instruments measure is effectively zero. The substation is operating at full capacity with no material input you can identify.
@@ -432,12 +402,12 @@ The chemical runoff traces through the underground drainage to a cluster of tene
 
 But in the middle of the depletion, there's a secondary signature: small, steady, operating independently. Someone is running active alchemy down here—not draining, but producing. A working circle, regularly activated with real fuel. Someone who cares enough about something to pay for it themselves, in a district where caring enough to pay costs real money.
 
-The signature leads to a basement entrance beneath a crumbling tenement. The door has been reinforced with crude alchemical binding—basic bonding paste with a simple lock circle. Freehand work, rough but functional. Someone with genuine skill who doesn't want visitors.",,,c_track_1,Knock and announce yourself.,not_has_flag:purifier_basement_done,navigate:purifier_entrance_open,,c_track_2,Use your authorization seal to force the binding.,not_has_flag:purifier_basement_done,navigate:purifier_entrance_force,,c_track_4,A very old man is sitting outside in the afternoon sun. Speak to him first.,not_has_flag:purifier_basement_done,navigate:meet_old_tomas,,c_track_5,Verify drainage appendix K-B-11 (cistern ring—secondary).,any_of:has_flag:pattern_discovered+has_item:district_map+has_flag:chose_mireth_plaque,navigate:cat_colony_approach,,c_track_6,Follow stenciled routing marks that do not match the dock manifests.,not_has_flag:warehouse_thread_complete,navigate:warehouse_approach,,c_track_cea_from_slum,Go directly to the CEA—continue your assessment.,has_flag:warehouse_thread_complete|has_flag:purifier_basement_done,navigate:seek_answers,
+The signature leads to a basement entrance beneath a crumbling tenement. The door has been reinforced with crude alchemical binding—basic bonding paste with a simple lock circle. Freehand work, rough but functional. Someone with genuine skill who doesn't want visitors.",,,c_track_1,Knock and announce yourself.,not_has_flag:purifier_basement_done,navigate:purifier_entrance_open,,c_track_2,Use your authorization seal to force the binding.,not_has_flag:purifier_basement_done,navigate:purifier_entrance_force,,c_track_4,A very old man is sitting outside in the afternoon sun. Speak to him first.,not_has_flag:purifier_basement_done,navigate:meet_old_tomas,,c_track_5,Follow stenciled routing marks that do not match the dock manifests.,not_has_flag:warehouse_thread_complete,navigate:warehouse_approach,,c_track_6,Go directly to the CEA—continue your assessment.,has_flag:warehouse_thread_complete|has_flag:purifier_basement_done,navigate:seek_answers,
 track_disturbance_repeat,narrative,"The slum streets channel you the same way they did before—leaning brick, shared load, thin light—but this time you are not finding the trail for the first time. You are walking it with the disturbance already named in your head, your plate confirming what memory already sketched.
 
 Chemical runoff still threads toward the tenements by the old cistern ring. The soil reads spent—almost nothing left—yet that secondary signature holds: small, steady, someone's fuel paying for a private circle in a place where private fuel is its own kind of vow.
 
-The path returns you to the crumbling tenement and the basement door: crude bonding paste, a simple lock circle, Freehand work—rough but functional. Someone with genuine skill who doesn't want visitors. The purifier's echo lives behind that threshold; the district's larger arithmetic waits beyond it.",,,c_tdr_1,Knock and announce yourself.,not_has_flag:purifier_basement_done,navigate:purifier_entrance_open,,c_tdr_2,Use your authorization seal to force the binding.,not_has_flag:purifier_basement_done,navigate:purifier_entrance_force,,c_tdr_4,A very old man is sitting outside in the afternoon sun. Speak to him first.,not_has_flag:purifier_basement_done,navigate:meet_old_tomas,,c_tdr_5,Verify drainage appendix K-B-11 (cistern ring—secondary).,any_of:has_flag:pattern_discovered+has_item:district_map+has_flag:chose_mireth_plaque,navigate:cat_colony_approach,,c_tdr_6,Follow stenciled routing marks that do not match the dock manifests.,not_has_flag:warehouse_thread_complete,navigate:warehouse_approach_repeat,,c_tdr_cea_from_slum,Go directly to the CEA—continue your assessment.,has_flag:warehouse_thread_complete|has_flag:purifier_basement_done,navigate:seek_answers,
+The path returns you to the crumbling tenement and the basement door: crude bonding paste, a simple lock circle, Freehand work—rough but functional. Someone with genuine skill who doesn't want visitors. The purifier's echo lives behind that threshold; the district's larger arithmetic waits beyond it.",,,c_tdr_1,Knock and announce yourself.,not_has_flag:purifier_basement_done,navigate:purifier_entrance_open,,c_tdr_2,Use your authorization seal to force the binding.,not_has_flag:purifier_basement_done,navigate:purifier_entrance_force,,c_tdr_4,A very old man is sitting outside in the afternoon sun. Speak to him first.,not_has_flag:purifier_basement_done,navigate:meet_old_tomas,,c_tdr_5,Follow stenciled routing marks that do not match the dock manifests.,not_has_flag:warehouse_thread_complete,navigate:warehouse_approach_repeat,,c_tdr_6,Go directly to the CEA—continue your assessment.,has_flag:warehouse_thread_complete|has_flag:purifier_basement_done,navigate:seek_answers,
 meet_old_tomas,narrative,"He's maybe seventy, settled on a low stool in a patch of weak afternoon sun, wearing the careful stillness of someone who has been very sick recently and is still learning to be well again.
 
 You slow as you pass. Something in how he's sitting—hands loose in his lap, face turned toward the warmth with the specific attention of someone who hasn't been able to do that in a while—makes you stop.
@@ -621,8 +591,8 @@ You may not have tied off every thread you started. What you can still show—th
 
 The CEA district office is at the top of the administrative quarter. You walk toward it through streets that never quite empty—foot traffic, handcarts, the low rhythm of work that does not wait on any single bell—past children who have not yet learned to carry the particular exhaustion of the district on their faces. You pass the Drowning plaque again. Someone has left a single flower at its base. The flower is wilting.
 
-You stop for a moment at the plaque. You have cited the Drowning incident three times in your work. From inside the district, the memorial reads less like a citation and more like a receipt—three sentences of formal accountability, polished thin by weather and by the habit of being read.",,,c_seek_1,Go directly to the district Overseer.,,navigate:cea_building_exterior,set_flag:seek_answers_left_once:true,c_seek_2,Investigate the CEA substation first.,,navigate:cea_substation_investigation,set_flag:seek_answers_left_once:true,c_seek_3,Put the escalation on formal record before you confront the Overseer.,not_has_flag:authority_escalation_filed,navigate:authority_overplay_1,set_flag:seek_answers_left_once:true,c_seek_4,Meet Elara by the bronze—she holds the district's unspent answer.,has_flag:elara_met|has_flag:purifier_resolved|world_check:vaelEnergy:<=:55|not_has_flag:declined_elara_craft_path|has_flag:seek_answers_left_once|has_flag:fiction_day_3|reputation_check:freehandsRep:>=:25|world_check:communityCost:>=:15,navigate:elara_offer,,c_seek_5,Check the purifier thread in your ledger.,has_flag:purifier_basement_done,navigate:seek_purifier_echo,,,,,,
-seek_purifier_echo,narrative,"You flip to the basement entry and reread what you already decided—not for doubt but for precision. Memory lies. Ink does not unless someone smudges it on purpose. Three outcomes are still legible. You touch the line that matches the flag your week actually set.",,,c_spe_1,Read the destruction entry.,has_flag:purifier_destroyed,navigate:echo_purifier_destroyed,,c_spe_2,Read the modification entry.,has_flag:purifier_modified,navigate:echo_purifier_modified,,c_spe_3,Read the withdrawal entry.,has_flag:purifier_left,navigate:echo_purifier_left,,,,,,,,,,,,,,,,
+You stop for a moment at the plaque. You have cited the Drowning incident three times in your work. From inside the district, the memorial reads less like a citation and more like a receipt—three sentences of formal accountability, polished thin by weather and by the habit of being read.",,,c_seek_1,Go directly to the district Overseer.,,navigate:cea_building_exterior,set_flag:seek_answers_left_once:true,c_seek_2,Investigate the CEA substation first.,,navigate:cea_substation_investigation,set_flag:seek_answers_left_once:true,c_seek_3,Put the escalation on formal record before you confront the Overseer.,not_has_flag:authority_escalation_filed,navigate:authority_overplay_1,set_flag:seek_answers_left_once:true,c_seek_4,Meet Elara by the bronze—she holds the district's unspent answer.,has_flag:elara_met|has_flag:purifier_resolved|world_check:vaelEnergy:<=:55|not_has_flag:declined_elara_craft_path|has_flag:seek_answers_left_once|has_flag:fiction_day_3|reputation_check:freehandsRep:>=:25|world_check:communityCost:>=:15|not_has_flag:alt_craft_committed,navigate:alt_craft_entry,,c_seek_5,Check the purifier thread in your ledger.,has_flag:purifier_basement_done,navigate:seek_purifier_echo,,c_seek_6,Cross-file: theater basement notes (administrative appendix).,has_flag:theater_seawall_briefing|not_has_flag:declined_theater_chronicler_path|not_has_flag:alt_chronicler_committed|not_has_flag:committed_chronicler,navigate:alt_chronicler_entry,
+seek_purifier_echo,narrative,You flip to the basement entry and reread what you already decided—not for doubt but for precision. Memory lies. Ink does not unless someone smudges it on purpose. Three outcomes are still legible. You touch the line that matches the flag your week actually set.,,,c_spe_1,Read the destruction entry.,has_flag:purifier_destroyed,navigate:echo_purifier_destroyed,,c_spe_2,Read the modification entry.,has_flag:purifier_modified,navigate:echo_purifier_modified,,c_spe_3,Read the withdrawal entry.,has_flag:purifier_left,navigate:echo_purifier_left,,,,,,,,,,,,,,,,
 echo_purifier_destroyed,narrative,"You chose the wall over the tap. The ledger calls that coherent. Your body still remembers Elara's kitchen going quiet when clean water stopped answering.
 
 The entry ends where it should: resolved, documented, paid.",,,c_epd_1,Close the ledger.,,navigate:seek_answers,set_flag:seek_answers_left_once:true,,,,,,,,,,,,,,,,,,,,,,,,,
@@ -1090,17 +1060,6 @@ Kaelen drags your twitching body away from the crane. Your hair is standing on e
 The district physician gives you the same look she apparently has ready for visiting Scholars.
 
 **[GAME OVER — PEER REVIEW (IMMEDIATE)]**",,,c_death_touch,Restart.,,navigate:start,,,,,,,,,,,,,,,,,,,,,,,,,,
-death_dark_alley,narrative,"The basement entrance is right there, but the alley to the left offers a shorter approach. You know this because it's on the district map. What the map does not indicate—because maps are generally disinterested in such details—is that the alley serves as the established territory of a feral cat colony.
-
-Not ordinary cats. Karet Bay cats. Cats that have been subsisting in a fuel-depleted district for over a year and have responded by becoming larger, more strategic, and possessed of an unsettling collective sense of grievance.
-
-You are halfway through the alley when twenty-seven pairs of luminous eyes open in the darkness. The alpha cat—a scarred, one-eared animal the size of a small dog—drops from a fire escape onto your shoulder with the precision of a trained operative.
-
-What follows is, by objective measure, the most one-sided conflict in Karet Bay's recorded history. The cats don't want your food. They don't want your ledger. They want to make a specific point about territorial sovereignty and what happens when Scholars fail to read maps properly.
-
-You emerge forty minutes later, shredded, comprehensively humbled, and missing your authorization seal. The alpha cat appears to have taken it. You suspect you have been issued a citation.
-
-**[GAME OVER — THE FERAL EXCHANGE]**",,,c_death_alley,Restart.,,navigate:start,,,,,,,,,,,,,,,,,,,,,,,,,,
 death_drink_water,narrative,"'May I?' you ask, gesturing to the purifier's output tap. Elara shrugs.
 
 The water comes out clear. It smells clean. You take a sip.
@@ -1231,7 +1190,7 @@ She hands you a second playbill. Dima's map is on the back. She's already writte
 
 'You know Dima,' you say.
 
-'He drew the map,' she says. 'He's been our audience data analyst. Very thorough kid.'",,add_item:seawall_analysis:1,c_rev_theater_1,Leave with the analysis. Get to the actual seawall.,,navigate:race_to_seawall,set_flag:declined_theater_chronicler_path:true,c_rev_theater_2,Ask Petra one more question first.,,navigate:theater_exit,set_flag:declined_theater_chronicler_path:true,c_rev_theater_3,Remain in the basement with Petra and Dima.,world_check:communityCost:>=:45|has_flag:fiction_day_2|reputation_check:freehandsRep:>=:25|has_flag:brin_met|not_has_flag:declined_theater_chronicler_path,navigate:chronicler_commitment,,c_rev_theater_4,This is unauthorized alchemical activity. Shut it down.,,navigate:death_petra_arrested,,c_rev_theater_5,Ask if the troupe needs a writer for Act III.,,navigate:death_join_troupe,,,,,,
+'He drew the map,' she says. 'He's been our audience data analyst. Very thorough kid.'",,add_item:seawall_analysis:1|set_flag:theater_seawall_briefing:true,c_rev_theater_1,Leave with the analysis. Get to the actual seawall.,,navigate:race_to_seawall,set_flag:declined_theater_chronicler_path:true,c_rev_theater_2,Ask Petra one more question first.,,navigate:theater_exit,set_flag:declined_theater_chronicler_path:true,c_rev_theater_4,This is unauthorized alchemical activity. Shut it down.,,navigate:death_petra_arrested,,c_rev_theater_5,Ask if the troupe needs a writer for Act III.,,navigate:death_join_troupe,,,,,,,,,,,
 theater_exit,narrative,"'Have you been aware,' you ask, 'that your drainage modifications have been partially offsetting the toxic compound buildup in the seawall's fuel chambers?'
 
 Petra considers this with the focus of someone absorbing a calculation.
@@ -1255,6 +1214,9 @@ You look at the seawall in the distance. You think about endings. About the diff
 She nods once, with the gravity of someone accepting a stage direction. 'Then we'll have our best material by morning.'
 
 You leave at a run.",,adjust_community_cost:-10,c_exit_theater,Get to the seawall. Now.,,navigate:race_to_seawall,,,,,,,,,,,,,,,,,,,,,,,,,,
+alt_chronicler_entry,narrative,The appendix line is dry: cross-reference theater drainage filings against your field appendix. It does not sound like a decision. It sounds like paperwork that became a door.,,,c_altc_e1,Continue—open the appendix routing.,,navigate:alt_chronicler_bailout_1,,,,,,,,,,,,,,,,,,,,,,,,,,
+alt_chronicler_bailout_1,narrative,You can still treat this as a filing exercise—one more note in the margin of the CEA thread—and walk away before it becomes a second assignment.,,,c_altc_b1_back,Return to the CEA assessment thread.,,navigate:seek_answers,,c_altc_b1_on,Stay with the chronicle routing.,,navigate:alt_chronicler_bailout_2,,,,,,,,,,,,,,,,,,,,,
+alt_chronicler_bailout_2,narrative,"If you go downstairs again, you are not crossing back to the same clock. The seawall will keep shortening itself with or without you—but the record you are about to help finish will not.",,,c_altc_b2_back,Return to the CEA assessment thread.,,navigate:seek_answers,,c_altc_b2_commit,Commit—return to the theater basement now.,,navigate:chronicler_commitment,set_flag:alt_chronicler_committed:true,,,,,,,,,,,,,,,,,,,,
 chronicler_commitment,narrative,"You stay. Behind you, Petra is already shifting chairs for the next rehearsal block, the sound like dry punctuation against stone. Dima sits at a low table with his notebook and a candle-stub, watching you with the careful attention of someone who has been waiting to see what you would do.
 
 The seawall is failing. The district will pay for that failure on a timeline you cannot unwrite—but you were never the only person who mattered here.
@@ -1263,7 +1225,7 @@ You sit down across from Dima. 'Show me what you've written. We finish the recor
 
 He opens the notebook. The first page is titled: *Karet Bay, Volume Four — Redirection Ledger.*
 
-Beneath it: everything.",,,c_chron_1,Work through the night to complete the district chronicle.,,navigate:doc_planning,set_flag:chose_chronicler:true|adjust_community_cost:-20|adjust_state_chaos:15,c_chron_2,Race to the seawall — you can still make it.,,navigate:race_to_seawall,set_flag:declined_theater_chronicler_path:true,,,,,,,,,,,,,,,,,,,,
+Beneath it: everything.",,,c_chron_1,Work through the night to complete the district chronicle.,has_flag:alt_chronicler_committed,navigate:doc_planning,set_flag:chose_chronicler:true|adjust_community_cost:-20|adjust_state_chaos:15,,,,,,,,,,,,,,,,,,,,,,,,,
 death_petra_arrested,narrative,"The instinct overwhelms you mid-applause. You stand up.
 
 'STOP,' you announce, in the voice you have been practicing for situations exactly like this one. 'This performance constitutes unauthorized alchemical activity within a residential zone. Under CEA assessment protocols, I am placing the organizer of this activity under—'
@@ -1400,123 +1362,6 @@ You file a full report. It is accurate, complete, and too late. It references th
 She never mentions it again.
 
 **[GAME OVER — THE CORRECT PROCESS, INCORRECTLY TIMED]**",,,c_ao_death,Restart.,,navigate:start,,,,,,,,,,,,,,,,,,,,,,,,,,
-mireth_field_visit,narrative,"She's standing at the base of the Drowning of Karet Bay plaque when you see her. Not examining it—she has clearly read it before, many times—just standing near it with the stillness of someone who came here with a purpose and is taking a moment before completing it.
-
-'Mireth,' you say.
-
-'Vael.' She turns. She looks the same as she does in the Scholar Quarter, except that here she looks slightly wrong—the way someone's familiar face looks unexpected when you see them in a context that doesn't belong to them. 'Don't make that face. I do come to the field sometimes.'
-
-'I've never seen you come to the field.'
-
-'I come when I think it's necessary.' She looks at the plaque for a moment. 'I sent you here because you're good at the technical work. I came because I wanted to see what you were finding before you decided what to do with it.'
-
-She has your briefing in her hand. She has clearly read it twice.
-
-'Your assessment is accurate,' she says. 'The crane, the material redirection, the seawall projections—all sound.' A pause. 'You've also been talking to people.'
-
-'That's part of field assessment.'
-
-'Not the way you've been doing it.' She looks at you with the precision of someone who is being very careful about what she says next. 'There are three previous assessments of this district in our files. Two of them have identical recommendations: continue monitoring, flag for review, defer to Authority decision. The third one—mine, from nine years ago—says the same thing but with different wording.'
-
-She is quiet for a moment.
-
-'I sent three previous Scholars here. They all filed correct reports. They all recommended proper channels. They are all still waiting for the proper channels to respond.' She tucks the briefing under her arm. 'I wanted to see if you would do the same. I wanted to see if you would—' She stops. 'I am going to give you a piece of information that is not in any official document. You will not find it in your briefing materials or in your training or in nineteen years of my field reports, because I have never known how to file it.'
-
-She looks at the plaque again.
-
-'The Drowning of Karet Bay happened because a trade consortium moved a river with paperwork that cleared every desk—and nobody with a stamp asked early enough who would pay when the freshwater failed. The courts made that cost visible afterward. Different century, same shape: what looks correct in the file can still be a bad exchange for the people under it.' A pause. 'I've been asking myself how close we are to that shape for nineteen years. I still don't have a clean answer.'
-
-She hands you the briefing. 'Whatever you decide—decide it. Don't defer it. This district does not have time for deferred.'
-
-She leaves the way she came, without looking back at the plaque.",,set_flag:mireth_warned:true,c_mfv_1,Continue your investigation with what she's given you.,not_has_flag:fiction_day_2,navigate:transition_end_day_one,,c_mfv_2,"Hold. Ask—quietly, like it embarrasses you—whether ""dock nonsense"" about scavengers and chalk by the decommissioned cistern annex ever showed up in her unofficial margins.",has_flag:saw_the_city|has_flag:pattern_discovered|has_item:district_map|has_flag:chose_mireth_plaque|not_has_flag:cat_whisper_heard|not_has_flag:fiction_day_2,navigate:transition_end_day_one,set_flag:cat_whisper_heard:true,c_mfv_3,Continue your investigation with what she's given you.,has_flag:fiction_day_2,navigate:track_disturbance,,c_mfv_4,"Hold. Ask—quietly, like it embarrasses you—whether ""dock nonsense"" about scavengers and chalk by the decommissioned cistern annex ever showed up in her unofficial margins.",has_flag:saw_the_city|has_flag:pattern_discovered|has_item:district_map|has_flag:chose_mireth_plaque|not_has_flag:cat_whisper_heard|has_flag:fiction_day_2,navigate:track_disturbance,set_flag:cat_whisper_heard:true,,,,,,,,,,
-cat_colony_approach,narrative,"There is no internal memo K-B-11. You invented it on the spot because sounding like paperwork is the only camouflage your brain could find.
-
-The cistern annex is what happens when civil engineering loses an argument with gravity and wins anyway out of spite. The floor is a lasagna of incompatible patches, each generation convinced *this* layer will be the adult in the room.
-
-The walls wear chalk stripes—human load marks, until you notice the second alphabet: claw-grooves at knee height, grouped in threes and fives like a tally of sins only cats can count.
-
-Your diagnostic plate makes a noise you have never heard it make before. It is the acoustic equivalent of ""I refuse.""
-
-Ambient readings: near-zero district fuel, maximum attitude. Copper dust in the mortar as if someone has been buffing the building with pennies and resentment. Fish oil older than your ethics seminar. Fur. So much fur. The fur appears to be doing *governance*.
-
-Eyes open in the dark. More eyes. The number is somewhere between ""enough"" and ""prime minister.""
-
-You are not in the alley shortcut. You are in their lobby. There is no reception desk. There is a rock that is absolutely a reception desk if you value your ankles.",,,c_cat_ap_1,Enter like you're attending a budget hearing. (You are. You just don't know the currency.),,navigate:cat_colony_sigils,,c_cat_ap_2,Try the alley shortcut anyway. Surely mammals respect precedent.,,navigate:death_dark_alley,,c_cat_ap_3,Flee to professionalism. Knock on Elara's door like a person who has never invented a memo.,not_has_flag:purifier_basement_done,navigate:purifier_entrance_open,,,,,,,,,,,,,,,,
-cat_colony_sigils,narrative,"You kneel with the solemnity of someone about to misfile reality.
-
-Up close, the scratches resolve into notation that should not work but does: a spiral with a deliberate break at the seventh turn—drainage bleed-off grammar—married to vertical ticks that look like a ledger of meals, shipments, or vendettas. Possibly all three. Possibly the cats use the same column for all of them.
-
-An orange tomcat with one ear and the moral authority of a dock foreman drops onto your knee without asking permission. Permission is a human concept. He is reviewing your soul.
-
-You understand, with the clarity of a nightmare, that this colony has spent months performing *unauthorized structural grooming*: fur and oil and copper dust packed into stone grooves until the stone behaves slightly differently—just enough to nudge the nastiest seepage away from the worst crack, like a crowd parting for someone carrying hot soup.
-
-It is a circle. It is also a hobby. It is also, technically, tax evasion if taxes are made of physics.
-
-The tomcat stares at your chalk. You get the distinct impression he is waiting for you to embarrass yourself scientifically.",,,c_cat_sig_1,Try to document the phenomenon using dignified academic language.,,navigate:cat_colony_parley,,c_cat_sig_2,Bribe the legislature with dock fish. Democracy runs on salt.,,navigate:cat_colony_snack,,c_cat_sig_3,Announce a full census and assign each cat a provisional ledger line.,,navigate:death_cat_census,,,,,,,,,,,,,,,,
-cat_colony_snack,narrative,"You unwrap dock rations. The fish is so salty it could serve as a Tier 0 desiccant in a pinch.
-
-The orange tomcat performs a sniff so judgmental it should count as adversarial examination. Then—protocol collapses—he accepts tribute.
-
-Other cats teleport in. You did not see them move. You are no longer sure they obey Euclidean rules. They arrange themselves around a flat stone that is obviously the Prime Minister of stones. Stains on it are older than the Republic.
-
-For several minutes, the annex sounds like a wet percussion section. Nobody removes your face. You mark this as a diplomatic win in your ledger next to a question mark shaped like a cat.
-
-The tomcat returns, tail high, and stamps your notes with his nose. Wet ink. Binding precedent.",,,c_cat_sn_1,"Initial the nose-print as """"witnessed.""""",,navigate:cat_colony_parley,,,,,,,,,,,,,,,,,,,,,,,,,,
-cat_colony_parley,narrative,"You write: *Non-human maintenance behavior observed. Possible passive circle analog via organic deposition. Political status: unclear. Theological status: worse.*
-
-The tomcat watches you write the word ""theological"" and seems offended on behalf of science.
-
-You whisper to the assembly like a lunatic: 'There is a woman downstairs running clean water through actual alchemy. Your weird fur-math is nudging sludge so her intake doesn't drown in spite. I need to reach that door without becoming a folk tale.'
-
-The cats do not clap. Cats do not clap. They *align*, which is clapping for people who think in conspiracy.
-
-The orange tom walks toward the back of the annex like he is leading you to committee. You follow. You have followed worse directions today. Those directions had letterhead.
-
-Ahead: a lintel, a hollow, and the distinct sensation that democracy is about to occur in a laundry pile.",,,c_cat_pl_1,Take your seat on the upturned bucket marked VISITOR (NON-VOTING).,,navigate:cat_colony_parliament_gate,,c_cat_pl_2,"Attempt to knight the tomcat under """"autonomous borough"""" precedent and present your seal.",,navigate:death_cat_coronation,,,,,,,,,,,,,,,,,,,,,
-cat_colony_parliament_gate,narrative,"The chamber is socks and string and bottle caps and one brass CEA button that absolutely fell off someone's coat and absolutely became a religious object.
-
-The orange tom knocks a cap off a crate. It rings like a gavel. Twelve cats and you achieve quorum, assuming ""quorum"" means ""enough glaring to bend light.""
-
-A kitten tries to steal your fuel block. You negotiate it back with eye contact and shame.
-
-This is not in your field manual. Your field manual is weeping in another room.
-
-The Clerk of the Hairball—this is not a title you assigned; it is a title that *happened*—stares at you until you accept that you are about to sit through formal procedure.",,,c_cat_pg_1,Enter the Feral Parliament session.,,feral_parliament_begin:cat_colony_treaty,,,,,,,,,,,,,,,,,,,,,,,,,,
-cat_colony_treaty,narrative,"When the parliament adjourns, reality rushes back in like a tide of paperwork that forgot to knock.
-
-You are kneeling on wet stone with a strip of ration cloth, three fish scales, and a chalk spiral that is not activated but is definitely *sincere*. The tomcat nose-bumps each scale. Other cats witness by whisker. One abstains on grounds of being a sock.
-
-You have signed something. You are not sure which jurisdiction it belongs to. You're fairly sure it's not Caldris. You're fairly sure it's older.
-
-The colony escorts you through a gap labeled UNSAFE on the map. The map is correct: it is unsafe for dignity. It is very safe for ankles if you walk like you mean it.
-
-Elara's door waits ahead, chalk binding humming like a polite threat.
-
-You look back. Eyes gleam. Not judgment. *Onboarding.*
-
-You have joined a parallel government whose cabinet meetings involve yarn.
-
-It files no reports. It has better quorum than the Revolutionary Council.",,add_item:feral_accord:1|set_flag:cat_borough:true|adjust_community_cost:-5,c_cat_tr_1,Knock on the basement door. Pretend you didn't just pass a bill.,not_has_flag:purifier_basement_done,navigate:purifier_entrance_open,,c_cat_tr_2,Step back into the district pattern—Elara's basement is already behind you.,has_flag:purifier_basement_done,navigate:seek_answers,,,,,,,,,,,,,,,,,,,,,
-death_cat_census,narrative,"You announce, in ringing tones, that each animal will receive a provisional index line in the colony ledger.
-
-The cats do not boo. Booing is inefficient. They open an adversarial examination in triplicate, using claws.
-
-What follows is the dark alley encounter's director's cut: now with thematic coherence. You have *opted in*. The colony treats this as enthusiastic consent to become a training exercise.
-
-Forty minutes later you possess: no spare chalk, one fewer glove, a new understanding that filing gloss can draw blood, and the distinct memory of being used as a training prop for a kitten learning the word ""no.""
-
-The alpha returns your authorization seal. Not out of mercy. Brass upsets the stomach.
-
-**[GAME OVER — ADVERSARIAL AUDIT (FERAL, DOUBLE-BLIND, CLAWED)]**",,,c_death_cat_census,Restart.,,navigate:start,,,,,,,,,,,,,,,,,,,,,,,,,,
-death_cat_coronation,narrative,"You kneel. You lift your Scholar's seal. You attempt to crown the tomcat as First Citizen of the Cistern Autonomous Zone.
-
-The tomcat interprets this as: (1) a dominance challenge, (2) a dinner bell, and (3) an unsolicited performance review. He responds in triplicate.
-
-The Revolutionary Council's founding documents are famously silent on cats. The cats are not silent on you. Their silence was strategic. Their noise is educational.
-
-You discover that the Right of Exchange applies even when the other party trades exclusively in indignity.
-
-**[GAME OVER — THE CROWNING: STRUCK FROM THE MINUTES]**",,,c_death_cat_crown,Restart.,,navigate:start,,,,,,,,,,,,,,,,,,,,,,,,,,
 warehouse_approach,narrative,"You follow the crate markings inland. The stenciled codes on the supply crates at the dock—""KBD-T2-M"" for Karet Bay District, Tier 2, Maintenance—told a simple story of materials arriving where they were supposed to go. But you've been watching crates all morning, and the ones with that code stopped arriving three loads ago. The ones still moving have different codes. Fresher paint. Newer stencils.
 
 The warehouses rise around you like a second coastline—brick and corrugated iron, CEA shipping labels pasted over older labels pasted over labels so old they've become part of the wall. The air changes here: less brine, more dust and machine oil. The ground is hard-packed clay over old cobblestone, and every surface carries the fine grey residue of materials being moved in bulk.
@@ -1786,7 +1631,7 @@ At the center of it, Brin. Heavyset, steady, with Freehands circle-marks on both
 
 ""Seren sent you,"" she says. It is not a question.
 
-This is mutual aid made physical. The gap between what the CEA provides and what people need, measured in pipe sections and bonding paste and hours of unpaid labor. You have seen the gap in your numbers. Here, it has a smell.",,set_flag:brin_met:true|add_item:freehands_token:1,c_fhs_1,Talk to Brin.,,navigate:brin_conversation,,c_fhs_2,Explore the workshop.,,navigate:fh_workshop,,c_fhs_3,Attend the repair briefing.,,navigate:repair_briefing,,c_fhs_4,Leave for the disturbance trail.,,navigate:track_disturbance,,c_fhs_5,Kaelen is waiting in the back room.,has_flag:kaelen_met|not_has_flag:declined_kaelen_line_path|has_flag:fiction_day_3|reputation_check:freehandsRep:>=:40|has_flag:pattern_discovered,navigate:kaelen_proposition,,c_fhs_6,Leave and return to the investigation.,,navigate:seek_answers,set_flag:declined_kaelen_line_path:true
+This is mutual aid made physical. The gap between what the CEA provides and what people need, measured in pipe sections and bonding paste and hours of unpaid labor. You have seen the gap in your numbers. Here, it has a smell.",,set_flag:brin_met:true|add_item:freehands_token:1,c_fhs_1,Talk to Brin.,,navigate:brin_conversation,,c_fhs_2,Explore the workshop.,,navigate:fh_workshop,,c_fhs_3,Attend the repair briefing.,,navigate:repair_briefing,,c_fhs_4,Leave for the disturbance trail.,,navigate:track_disturbance,,c_fhs_5,Back room: confirm the unofficial roster note.,has_flag:kaelen_met|not_has_flag:declined_kaelen_line_path|has_flag:fiction_day_3|reputation_check:freehandsRep:>=:40|has_flag:pattern_discovered|not_has_flag:alt_line_committed,navigate:alt_line_entry,,c_fhs_6,Leave and return to the investigation.,,navigate:seek_answers,set_flag:declined_kaelen_line_path:true
 brin_conversation,narrative,"Brin sets down her manifest and gives you her full attention. It is a substantial thing. She has the focus of a guild-certified structural lead—someone accustomed to holding the shape of a large problem in her head and directing people toward its solution.
 
 'Twenty years,' she says, when you ask what she did before this. 'Structural work. Load-bearing walls, foundation reinforcement, the kind of circle work that keeps buildings standing. Guild-certified, Tier 2 rated. I built things right because that is what the work demanded.'
@@ -1938,7 +1783,7 @@ The shift change happened two hours ago. Workers spill from doorways in loose cl
 
 The maintenance hum sounds different in the dark. During the day, the collective noise of the district smooths the failures into a general drone. At night, with fewer machines running and fewer people shouting, you can hear each one individually. A water pump cycling at the wrong frequency. A structural reinforcement circle on a load-bearing wall that clicks off for two seconds every thirty. A drainage valve somewhere below the street that opens and closes with the rhythm of something breathing.
 
-You stand at the junction of the old canal path and the fishmarket lane. To your left, the night market stretches along the canal—a chain of stalls lit by alchemical lanterns that flicker with the inconsistent fuel supply, some burning steady white, others guttering amber, a few dark entirely. To your right, the narrow streets lead deeper into the residential blocks where off-duty workers gather in taverns and doorways. Ahead, fresh ink gleams on the wall: another pamphlet, recently pasted. The ink hasn't dried.",,set_flag:night_market_visited:true,c_night_1,Visit the night market.,,navigate:night_market_entrance,,c_night_2,Follow the ink.,,navigate:ash_trail,,c_night_3,Find the dockside tavern.,,navigate:night_tavern,,c_night_4,Return to your calculations.,,navigate:worker_conversations,,c_night_5,A familiar figure falls into step beside you.,has_flag:ash_met|has_flag:night_market_visited|reputation_check:workerRep:>=:25,navigate:ash_proposition,,,,,,
+You stand at the junction of the old canal path and the fishmarket lane. To your left, the night market stretches along the canal—a chain of stalls lit by alchemical lanterns that flicker with the inconsistent fuel supply, some burning steady white, others guttering amber, a few dark entirely. To your right, the narrow streets lead deeper into the residential blocks where off-duty workers gather in taverns and doorways. Ahead, fresh ink gleams on the wall: another pamphlet, recently pasted. The ink hasn't dried.",,set_flag:night_market_visited:true,c_night_1,Visit the night market.,,navigate:night_market_entrance,,c_night_2,Follow the ink.,,navigate:ash_trail,,c_night_3,Find the dockside tavern.,,navigate:night_tavern,,c_night_4,Return to your calculations.,,navigate:worker_conversations,,c_night_5,A familiar figure falls into step beside you.,has_flag:ash_met|has_flag:night_market_visited|reputation_check:workerRep:>=:25|not_has_flag:alt_red_committed,navigate:alt_red_entry,,,,,,
 night_market_entrance,narrative,"The night market runs along the old canal path like a sentence that keeps adding clauses. Stalls made of salvaged timber and canvas, lit by whatever light source each vendor could secure. The smell hits you first: fried dough, rendered fat, alchemical solder, fish paste, lamp oil. The smell of a district feeding itself after the official economy has gone home for the evening.
 
 A woman sells dumplings from a cart with an alchemical heating circle embedded directly into the metal surface. The smell is extraordinary—garlic, ginger, something fermented that burns the back of your nose in a way that makes your mouth water. She works with the mechanical efficiency of someone who has done this ten thousand times and will do it ten thousand more.
@@ -2642,6 +2487,9 @@ And Dima—fifteen years old, with ink-stained fingers and the careful handwriti
 **[ENDING: THE CHRONICLER]**
 
 *The cost was real. The cost was yours. In a world where someone always pays—sometimes paying means keeping the record so the cost is never forgotten.*",,,c_chron_v2_end,Return to the start.,,navigate:start,,,,,,,,,,,,,,,,,,,,,,,,,,
+alt_craft_entry,narrative,The bronze at the Drowning Memorial already carries the weight of official sympathy; the carved names hold the light the way metal always does—flat and patient. Elara stands a little off-center from the flowers—not staging grief—simply sharing air with the plaque as if it were another coordinate on an internal map. You arrived from the assessment thread with its vocabulary still in your mouth. Her posture does not corner you. The silence between you has the bland politeness of a corridor before anyone opens the door.,,,c_altcr_e1,Step into the conversation.,,navigate:alt_craft_bailout_1,,,,,,,,,,,,,,,,,,,,,,,,,,
+alt_craft_bailout_1,narrative,You can still treat this as memorial small-talk—one more civility between colleagues—and walk back toward the CEA file trail before it starts asking for your hands instead of your signature.,,,c_altcr_b1_back,Return to the CEA assessment thread.,,navigate:seek_answers,,c_altcr_b1_on,Stay with the offer.,,navigate:alt_craft_bailout_2,,,,,,,,,,,,,,,,,,,,,
+alt_craft_bailout_2,narrative,"If you stay, you are not choosing another margin note. You are choosing field work without the stamp that makes field work insurable. The cost will not arrive as a single tidy line item; it will spread across time you cannot reclaim, visibility you cannot roll back, and the quiet fraying of credentials when they brush against what the ledger prefers not to count.",,,c_altcr_b2_back,Return to the assessment thread.,,navigate:seek_answers,,c_altcr_b2_commit,Commit—hear the offer at the bronze.,,navigate:elara_offer,set_flag:alt_craft_committed:true,,,,,,,,,,,,,,,,,,,,
 elara_offer,narrative,"The afternoon at the Drowning Memorial wears a bureaucrat's sunlight—bright enough to read by, indifferent to whether the reading comforts anyone. The plaque catches it on the wall before you, bronze letters spelling names of workers lost to infrastructure failure. Someone has left fresh flowers at the base. The petals are already curling.
 
 The basement's rupture still sits under your tongue—copper and stubborn quiet—while the plaque offers grief in approved proportions.
@@ -2658,7 +2506,7 @@ Her hands are in her pockets. Her expression is carefully neutral in the way tha
 
 ""No credentials. No reports. No institutional approval. Just the work."" She nods toward the residential quarter. ""I could use someone who understands the theory. Someone whose alchemy isn't self-taught.""
 
-The offer sits between you like an equation with variables you haven't solved for. To one side, the weight of everything stamped and sealed. Ahead of you, a woman who fixes things without permission.",,,c_eo_1,Go with Elara.,,navigate:elara_workshop,,c_eo_2,Ask what kind of work she means.,,navigate:elara_explains,,c_eo_3,Decline and return to the CEA building.,,navigate:cea_building_exterior,set_flag:declined_elara_craft_path:true,,,,,,,,,,,,,,,
+The offer sits between you like an equation with variables you haven't solved for. To one side, the weight of everything stamped and sealed. Ahead of you, a woman who fixes things without permission.",,,c_eo_1,Go with Elara.,has_flag:alt_craft_committed,navigate:elara_workshop,,c_eo_2,Ask what kind of work she means.,has_flag:alt_craft_committed,navigate:elara_explains,,c_eo_3,Decline and return to the CEA building.,not_has_flag:alt_craft_committed,navigate:cea_building_exterior,set_flag:declined_elara_craft_path:true,,,,,,,,,,,,,,,
 elara_explains,narrative,"""The water distribution network in the residential quarter,"" Elara says. She speaks the way she works—directly, without ornament, each word placed where it needs to go. ""It was designed thirty years ago for a population half the current size. The original alchemical pressure circles were calibrated for twelve hundred households. The district has twenty-three hundred now, and the CEA's response has been to boost the input pressure rather than redesign the distribution pattern.""
 
 She pulls a folded paper from her jacket. A sketch—hand-drawn, annotated in her small precise handwriting. You recognize junction markers, flow calculations, pressure gradients. The work of someone who understands hydraulic alchemy not as theory but as something that happens to real pipes carrying real water to real people.
@@ -2669,7 +2517,7 @@ She folds the paper back into her pocket with the careful motion of someone prot
 
 ""What I'm doing is unauthorized. I'm redesigning the distribution pattern using local materials and circle work I can maintain myself. Tier 0 and Tier 1 components. Nothing that requires CEA supply chains, because CEA supply chains don't supply this district anymore."" The dry observation lands without emphasis. She doesn't need to emphasize what you already know.
 
-""It's also the only thing that will work before someone dies of contaminated water. That's not rhetoric. That's hydraulic engineering.""",,,c_ee_1,Go with her.,,navigate:elara_workshop,,c_ee_2,Decline.,,navigate:cea_building_exterior,set_flag:declined_elara_craft_path:true,,,,,,,,,,,,,,,,,,,,
+""It's also the only thing that will work before someone dies of contaminated water. That's not rhetoric. That's hydraulic engineering.""",,,c_ee_1,Go with her.,has_flag:alt_craft_committed,navigate:elara_workshop,,c_ee_2,Decline.,not_has_flag:alt_craft_committed,navigate:cea_building_exterior,set_flag:declined_elara_craft_path:true,,,,,,,,,,,,,,,,,,,,
 elara_workshop,narrative,"Elara leads you through a side door, down concrete steps worn smooth by decades of feet, into the basement of the building above her purifier. The space is small—perhaps four meters by six—and organized with the exacting precision of someone who cannot afford to waste time looking for things. Tools hang on a pegboard in outlined silhouettes, each shape labeled in the same small handwriting you saw on the water network sketch. Materials are sorted by Hazard Index tier in clearly marked containers: Tier 0 in open bins, Tier 1 in sealed jars, the single Tier 2 component she possesses—a half-empty container of bonding catalyst—locked in a metal box bolted to the wall.
 
 The workbench dominates the room. Its surface is scarred oak, and chalk dust has been ground into the wood grain so thoroughly that it will never come out. Hundreds of circles have been drawn and erased and redrawn here. The ghosts of them remain in the wood like geological strata—layers of practice, of failure, of refinement.
@@ -2796,7 +2644,7 @@ Elara sees your expression. She's been waiting for it, you realize. Not with dre
 
 The teacup is warm in your hands. The water in it is clean because of what you did today. The career in your pocket is a document that says you're qualified to assess situations exactly like this one and then write reports about them that will be read by people who will authorize further assessments.
 
-The gap between what the credential permits and what the situation requires has become a chasm.",,,c_ch_1,Continue the work.,,navigate:craft_commitment,,c_ch_2,Return to the official investigation.,,navigate:seek_answers,set_flag:declined_elara_craft_path:true,,,,,,,,,,,,,,,,,,,,
+The gap between what the credential permits and what the situation requires has become a chasm.",,,c_ch_1,Continue the work.,,navigate:craft_commitment,,c_ch_2,Return to the official investigation.,not_has_flag:alt_craft_committed,navigate:seek_answers,set_flag:declined_elara_craft_path:true,,,,,,,,,,,,,,,,,,,,
 craft_commitment,narrative,"The fishmarket wall.
 
 The building is four stories of old stone and older alchemy, built during the first decade of the Republic when infrastructure was a promise and materials were available to keep it. Seven businesses occupy the ground floor—fishmongers, a baker, a woman who repairs nets and sells rope. Thirty families live above. The load-bearing wall on the eastern face has been failing for months, the structural reinforcement circles degrading in the same slow spiral of material starvation that's killing everything else in the district. A crack runs from foundation to second floor, widening at a rate that your Scholar training lets you calculate with unwelcome precision: two weeks, maybe three, before cascading failure.
@@ -2905,6 +2753,9 @@ Your hands are not clean anymore. They are scarred and calloused and stained wit
 You hold them up to the morning light. They look like Elara's now. They look like they belong to someone who has done real work.
 
 [ENDING: THE CRAFT]",,,c_ec_1,Begin again.,,navigate:start,,,,,,,,,,,,,,,,,,,,,,,,,,
+alt_line_entry,narrative,"You follow the corridor you were pointed toward: stock tallies, rope coiling, nothing that belongs on a ballad. The back room smells of lamp oil and dried tar. Kaelen is already there, shoulders to a crate, still in the way foremen look when they're tired of performing calm. Plaster eats the edges off the noise from the floor. Nobody has opened the conversation yet; the silence already has the shape of a filled-in form.",,,c_altl_e1,Confirm the roster slot and continue.,,navigate:alt_line_bailout_1,,,,,,,,,,,,,,,,,,,,,,,,,,
+alt_line_bailout_1,narrative,"You hear dock talk through the wall: tide windows, paste counts, who's covering whose shift. You can still treat it as waterfront noise from the safehouse floor and step back before it becomes a file entry. The thread stays optional until you stay in the room.",,,c_altl_b1_back,Return to the front room and the supply list.,,navigate:freehands_safehouse,,c_altl_b1_on,Stay with the thread.,,navigate:alt_line_bailout_2,,,,,,,,,,,,,,,,,,,,,
+alt_line_bailout_2,narrative,"Same door, same hinge whisper. If you go through again, the cost is crew weight—not a clerk's errand. Whatever clock they're running on the wall doesn't pause for second thoughts.",,,c_altl_b2_back,Return to the safehouse floor.,,navigate:freehands_safehouse,,c_altl_b2_commit,Go through—meet Kaelen in the back room.,,navigate:kaelen_proposition,set_flag:alt_line_committed:true,,,,,,,,,,,,,,,,,,,,
 kaelen_proposition,narrative,"Kaelen finds you in the back room of the Freehands safehouse, which is remarkable for two reasons. First, because the Freehands safehouse has a back room, which suggests a level of organizational infrastructure that your report will need to carefully not mention. Second, because Kaelen has cleaned up.
 
 He is wearing a different shirt. This is the dock worker equivalent of arriving in formal evening wear. The burn scars on his forearms are visible below rolled sleeves, and his hands—the same hands that drew a Level 2 reinforcement circle on a forty-year-old crane with improvised paste—are folded carefully on the table in front of him, as though he has rehearsed this.
@@ -2917,7 +2768,7 @@ He sits across from you. The lamplight catches the lines of his face, and you re
 
 He means you. The Scholar who stayed. The field evaluator whose career trajectory now resembles the structural integrity of a Tier 1 bonding paste under repeated stress loads—technically viable, practically uncertain, and heading in a direction the original design did not anticipate.
 
-""What do you say, Scholar?""",,adjust_worker_rep:5,c_kp_1,Hear the plan.,,navigate:line_crew_meeting,,c_kp_2,Ask about the risks.,,navigate:line_risks,,c_kp_3,Decline.,,navigate:freehands_safehouse,set_flag:declined_kaelen_line_path:true,,,,,,,,,,,,,,,
+""What do you say, Scholar?""",,adjust_worker_rep:5,c_kp_1,Hear the plan.,has_flag:alt_line_committed,navigate:line_crew_meeting,,c_kp_2,Ask about the risks.,has_flag:alt_line_committed,navigate:line_risks,,c_kp_3,Decline.,not_has_flag:alt_line_committed,navigate:freehands_safehouse,set_flag:declined_kaelen_line_path:true,,,,,,,,,,,,,,,
 line_risks,narrative,"""Risks?"" Kaelen holds up a hand and begins counting on fingers that have clearly had a long professional relationship with heavy objects.
 
 ""Unauthorized structural work on critical infrastructure. CEA interference if anyone notices—and someone always notices. Running out of materials before we finish, which means we'd leave the seawall half-repaired, which is arguably worse than leaving it alone because a partially reinforced structure fails differently than an unreinforced one."" He pauses. ""Running out of people willing to work for free. Someone getting hurt because we're not professionals—except we are professionals, we've been doing this work for twenty years, we just don't have the paperwork.""
@@ -2926,7 +2777,7 @@ He runs out of fingers on one hand and switches to the other.
 
 ""Oh, and there's a CEA inspection scheduled for next week. If they find unauthorized circle work on load-bearing infrastructure, everyone involved gets fined or arrested. Not fined and then arrested—one or the other, depending on whether the inspector has met quota for the month."" He lowers his hand. ""That's the real risk. Not the work. The work we can do. It's the part where we get caught doing it by the people who should have done it themselves.""
 
-The silence that follows is the silence of someone who has laid all his cards on a table that isn't very clean and is waiting to see if you'll sit down anyway.",,,c_lrisk_1,Hear the plan anyway.,,navigate:line_crew_meeting,,c_lrisk_2,Decline.,,navigate:freehands_safehouse,set_flag:declined_kaelen_line_path:true,,,,,,,,,,,,,,,,,,,,
+The silence that follows is the silence of someone who has laid all his cards on a table that isn't very clean and is waiting to see if you'll sit down anyway.",,,c_lrisk_1,Hear the plan anyway.,,navigate:line_crew_meeting,,c_lrisk_2,Decline.,not_has_flag:alt_line_committed,navigate:freehands_safehouse,set_flag:declined_kaelen_line_path:true,,,,,,,,,,,,,,,,,,,,
 line_crew_meeting,narrative,"The meeting takes place around a table in Brin's safehouse that was clearly designed for six people and is currently accommodating twelve through the aggressive application of optimism and folding chairs.
 
 You recognize faces from your time in the district: Gerd, the pipe fixer whose improvised circle work held the tenement quarter's water supply together through sheer stubbornness. The woman who told the Red Harrow story at the docks, sitting with her arms crossed and the posture of someone who has earned her opinions through direct experience. Two young workers from the crane crew who look at Kaelen the way structural supports look at load-bearing walls—like he's the only thing keeping them upright.
@@ -2939,7 +2790,7 @@ The plan is this: coordinate every available worker in the district for a contin
 
 ""Distributed cost,"" he says. ""Everyone carries a piece. Nobody carries it alone.""
 
-The room is quiet. Not skeptical quiet—thinking quiet. The quiet of people calculating what they can afford to give.",,,c_lcm_1,Volunteer your calculations.,,navigate:line_volunteer,adjust_worker_rep:10,c_lcm_2,Suggest improvements.,,navigate:line_improvements,,c_lcm_3,Observe silently.,,navigate:line_observe,,c_lcm_4,This is beyond your assignment — walk away.,,navigate:seek_answers,set_flag:declined_kaelen_line_path:true,,,,,,,,,,
+The room is quiet. Not skeptical quiet—thinking quiet. The quiet of people calculating what they can afford to give.",,,c_lcm_1,Volunteer your calculations.,,navigate:line_volunteer,adjust_worker_rep:10,c_lcm_2,Suggest improvements.,,navigate:line_improvements,,c_lcm_3,Observe silently.,,navigate:line_observe,,c_lcm_4,This is beyond your assignment — walk away.,not_has_flag:alt_line_committed,navigate:seek_answers,set_flag:declined_kaelen_line_path:true,,,,,,,,,,
 line_volunteer,narrative,"You spread your diagnostic data across the table. The workers lean in—not because they can read alchemical notation, but because they can read the expression of someone who is trying to help and has useful information.
 
 You explain the seawall's failure points using language stripped of academic abstraction: here is where it is weakest, here is where a repair will do the most good, here is the sequence that minimizes material waste and maximizes structural gain. You lay out the water system's vulnerabilities—the three joints where Tier 1 paste has been doing the work of Tier 2 reinforcement for months, slowly degrading under pressure it was never designed to hold. You calculate the material requirements, the fuel costs, the energy expenditure per shift.
@@ -3078,7 +2929,7 @@ Kaelen looks at you without judgment. Without pressure. Without the expression o
 
 ""Nobody's making you stay,"" he says. ""Nobody would blame you for walking. You've already done more than any Scholar who ever came down here.""
 
-He means it. That's the worst part.",,,c_lret_1,Stay. Sabotage the inspection.,,navigate:line_commitment,,c_lret_2,Leave.,,navigate:seek_answers,,,,,,,,,,,,,,,,,,,,,
+He means it. That's the worst part.",,,c_lret_1,Stay. Sabotage the inspection.,,navigate:line_commitment,,c_lret_2,Leave.,not_has_flag:alt_line_committed,navigate:seek_answers,,,,,,,,,,,,,,,,,,,,,
 line_commitment,narrative,"You pull out your Scholar's authorization seal and your institutional access ledger. Your hands are very steady—the steadiness of someone who has made a decision and is watching themselves make it from a slight distance, the way you'd watch a structural element reach its load limit.
 
 You file a procedural delay request for the CEA inspection, citing ""ongoing assessment requiring undisturbed site conditions per Scholars' Protocol 7, subsection 3: field evaluator discretionary hold."" It is a real protocol. It does grant field evaluators the authority to delay institutional interference with active assessment sites. It was designed for situations where an inspector's presence might disturb delicate diagnostic readings.
@@ -3170,6 +3021,9 @@ You take it.
 Brin's network folds you in the way the district folds in anyone useful—no speech, just shared shifts, borrowed chalk, circle work done by feel when plates are not an option. Your hands roughen where tools rest; the wear means something different than equations on vellum. The cost was real, and unevenly paid. What held did not hold because the story stayed clean. It held because enough people chose the line before they chose the alibi.
 
 [ENDING: THE LINE]",,,c_elp_1,Restart.,,navigate:start,,,,,,,,,,,,,,,,,,,,,,,,,,
+alt_red_entry,narrative,"The night market keeps doing what it always does: lamps, overlapping bargains, fine soot threading the lamplight. Ash falls into step beside you without a speech attached. You can still file the matched stride under ambient night noise until you decide this is an opener; the heavy pitch does not have to land here.",,,c_altr_e1,Let them walk with you—hear the opener.,,navigate:alt_red_bailout_1,,,,,,,,,,,,,,,,,,,,,,,,,,
+alt_red_bailout_1,narrative,You can still melt back into the market and keep your evening unofficial.,,,c_altr_b1_back,Return to the night district.,,navigate:night_district,,c_altr_b1_on,Stay with the thread.,,navigate:alt_red_bailout_2,,,,,,,,,,,,,,,,,,,,,
+alt_red_bailout_2,narrative,"If you stay, you are choosing to stand in the market while Ash names sabotage—not rumor, not theory, a plan with targets. The crowd keeps sliding past; you can still pretend you are only catching stall talk until you admit you are standing still for a reason.",,,c_altr_b2_back,Step back into the crowd.,,navigate:night_district,,c_altr_b2_commit,Commit—hear the full proposition.,,navigate:ash_proposition,set_flag:alt_red_committed:true,,,,,,,,,,,,,,,,,,,,
 ash_proposition,narrative,"The night market hums with its usual commerce of things that aren't strictly supposed to be sold. You're navigating between a stall hawking ""medicinal"" fuel distillates and one offering clearly stolen diagnostic plates when someone falls into step beside you.
 
 No hood this time. You can see their face—mid-twenties, sharp features, the kind of bone structure that looks designed for arguments and has probably won most of them. Burn scars run along both forearms, the distinctive patterning of alchemical feedback. Self-fueled work. The kind that costs you something personal.
@@ -3180,7 +3034,7 @@ They stop walking. The market noise folds around you like a privacy screen.
 
 ""I have a plan. Three CEA material transfer points—the staging area, the pumping station, the distribution office. We disrupt them. Force the materials to stay in the district."" Ash's voice is calm, precise, the tone of someone presenting a field report rather than a conspiracy. ""Not permanently. Just long enough for the right people to notice.""
 
-You stand in the middle of a night market being recruited for infrastructure sabotage by someone who buys pamphlet ink in bulk. The republic's institutional framework did not prepare you for this particular scenario.",,set_flag:red_plan_heard:true,c_ap_1,Hear the full plan.,,navigate:red_plan_detail,,c_ap_2,"Ask who the ""right people"" are.",,navigate:red_target,,c_ap_3,Decline.,,navigate:night_district,,,,,,,,,,,,,,,,
+You stand in the middle of a night market being recruited for infrastructure sabotage by someone who buys pamphlet ink in bulk. The republic's institutional framework did not prepare you for this particular scenario.",,set_flag:red_plan_heard:true,c_ap_1,Hear the full plan.,has_flag:alt_red_committed,navigate:red_plan_detail,,c_ap_2,"Ask who the ""right people"" are.",has_flag:alt_red_committed,navigate:red_target,,c_ap_3,Decline.,not_has_flag:alt_red_committed,navigate:night_district,,,,,,,,,,,,,,,,
 red_target,narrative,"""The transit rail project has three sponsors on the Revolutionary Council."" Ash ticks them off on scarred fingers. ""Alderman Dresser. Committee Chair Valis. Deputy Secretary Moune. Between them, they've invested enough political capital in that railway to build a second one.""
 
 They lean against a market post. The casual posture of someone who has rehearsed being casual.
@@ -3215,7 +3069,7 @@ The burn scars. You've been trying not to stare at them.
 
 A pause. The night market fills the silence with the commerce of people who have learned to solve problems outside of official channels.
 
-""The Academy gave me a commendation. The district got a new budget review. The next year, the budget was cut again."" Ash looks at you with an expression that is not anger. It is the thing that comes after anger, when the anger has been measured and found insufficient. ""I didn't quit because the system was broken. I quit because the system was working exactly as designed.""",,adjust_scholar_rep:-5|set_flag:ash_backstory_known:true,c_ab_1,Agree to help.,,navigate:red_gather_intel,,c_ab_2,Decline.,,navigate:night_district,,,,,,,,,,,,,,,,,,,,,
+""The Academy gave me a commendation. The district got a new budget review. The next year, the budget was cut again."" Ash looks at you with an expression that is not anger. It is the thing that comes after anger, when the anger has been measured and found insufficient. ""I didn't quit because the system was broken. I quit because the system was working exactly as designed.""",,adjust_scholar_rep:-5|set_flag:ash_backstory_known:true,c_ab_1,Agree to help.,,navigate:red_gather_intel,set_flag:alt_red_committed:true,c_ab_2,Decline.,,navigate:night_district,,,,,,,,,,,,,,,,,,,,,
 red_gather_intel,narrative,"Phase one: intelligence gathering. You and Ash scope the three transfer points over two nights with the methodical patience of people who have been trained to assess infrastructure. One currently credentialed. One formerly. The irony is structural.
 
 Point One: the warehouse staging area. Rows of supply crates, CEA logistics staff, a security rotation that runs with the precision of someone in middle management being genuinely competent at their job. You may have been here before. If so, the familiarity has a different weight now.
@@ -3434,4 +3288,4 @@ She folds the paper. Not angrily. Precisely. The way you fold something you'll n
 
 'One person with proper training can fix a junction in ninety minutes. Two people—one who knows the theory, one who knows the pipes—can do it in forty. There are thirty-one junctions and two of us.' She looks at you. 'That's the scope. That's the work. The question is whether you want to do math or do plumbing.'
 
-The question is not actually about plumbing. You both know this.",,,c_cns_1,Commit to the work.,,navigate:craft_commitment,,c_cns_2,Study the network map first.,,navigate:craft_study,,c_cns_3,Return to the official investigation.,,navigate:seek_answers,,,,,,,,,,,,,,,,
+The question is not actually about plumbing. You both know this.",,,c_cns_1,Commit to the work.,,navigate:craft_commitment,,c_cns_2,Study the network map first.,,navigate:craft_study,,c_cns_3,Return to the official investigation.,not_has_flag:alt_craft_committed,navigate:seek_answers,,,,,,,,,,,,,,,,

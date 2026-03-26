@@ -8,7 +8,8 @@ import { DIAGNOSTIC_SEVERITY } from './types.js'
 /** Runtime default when `exitNodeId` omitted — mirrors `src/plugins/theater/index.ts`. */
 export const THEATER_DEFAULT_EXIT_NODE_ID = 'theater_revelation'
 /** Runtime default when `exitNodeId` omitted — mirrors `src/plugins/feral-parliament/index.ts`. */
-export const FERAL_DEFAULT_EXIT_NODE_ID = 'cat_colony_treaty'
+/** No `feral_parliament_begin` nodes in current story data; default avoids dangling graph edges. */
+export const FERAL_DEFAULT_EXIT_NODE_ID = 'start'
 
 export function walkNodeKey(nodeId) {
   return `node:${nodeId}`
